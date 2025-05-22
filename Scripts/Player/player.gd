@@ -1,0 +1,123 @@
+extends CharacterBody2D
+class_name Player
+
+# Components
+@onready var attack_component = $attack_component
+@onready var hitbox_component = $hitbox_component
+@onready var health_component = $health_component
+@onready var hurtbox_component = $hurtbox_component
+@onready var animated_sprite = $AnimatedSprite2D
+@onready var state_machine = $StateMachine
+@onready var projectile_emitter = $projectile_emitter
+@onready var status_effect_component = $status_effect_component
+
+# Movement Variables
+@export var move_speed: float = 200.0 # Movement Speed
+var facing_direction: Vector2 = Vector2.RIGHT # Direction sprite is facing
+var aim_direction: Vector2 = Vector2.RIGHT  # Direction player is aiming (mouse)
+var movement_vector: Vector2 = Vector2.ZERO  # Current input direction
+
+func _ready() -> void:
+	# Create states
+	var idle_state = PlayerIdleState.new(self)
+	var move_state = PlayerMoveState.new(self)
+	
+	# Add states to state machine
+	state_machine.add_state("idle", idle_state)
+	state_machine.add_state("move", move_state)
+	
+	# Initialize state machine
+	state_machine.initialize("idle")
+
+func _input(event: InputEvent) -> void:
+	# Handle input events
+	handle_movement_input(event)
+	
+	# Handle mouse input for aiming
+	if event is InputEventMouseMotion:
+		update_aim_direction()
+	
+	# Handle projectile attacks
+	if event.is_action_pressed("fire"):
+		projectile_emitter.fire_projectile(aim_direction)
+	
+func _physics_process(delta: float) -> void:
+	# Update movement_vector based on current input state
+	update_movement_vector()
+	
+	# Apply movement
+	move_and_slide()
+
+# Updates the aim direction based on mouse position
+func update_aim_direction() -> void:
+	# Get mouse position in world coordinates
+	var mouse_pos = get_global_mouse_position()
+	
+	# Calculate direction from player to mouse
+	aim_direction = (mouse_pos - global_position).normalized()
+
+# Handle key press/release events
+func handle_movement_input(event: InputEvent) -> void:
+	if event.is_action_released("move_left") or event.is_action_released("move_right"):
+		# Reset horizontal velocity
+		velocity.x = 0
+	
+	if event.is_action_released("move_up") or event.is_action_released("move_down"):
+		# Reset vertical velocity
+		velocity.y = 0
+
+# Get the current movement input direction (no parameters needed)
+func get_movement_input() -> Vector2:
+	return movement_vector
+
+# Update the movement vector based on current key states
+func update_movement_vector() -> void:
+	movement_vector = Vector2.ZERO
+	
+	# Get WASD input direction based on current key states
+	if Input.is_action_pressed("move_left"):
+		movement_vector.x -= 1
+	if Input.is_action_pressed("move_right"):
+		movement_vector.x += 1
+	if Input.is_action_pressed("move_up"):
+		movement_vector.y -= 1
+	if Input.is_action_pressed("move_down"):
+		movement_vector.y += 1
+	
+	# Normalize for consistent speed in all directions
+	if movement_vector.length() > 1.0:
+		movement_vector = movement_vector.normalized()
+
+# Update sprite facing based on movement direction
+func update_sprite_facing(move_input: Vector2) -> void:
+	if move_input.x != 0:
+		# Update facing direction
+		facing_direction.x = move_input.x
+		
+		# Update sprite orientation
+		if facing_direction.x > 0:
+			# Moving right, so flip the sprite
+			animated_sprite.flip_h = true
+		else:
+			# Moving left, no need to flip
+			animated_sprite.flip_h = false
+
+# Returns the direction player is aiming (for attacks)
+func get_aim_direction() -> Vector2:
+	return aim_direction
+
+# Returns the direction player is moving (for movement abilities)
+func get_facing_direction() -> Vector2:
+	return facing_direction
+
+# Helper method for status effect visuals
+func set_effect_tint(color: Color, duration: float) -> void:
+	modulate = color
+	get_tree().create_timer(duration).timeout.connect(func(): 
+		modulate = Color.WHITE
+	)
+
+# This is called by the StatusEffectComponent for stun effects
+func set_stun_state(is_stunned: bool) -> void:
+	set_process_input(!is_stunned)
+	# You could also pause state machine or add other stun behavior here

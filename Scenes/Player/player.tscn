@@ -1,0 +1,116 @@
+[gd_scene load_steps=19 format=3 uid="uid://dxhony1kmfltv"]
+
+[ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
+[ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
+[ext_resource type="Texture2D" uid="uid://cl6ud7mjq75" path="res://Assets/Player/Chibi-character-template_skin0_part2_by_AxulArt.png" id="2_3smsa"]
+[ext_resource type="PackedScene" uid="uid://du3qd1ihh51o8" path="res://Scripts/Components/health_component.tscn" id="2_fkybt"]
+[ext_resource type="PackedScene" uid="uid://hpt6vaypagal" path="res://Scripts/Components/hitbox_component.tscn" id="3_x3wgy"]
+[ext_resource type="PackedScene" uid="uid://bauly11ivc0e3" path="res://Scripts/Components/hurtbox_component.tscn" id="4_3smsa"]
+[ext_resource type="Script" uid="uid://dlr8hb66x3wl0" path="res://Scripts/Components/state_machine.gd" id="7_3smsa"]
+[ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://StatusEffectComponent.gd" id="8_jlvik"]
+[ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://projectile_emitter.gd" id="9_gk6dx"]
+[ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scripts/Components/Projectile.tscn" id="10_jhyir"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8erm5"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1ek2"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(192, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx1dd"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(224, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0u5uq"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(256, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gymyn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8erm5")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1ek2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tx1dd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0u5uq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tx1dd")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pu2lt"]
+radius = 5.0
+height = 18.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x3wgy"]
+size = Vector2(13.5, 11)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ukyrk"]
+radius = 7.0
+height = 24.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 25
+script = ExtResource("1_x3wgy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_gymyn")
+animation = &"Walk"
+frame_progress = 0.373154
+speed_scale = 0.8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("CapsuleShape2D_pu2lt")
+
+[node name="attack_component" parent="." instance=ExtResource("1_vgqql")]
+base_damage = 5.0
+
+[node name="health_component" parent="." instance=ExtResource("2_fkybt")]
+max_health = 100
+
+[node name="hitbox_component" parent="." node_paths=PackedStringArray("attack_component") instance=ExtResource("3_x3wgy")]
+attack_component = NodePath("../attack_component")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox_component"]
+position = Vector2(-11, 4)
+shape = SubResource("RectangleShape2D_x3wgy")
+
+[node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
+health_component = NodePath("../health_component")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_ukyrk")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("7_3smsa")
+metadata/_custom_type_script = "uid://dlr8hb66x3wl0"
+
+[node name="status_effect_component" type="Node" parent="."]
+script = ExtResource("8_jlvik")
+metadata/_custom_type_script = "uid://dfncltihfaxrq"
+
+[node name="projectile_emitter" type="Node2D" parent="."]
+position = Vector2(0, 9)
+script = ExtResource("9_gk6dx")
+projectile_scene = ExtResource("10_jhyir")
+metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
