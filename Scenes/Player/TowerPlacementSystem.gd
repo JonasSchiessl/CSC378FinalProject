@@ -158,11 +158,20 @@ func attempt_place_tower() -> void:
 	# Create the actual tower
 	var new_tower = tower_scene.instantiate()
 	
-	# Add to the scene tree (to parent of this system, or a dedicated container)
-	get_parent().add_child(new_tower)
+	# CRITICAL: Add tower to the game world, not to the player!
+	# We need to find the root of our game scene
+	var game_root = get_tree().current_scene
 	
-	# Set position
-	new_tower.global_position = grid_to_world(current_grid_position)
+	# Alternative: If you have a specific node for towers, use that instead:
+	# var tower_container = get_node("/root/Game/Towers")
+	# tower_container.add_child(new_tower)
+	
+	game_root.add_child(new_tower)
+	
+	# IMPORTANT: Use global_position to place the tower in world space
+	# This ensures the position is absolute, not relative to any parent
+	var world_position = grid_to_world(current_grid_position)
+	new_tower.global_position = world_position
 	
 	# Mark position as occupied
 	occupied_positions[current_grid_position] = new_tower
@@ -172,7 +181,7 @@ func attempt_place_tower() -> void:
 	if new_tower.has_method("initialize"):
 		new_tower.initialize()
 	
-	print("Tower placed at grid position: ", current_grid_position)
+	print("Tower placed at world position: ", world_position)
 	
 	# You might want to hide preview after placement or keep it for continuous placement
 	# hide_preview()

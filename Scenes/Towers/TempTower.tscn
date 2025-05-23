@@ -10,6 +10,7 @@ size = Vector2(50, 52)
 radius = 92.0217
 
 [node name="TempTower" type="CharacterBody2D"]
+position = Vector2(69, 69)
 collision_layer = 2
 script = ExtResource("1_u0wx6")
 
@@ -33,6 +34,7 @@ offset_left = 7.0
 offset_top = -28.0
 offset_right = 47.0
 offset_bottom = -1.0
+metadata/_edit_use_anchors_ = true
 
 [node name="RangeIndicator" type="Node2D" parent="."]
 
