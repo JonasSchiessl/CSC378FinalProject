@@ -17,6 +17,9 @@ var facing_direction: Vector2 = Vector2.RIGHT # Direction sprite is facing
 var aim_direction: Vector2 = Vector2.RIGHT  # Direction player is aiming (mouse)
 var movement_vector: Vector2 = Vector2.ZERO  # Current input direction
 
+# Projectile Variables
+var current_projectile_index: int = 0
+
 func _ready() -> void:
 	# Create states
 	var idle_state = PlayerIdleState.new(self)
@@ -40,6 +43,16 @@ func _input(event: InputEvent) -> void:
 	# Handle projectile attacks
 	if event.is_action_pressed("fire"):
 		projectile_emitter.fire_projectile(aim_direction)
+	
+	# Handle projectile switching
+	if event.is_action_pressed("switch_projectile"):
+		switch_projectile()
+	
+	# Handle specific projectile selection (1-9 keys)
+	for i in range(9):
+		if event.is_action_pressed("projectile_" + str(i + 1)):
+			select_projectile(i)
+			break
 	
 func _physics_process(delta: float) -> void:
 	# Update movement_vector based on current input state
@@ -121,3 +134,31 @@ func set_effect_tint(color: Color, duration: float) -> void:
 func set_stun_state(is_stunned: bool) -> void:
 	set_process_input(!is_stunned)
 	# You could also pause state machine or add other stun behavior here
+
+# Switch to next available projectile
+func switch_projectile() -> void:
+	if projectile_emitter.projectile_types.size() <= 1:
+		return  # No switching needed if only one or no projectiles
+	
+	current_projectile_index = (current_projectile_index + 1) % projectile_emitter.projectile_types.size()
+	projectile_emitter.set_projectile_type_by_index(current_projectile_index)
+	
+	# Optional: Show UI feedback
+	var projectile_name = projectile_emitter.get_current_projectile_name()
+	print("Switched to: " + projectile_name)
+
+# Select specific projectile by index
+func select_projectile(index: int) -> void:
+	if index < 0 or index >= projectile_emitter.projectile_types.size():
+		return  # Invalid index
+	
+	current_projectile_index = index
+	projectile_emitter.set_projectile_type_by_index(index)
+	
+	# Optional: Show UI feedback
+	var projectile_name = projectile_emitter.get_current_projectile_name()
+	print("Selected: " + projectile_name)
+
+# Fire specific projectile by name
+func fire_projectile_by_name(projectile_name: String) -> void:
+	projectile_emitter.fire_projectile_by_name(projectile_name, aim_direction)

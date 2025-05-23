@@ -1,4 +1,3 @@
-# projectile.gd
 extends Node2D
 class_name Projectile
 
@@ -42,13 +41,16 @@ var targets_hit: Array = []  # Keep track of targets already hit for penetration
 @onready var collision_shape: CollisionShape2D = $HitboxComponent/CollisionShape2D
 @onready var area_effect_shape: CollisionShape2D = $AreaEffectZone/CollisionShape2D if has_node("AreaEffectZone/CollisionShape2D") else null
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var particles: GPUParticles2D = $TrailParticles if has_node("TrailParticles") else null
+@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D if has_node("AudioStreamPlayer2D") else null
 
 func _ready() -> void:
 	# Save start position for range calculation
 	start_position = global_position
 	
 	# Save original scale
-	base_scale = sprite.scale.x
+	if base_scale == 0.0:
+		base_scale = sprite.scale.x
 	
 	# Initialize penetration
 	penetration_remaining = penetration
@@ -67,6 +69,74 @@ func _ready() -> void:
 	# Enable hitbox
 	hitbox_component.active = true
 	hitbox_component.monitoring = true
+
+# Configure this projectile to act as a specific type
+func configure_as_type(projectile_type: ProjectileType) -> void:
+	if not projectile_type:
+		return
+	
+	# Ensure sprite is initialized
+	if not sprite:
+		sprite = $AnimatedSprite2D
+		if not sprite:
+			push_error("AnimatedSprite2D not found in projectile scene!")
+			return
+	
+	# Apply visual configuration
+	if projectile_type.sprite_frames:
+		sprite.sprite_frames = projectile_type.sprite_frames
+		sprite.play("default")
+	
+	if projectile_type.projectile_color != Color.WHITE:
+		sprite.modulate = projectile_type.projectile_color
+	
+	if particles and projectile_type.trail_color != Color.WHITE:
+		if particles.process_material:
+			particles.process_material.color = projectile_type.trail_color
+	
+	if projectile_type.particle_texture and particles:
+		particles.texture = projectile_type.particle_texture
+	
+	# Apply audio configuration
+	if audio_player and projectile_type.launch_sound:
+		audio_player.stream = projectile_type.launch_sound
+		audio_player.play()
+
+# Set up the projectile with attack data and settings
+func setup(new_attack: Attack, new_direction: Vector2, 
+		   new_speed: float = speed, new_max_range: float = max_range, 
+		   new_arc_height: float = arc_height, new_penetration: int = penetration,
+		   new_area_effect: bool = area_effect, new_area_radius: float = area_effect_radius,
+		   new_lingering: bool = create_lingering_effect, new_lingering_type: String = lingering_effect_type,
+		   new_lingering_radius: float = lingering_effect_radius, new_lingering_duration: float = lingering_effect_duration,
+		   new_lingering_damage: float = lingering_effect_damage,
+		   projectile_type: ProjectileType = null) -> void:
+	attack = new_attack
+	direction = new_direction.normalized()
+	speed = new_speed
+	max_range = new_max_range
+	arc_height = new_arc_height
+	penetration = new_penetration
+	penetration_remaining = penetration
+	area_effect = new_area_effect
+	area_effect_radius = new_area_radius
+	
+	# Lingering effect parameters
+	create_lingering_effect = new_lingering
+	lingering_effect_type = new_lingering_type
+	lingering_effect_radius = new_lingering_radius
+	lingering_effect_duration = new_lingering_duration
+	lingering_effect_damage = new_lingering_damage
+	
+	# Configure visual/audio based on projectile type
+	if projectile_type:
+		configure_as_type(projectile_type)
+	
+	# Update area effect shape if needed
+	if area_effect and area_effect_shape != null:
+		var circle_shape = CircleShape2D.new()
+		circle_shape.radius = area_effect_radius
+		area_effect_shape.shape = circle_shape
 
 func _physics_process(delta: float) -> void:
 	# Update timer
@@ -101,45 +171,12 @@ func _physics_process(delta: float) -> void:
 		
 		# Also scale the collision shape if it exists
 		if collision_shape and collision_shape.shape:
-			# Note: This assumes the shape's original size is correctly set
-			# You might need to adjust this based on your collision shape type
 			if collision_shape.shape is CircleShape2D:
 				var original_radius = collision_shape.shape.radius / scale_factor
 				collision_shape.shape.radius = original_radius * scale_factor
 			elif collision_shape.shape is RectangleShape2D:
 				var original_extents = collision_shape.shape.extents / scale_factor
 				collision_shape.shape.extents = original_extents * scale_factor
-
-# Set up the projectile with attack data and settings
-func setup(new_attack: Attack, new_direction: Vector2, 
-		   new_speed: float = speed, new_max_range: float = max_range, 
-		   new_arc_height: float = arc_height, new_penetration: int = penetration,
-		   new_area_effect: bool = area_effect, new_area_radius: float = area_effect_radius,
-		   new_lingering: bool = create_lingering_effect, new_lingering_type: String = lingering_effect_type,
-		   new_lingering_radius: float = lingering_effect_radius, new_lingering_duration: float = lingering_effect_duration,
-		   new_lingering_damage: float = lingering_effect_damage) -> void:
-	attack = new_attack
-	direction = new_direction.normalized()
-	speed = new_speed
-	max_range = new_max_range
-	arc_height = new_arc_height
-	penetration = new_penetration
-	penetration_remaining = penetration
-	area_effect = new_area_effect
-	area_effect_radius = new_area_radius
-	
-	# Lingering effect parameters
-	create_lingering_effect = new_lingering
-	lingering_effect_type = new_lingering_type
-	lingering_effect_radius = new_lingering_radius
-	lingering_effect_duration = new_lingering_duration
-	lingering_effect_damage = new_lingering_damage
-	
-	# Update area effect shape if needed
-	if area_effect and area_effect_shape != null:
-		var circle_shape = CircleShape2D.new()
-		circle_shape.radius = area_effect_radius
-		area_effect_shape.shape = circle_shape
 
 # Called when hitting a hurtbox
 func _on_hitbox_area_entered(area: Area2D) -> void:
