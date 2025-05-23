@@ -30,16 +30,19 @@ func _ready() -> void:
 	state_machine.initialize("idle")
 
 func _input(event: InputEvent) -> void:
-	# Handle input events
+	# Handle movement input always
 	handle_movement_input(event)
 	
-	# Handle mouse input for aiming
-	if event is InputEventMouseMotion:
-		update_aim_direction()
-	
-	# Handle projectile attacks
-	if event.is_action_pressed("fire"):
-		projectile_emitter.fire_projectile(aim_direction)
+	# Only handle combat inputs during fight phase
+	if GameManager.instance and GameManager.instance.is_fight_phase():
+		# Handle mouse input for aiming
+		if event is InputEventMouseMotion:
+			update_aim_direction()
+		
+		# Handle projectile attacks
+		if event.is_action_pressed("fire"):
+			projectile_emitter.fire_projectile(aim_direction)
+
 	
 func _physics_process(delta: float) -> void:
 	# Update movement_vector based on current input state
