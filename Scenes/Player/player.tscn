@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dxhony1kmfltv"]
+[gd_scene load_steps=21 format=3 uid="uid://dxhony1kmfltv"]
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="8_jlvik"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="9_gk6dx"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/FireballProjectile.tscn" id="10_jhyir"]
+[ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scenes/Player/TowerPlacementSystem.gd" id="11_74mp2"]
+[ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8erm5"]
 atlas = ExtResource("2_3smsa")
@@ -68,7 +70,7 @@ height = 24.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 25
+collision_mask = 27
 script = ExtResource("1_x3wgy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -114,3 +116,8 @@ position = Vector2(0, 9)
 script = ExtResource("9_gk6dx")
 projectile_scene = ExtResource("10_jhyir")
 metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
+
+[node name="TowerPlacementSystem" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("11_74mp2")
+player = NodePath("..")
+tower_scene = ExtResource("12_oikmp")
