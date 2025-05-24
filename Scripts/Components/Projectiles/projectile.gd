@@ -44,6 +44,46 @@ var targets_hit: Array = []  # Keep track of targets already hit for penetration
 @onready var particles: GPUParticles2D = $TrailParticles if has_node("TrailParticles") else null
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D if has_node("AudioStreamPlayer2D") else null
 
+# Set up the projectile with attack data and settings
+func setup(new_attack: Attack, new_direction: Vector2, 
+		   new_speed: float = speed, new_max_range: float = max_range, 
+		   new_arc_height: float = arc_height, new_penetration: int = penetration,
+		   new_area_effect: bool = area_effect, new_area_radius: float = area_effect_radius,
+		   new_lingering: bool = create_lingering_effect, new_lingering_type: String = lingering_effect_type,
+		   new_lingering_radius: float = lingering_effect_radius, new_lingering_duration: float = lingering_effect_duration,
+		   new_lingering_damage: float = lingering_effect_damage,
+		   projectile_type: ProjectileType = null) -> void:
+	
+	attack = new_attack
+	direction = new_direction.normalized()
+	speed = new_speed
+	max_range = new_max_range
+	arc_height = new_arc_height
+	penetration = new_penetration
+	penetration_remaining = penetration
+	area_effect = new_area_effect
+	area_effect_radius = new_area_radius
+	
+	# Lingering effect parameters
+	create_lingering_effect = new_lingering
+	lingering_effect_type = new_lingering_type
+	lingering_effect_radius = new_lingering_radius
+	lingering_effect_duration = new_lingering_duration
+	lingering_effect_damage = new_lingering_damage
+	
+	# Configure visual/audio based on projectile type
+	if projectile_type:
+		configure_as_type(projectile_type)
+	
+	# Setup particles AFTER configuring type
+	setup_particles()
+	
+	# Update area effect shape if needed
+	if area_effect and area_effect_shape != null:
+		var circle_shape = CircleShape2D.new()
+		circle_shape.radius = area_effect_radius
+		area_effect_shape.shape = circle_shape
+
 func _ready() -> void:
 	# Save start position for range calculation
 	start_position = global_position
@@ -69,74 +109,6 @@ func _ready() -> void:
 	# Enable hitbox
 	hitbox_component.active = true
 	hitbox_component.monitoring = true
-
-# Configure this projectile to act as a specific type
-func configure_as_type(projectile_type: ProjectileType) -> void:
-	if not projectile_type:
-		return
-	
-	# Ensure sprite is initialized
-	if not sprite:
-		sprite = $AnimatedSprite2D
-		if not sprite:
-			push_error("AnimatedSprite2D not found in projectile scene!")
-			return
-	
-	# Apply visual configuration
-	if projectile_type.sprite_frames:
-		sprite.sprite_frames = projectile_type.sprite_frames
-		sprite.play("default")
-	
-	if projectile_type.projectile_color != Color.WHITE:
-		sprite.modulate = projectile_type.projectile_color
-	
-	if particles and projectile_type.trail_color != Color.WHITE:
-		if particles.process_material:
-			particles.process_material.color = projectile_type.trail_color
-	
-	if projectile_type.particle_texture and particles:
-		particles.texture = projectile_type.particle_texture
-	
-	# Apply audio configuration
-	if audio_player and projectile_type.launch_sound:
-		audio_player.stream = projectile_type.launch_sound
-		audio_player.play()
-
-# Set up the projectile with attack data and settings
-func setup(new_attack: Attack, new_direction: Vector2, 
-		   new_speed: float = speed, new_max_range: float = max_range, 
-		   new_arc_height: float = arc_height, new_penetration: int = penetration,
-		   new_area_effect: bool = area_effect, new_area_radius: float = area_effect_radius,
-		   new_lingering: bool = create_lingering_effect, new_lingering_type: String = lingering_effect_type,
-		   new_lingering_radius: float = lingering_effect_radius, new_lingering_duration: float = lingering_effect_duration,
-		   new_lingering_damage: float = lingering_effect_damage,
-		   projectile_type: ProjectileType = null) -> void:
-	attack = new_attack
-	direction = new_direction.normalized()
-	speed = new_speed
-	max_range = new_max_range
-	arc_height = new_arc_height
-	penetration = new_penetration
-	penetration_remaining = penetration
-	area_effect = new_area_effect
-	area_effect_radius = new_area_radius
-	
-	# Lingering effect parameters
-	create_lingering_effect = new_lingering
-	lingering_effect_type = new_lingering_type
-	lingering_effect_radius = new_lingering_radius
-	lingering_effect_duration = new_lingering_duration
-	lingering_effect_damage = new_lingering_damage
-	
-	# Configure visual/audio based on projectile type
-	if projectile_type:
-		configure_as_type(projectile_type)
-	
-	# Update area effect shape if needed
-	if area_effect and area_effect_shape != null:
-		var circle_shape = CircleShape2D.new()
-		circle_shape.radius = area_effect_radius
-		area_effect_shape.shape = circle_shape
 
 func _physics_process(delta: float) -> void:
 	# Update timer
@@ -178,6 +150,84 @@ func _physics_process(delta: float) -> void:
 				var original_extents = collision_shape.shape.extents / scale_factor
 				collision_shape.shape.extents = original_extents * scale_factor
 
+# New function to properly setup particles
+func setup_particles() -> void:
+	if not particles:
+		return
+	
+	# Update particle direction based on projectile movement
+	if particles.process_material and particles.process_material is ParticleProcessMaterial:
+		var material = particles.process_material as ParticleProcessMaterial
+		# Particles should emit backwards from projectile direction
+		material.direction = Vector3(-direction.x, -direction.y, 0)
+		# Adjust initial velocity based on projectile speed
+		material.initial_velocity_min = speed * 0.1
+		material.initial_velocity_max = speed * 0.3
+	
+	# Start emitting particles
+	particles.emitting = true
+
+# Configure this projectile to act as a specific type
+func configure_as_type(projectile_type: ProjectileType) -> void:
+	if not projectile_type:
+		return
+	
+	# Ensure sprite is initialized
+	if not sprite:
+		sprite = $AnimatedSprite2D
+		if not sprite:
+			push_error("AnimatedSprite2D not found in projectile scene!")
+			return
+	
+	# Apply visual configuration
+	if projectile_type.sprite_frames:
+		sprite.sprite_frames = projectile_type.sprite_frames
+		sprite.play("default")
+	
+	if projectile_type.projectile_color != Color.WHITE:
+		sprite.modulate = projectile_type.projectile_color
+	
+	# Apply particle configuration
+	if particles:
+		# Use the projectile type's specific particle material if provided
+		if projectile_type.particle_material:
+			particles.process_material = projectile_type.particle_material
+		else:
+			# Create a default particle material if none provided
+			var default_material = ParticleProcessMaterial.new()
+			default_material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_POINT
+			default_material.spread = 15.0
+			default_material.initial_velocity_min = 50.0
+			default_material.initial_velocity_max = 100.0
+			default_material.scale_min = 0.5
+			default_material.scale_max = 1.0
+			# Use projectile color for particles if no custom material
+			default_material.color = projectile_type.projectile_color
+			particles.process_material = default_material
+		
+		# Set particle texture if provided
+		if projectile_type.particle_texture:
+			particles.texture = projectile_type.particle_texture
+	
+	# Apply audio configuration
+	if audio_player and projectile_type.launch_sound:
+		audio_player.stream = projectile_type.launch_sound
+		audio_player.play()
+
+# Function to stop particles gracefully
+func stop_particles() -> void:
+	if particles:
+		particles.emitting = false
+		# Optional: Let existing particles finish their lifetime
+		var timer = get_tree().create_timer(particles.lifetime)
+		timer.timeout.connect(func(): 
+			if is_instance_valid(self):
+				queue_free()
+		)
+	else:
+		# If no particles, just destroy immediately
+		queue_free()
+
 # Called when hitting a hurtbox
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area is HurtboxComponent and not targets_hit.has(area):
@@ -194,7 +244,8 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 				trigger_area_effect()
 			elif create_lingering_effect:
 				spawn_lingering_effect()
-			queue_free()
+			else:
+				stop_particles()
 
 # Called when hitting a physics body (like walls)
 func _on_hitbox_body_entered(body: Node2D) -> void:
@@ -203,7 +254,8 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 		trigger_area_effect()
 	elif create_lingering_effect:
 		spawn_lingering_effect()
-	queue_free()
+	else:
+		stop_particles()
 
 # Trigger area effect explosion
 func trigger_area_effect() -> void:
@@ -246,9 +298,8 @@ func trigger_area_effect() -> void:
 	hitbox_component.monitorable = false
 	sprite.visible = false
 	
-	# Create timer to destroy after effects finish
-	var timer = get_tree().create_timer(0.5)  # Adjust as needed
-	timer.timeout.connect(queue_free)
+	# Stop particles and handle cleanup
+	stop_particles()
 
 # Spawn a lingering effect at the current position
 func spawn_lingering_effect() -> void:
@@ -256,16 +307,42 @@ func spawn_lingering_effect() -> void:
 		return
 		
 	var effect = lingering_effect_scene.instantiate()
-	get_tree().current_scene.add_child(effect)
-	effect.global_position = global_position
+	
+	# Find the best parent for the lingering effect
+	var target_parent = get_tree().current_scene
+	
+	# If we're testing in the player scene, find a better parent
+	# Look for a Node2D that isn't the player or projectile emitter
+	if target_parent.name == "Player" or target_parent is CharacterBody2D:
+		# Try to find the world/level node, or create one if needed
+		var world_node = target_parent.get_parent()
+		if world_node and world_node != get_tree().root:
+			target_parent = world_node
+		else:
+			# Last resort: add to scene tree root
+			target_parent = get_tree().root
+	
+	# Add to the chosen parent
+	target_parent.add_child(effect)
+	
+	# CRITICAL: Set the global position AFTER adding to scene
+	# Store position before adding to avoid any transform issues
+	var spawn_position = global_position
+	effect.global_position = spawn_position
+	
+	# Setup the effect with proper parameters
 	effect.setup(attack.attack_source, lingering_effect_radius, 
 				lingering_effect_duration, lingering_effect_damage, 
 				lingering_effect_type)
-
+	
+	# Stop particles after spawning lingering effect
+	stop_particles()
+	
 # Called when projectile expires (range/lifetime)
 func on_projectile_expire() -> void:
 	if area_effect:
 		trigger_area_effect()
 	elif create_lingering_effect:
 		spawn_lingering_effect()
-	queue_free()
+	else:
+		stop_particles()

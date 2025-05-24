@@ -10,7 +10,7 @@ class_name ProjectileType
 @export_category("Visual Configuration")
 @export var sprite_frames: SpriteFrames
 @export var projectile_color: Color = Color.WHITE
-@export var trail_color: Color = Color.WHITE
+@export var particle_material: ParticleProcessMaterial
 @export var particle_texture: Texture2D
 
 # Audio configuration

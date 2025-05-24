@@ -94,7 +94,14 @@ func fire_projectile_advanced(direction: Vector2, speed: float, damage: float,
 			var effect_data = projectile_type_to_use.default_effects[effect_name]
 			attack.apply_effect(effect_name, effect_data.strength, effect_data.duration)
 	
-	# Set up projectile with all parameters
+	# IMPORTANT: Add to scene FIRST, then set position
+	get_tree().current_scene.add_child(projectile)
+	
+	# Set initial position AFTER adding to scene tree
+	# Use global_position to ensure correct world positioning
+	projectile.global_position = global_position
+	
+	# Set up projectile with all parameters AFTER positioning
 	projectile.setup(attack, direction, speed, proj_range, arc_height, 
 					penetration, area_effect, area_radius,
 					lingering, lingering_type, lingering_radius,
@@ -103,12 +110,6 @@ func fire_projectile_advanced(direction: Vector2, speed: float, damage: float,
 	# Set lingering effect scene if needed
 	if lingering and projectile.create_lingering_effect and projectile_type_to_use and projectile_type_to_use.lingering_effect_scene:
 		projectile.lingering_effect_scene = projectile_type_to_use.lingering_effect_scene
-	
-	# Add to scene
-	get_tree().current_scene.add_child(projectile)
-	
-	# Set initial position at entity
-	projectile.global_position = global_position
 
 # Change current projectile type by name
 func set_projectile_type(projectile_name: String) -> void:

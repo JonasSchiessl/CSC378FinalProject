@@ -29,3 +29,7 @@ shape = SubResource("CircleShape2D_xn66u")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaEffectZone"]
 shape = SubResource("CircleShape2D_bowbh")
 disabled = true
+
+[node name="TrailParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 50

@@ -44,10 +44,6 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("fire"):
 		projectile_emitter.fire_projectile(aim_direction)
 	
-	# Handle projectile switching
-	if event.is_action_pressed("switch_projectile"):
-		switch_projectile()
-	
 	# Handle specific projectile selection (1-9 keys)
 	for i in range(9):
 		if event.is_action_pressed("projectile_" + str(i + 1)):
