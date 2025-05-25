@@ -42,7 +42,11 @@ func _input(event: InputEvent) -> void:
 	
 	# Handle projectile attacks
 	if event.is_action_pressed("fire"):
-		projectile_emitter.fire_projectile(aim_direction)
+		var success = projectile_emitter.fire_projectile(aim_direction)
+		if not success:
+			# Optional: Show feedback that weapon is on cooldown
+			var remaining_cooldown = projectile_emitter.get_current_cooldown_remaining()
+			print("Weapon on cooldown! %.1f seconds remaining" % remaining_cooldown)
 	
 	# Handle specific projectile selection (1-9 keys)
 	for i in range(9):

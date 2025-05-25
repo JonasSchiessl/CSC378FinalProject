@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://4ydf4y6sgq8n"]
 
-[ext_resource type="Script" uid="uid://h7mwt32so6i0" path="res://Scripts/Components/Projectiles/lingering_effect.gd" id="1_uv8kl"]
-[ext_resource type="Material" uid="uid://b8kqh5njmeg1m" path="res://Scenes/Projectiles/Particles/Poison.tres" id="2_rjetu"]
+[ext_resource type="Script" uid="uid://h7mwt32so6i0" path="res://Scripts/Components/Projectiles/lingering_effect.gd" id="1_jnw74"]
+[ext_resource type="Material" uid="uid://b8kqh5njmeg1m" path="res://Scenes/Projectiles/Particles/Poison.tres" id="2_tvd67"]
 
 [node name="LingeringEffect" type="Node2D"]
-script = ExtResource("1_uv8kl")
+script = ExtResource("1_jnw74")
 effect_duration = 3.0
 effect_type = "poison"
 effect_color = Color(0.350327, 0.773968, 0, 0.7)
@@ -21,4 +21,4 @@ amount = 100
 lifetime = 0.55
 fixed_fps = 10
 trail_lifetime = 1.0
-process_material = ExtResource("2_rjetu")
+process_material = ExtResource("2_tvd67")
