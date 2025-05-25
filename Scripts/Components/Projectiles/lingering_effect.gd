@@ -24,7 +24,15 @@ var affected_entities: Dictionary = {}  # Track which entities are in the area
 @onready var particles: GPUParticles2D = $EffectParticles
 @onready var light: PointLight2D = $PointLight2D if has_node("PointLight2D") else null
 
+
 func _ready() -> void:
+	# Always set as top level to avoid following parent transforms
+	set_as_top_level(true)
+	
+	# Ensure we're using global coordinates
+	# This prevents the effect from inheriting any parent transformations
+	var stored_global_pos = global_position
+	
 	# Set up collision shape
 	var circle_shape = CircleShape2D.new()
 	circle_shape.radius = effect_radius
@@ -36,6 +44,14 @@ func _ready() -> void:
 	# Connect area signals
 	effect_area.area_entered.connect(_on_area_entered)
 	effect_area.area_exited.connect(_on_area_exited)
+	
+	# Restore global position after setup (in case it got modified)
+	global_position = stored_global_pos
+	
+	if particles:
+		particles.z_index = -1
+	# Debug print to verify position
+	print("Lingering effect spaw")
 
 func _process(delta: float) -> void:
 	# Update lifetime timer
