@@ -16,6 +16,8 @@
 [ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/projectiles/Fireball.tres" id="11_oikmp"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
+[ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scenes/Player/TowerPlacementSystem.gd" id="11_74mp2"]
+[ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8erm5"]
 atlas = ExtResource("2_3smsa")
@@ -131,7 +133,7 @@ metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 25
+collision_mask = 27
 script = ExtResource("1_x3wgy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -180,3 +182,8 @@ universal_projectile_scene = ExtResource("10_jhyir")
 metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="TowerPlacementSystem" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("11_74mp2")
+player = NodePath("..")
+tower_scene = ExtResource("12_oikmp")

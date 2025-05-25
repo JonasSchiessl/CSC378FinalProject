@@ -33,26 +33,30 @@ func _ready() -> void:
 	state_machine.initialize("idle")
 
 func _input(event: InputEvent) -> void:
-	# Handle input events
+	# Handle movement input always
 	handle_movement_input(event)
 	
-	# Handle mouse input for aiming
-	if event is InputEventMouseMotion:
-		update_aim_direction()
-	
-	# Handle projectile attacks
-	if event.is_action_pressed("fire"):
-		var success = projectile_emitter.fire_projectile(aim_direction)
-		if not success:
-			# Optional: Show feedback that weapon is on cooldown
-			var remaining_cooldown = projectile_emitter.get_current_cooldown_remaining()
-			print("Weapon on cooldown! %.1f seconds remaining" % remaining_cooldown)
-	
-	# Handle specific projectile selection (1-9 keys)
-	for i in range(9):
-		if event.is_action_pressed("projectile_" + str(i + 1)):
-			select_projectile(i)
-			break
+	# Only handle combat inputs during fight phase
+	if GameManager.instance and GameManager.instance.is_fight_phase():
+		# Handle mouse input for aiming
+		if event is InputEventMouseMotion:
+			update_aim_direction()
+		
+		# Handle projectile attacks
+		if event.is_action_pressed("fire"):
+			var success = projectile_emitter.fire_projectile(aim_direction)
+			if not success:
+				# Optional: Show feedback that weapon is on cooldown
+				var remaining_cooldown = projectile_emitter.get_current_cooldown_remaining()
+				print("Weapon on cooldown! %.1f seconds remaining" % remaining_cooldown)
+		
+		# Handle specific projectile selection (1-9 keys)
+		for i in range(9):
+			if event.is_action_pressed("projectile_" + str(i + 1)):
+				select_projectile(i)
+				break
+
+
 	
 func _physics_process(delta: float) -> void:
 	# Update movement_vector based on current input state
