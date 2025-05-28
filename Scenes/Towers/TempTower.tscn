@@ -1,15 +1,14 @@
 [gd_scene load_steps=11 format=3 uid="uid://wael2dq1ktnn"]
 
-[ext_resource type="Texture2D" uid="uid://dtqtxm13ptsad" path="res://Assets/Tower/tempTesla.jpg" id="1_butbb"]
 [ext_resource type="Script" uid="uid://b3eo8alao27n6" path="res://Scenes/Towers/temp_tower.gd" id="1_u0wx6"]
+[ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="2_gk5pf"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_t2g34"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="4_dbmra"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_gk5pf"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="5_w37wc"]
-[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/Projectiles/Fireball.tres" id="6_3jyt2"]
+[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Scenes/Projectiles/Fireball.tres" id="6_3jyt2"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_butbb"]
-size = Vector2(50, 55)
+[sub_resource type="CircleShape2D" id="CircleShape2D_w37wc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_butbb"]
 radius = 188.011
@@ -43,32 +42,30 @@ required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [node name="TempTower" type="CharacterBody2D"]
+z_index = 1
 collision_layer = 16
 collision_mask = 28
 script = ExtResource("1_u0wx6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(25.75, 25.75)
-scale = Vector2(0.118991, 0.118991)
-texture = ExtResource("1_butbb")
+position = Vector2(0, -16)
+texture = ExtResource("2_gk5pf")
 
 [node name="PhysicalCollision" type="CollisionShape2D" parent="."]
-position = Vector2(25.5001, 27.5)
-shape = SubResource("RectangleShape2D_butbb")
+shape = SubResource("CircleShape2D_w37wc")
 
 [node name="AttackRange" type="Area2D" parent="."]
 collision_layer = 128
 collision_mask = 8
 
 [node name="AttackCollision" type="CollisionShape2D" parent="AttackRange"]
-position = Vector2(29, 28)
 shape = SubResource("CircleShape2D_butbb")
 
 [node name="HealthBar" type="ProgressBar" parent="."]
-offset_left = 7.0
-offset_top = -28.0
-offset_right = 47.0
-offset_bottom = -1.0
+offset_left = -20.0
+offset_top = -75.0
+offset_right = 20.0
+offset_bottom = -48.0
 metadata/_edit_use_anchors_ = true
 
 [node name="RangeIndicator" type="Node2D" parent="."]
@@ -76,7 +73,6 @@ metadata/_edit_use_anchors_ = true
 [node name="RangeCircle" type="Sprite2D" parent="RangeIndicator"]
 
 [node name="projectile_emitter" type="Node2D" parent="."]
-position = Vector2(29, 28)
 script = ExtResource("3_t2g34")
 projectile_types = Array[ExtResource("4_gk5pf")]([SubResource("Resource_8xilq")])
 universal_projectile_scene = ExtResource("4_dbmra")

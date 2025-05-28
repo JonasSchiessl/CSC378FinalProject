@@ -1,4 +1,4 @@
-extends StaticBody2D
+extends CharacterBody2D
 
 @export var speed = 1
 
@@ -42,6 +42,7 @@ func _physics_process(delta: float) -> void:
 		$Sprite.flip_h = true
 		$AnimationPlayer.play("run")
 	global_position += direction * speed
+	move_and_slide()
 
 func fire_projectile():
 	var direction = (player.global_position - global_position).normalized()

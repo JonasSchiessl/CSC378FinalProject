@@ -44,8 +44,8 @@ func _ready() -> void:
 	
 	# Set up enemy detection signals
 	if attack_range_area:
-		attack_range_area.area_entered.connect(_on_enemy_entered_range)
-		attack_range_area.area_exited.connect(_on_enemy_left_range)
+		attack_range_area.body_entered.connect(_on_enemy_entered_range)
+		attack_range_area.body_exited.connect(_on_enemy_left_range)
 	else:
 		push_error("Tower: No AttackRange Area2D found! Cannot detect enemies.")
 	
