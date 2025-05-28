@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bev5jtd7m3s1h"
-path="res://.godot/imported/acidball-Sheet.png-90ad295e19ec1b4de6c7db1d7f9636c5.ctex"
+uid="uid://csw1vw0pui2hm"
+path="res://.godot/imported/turret-sprites.png-52e625acaaef2e0544a22beb066de142.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Projectiles/acidball-Sheet.png"
-dest_files=["res://.godot/imported/acidball-Sheet.png-90ad295e19ec1b4de6c7db1d7f9636c5.ctex"]
+source_file="res://Assets/Tower/turret-sprites.png"
+dest_files=["res://.godot/imported/turret-sprites.png-52e625acaaef2e0544a22beb066de142.ctex"]
 
 [params]
 

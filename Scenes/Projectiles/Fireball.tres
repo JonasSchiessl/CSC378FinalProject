@@ -1,0 +1,60 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://57vovnaucy5f"]
+
+[ext_resource type="Texture2D" uid="uid://cb5f21a7dln8v" path="res://Assets/Projectiles/fireball-Sheet.png" id="1_84ujm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fva8"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eh6cd"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v21ec"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ckst1"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_acqu8"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijqap"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qb0s7"]
+atlas = ExtResource("1_84ujm")
+region = Rect2(192, 0, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fva8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eh6cd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v21ec")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ckst1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_acqu8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijqap")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qb0s7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
