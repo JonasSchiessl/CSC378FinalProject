@@ -102,7 +102,7 @@ cooldown = 1.0
 required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
-[sub_resource type="Resource" id="Resource_7g0yx"]
+[sub_resource type="Resource" id="Resource_hnuln"]
 script = ExtResource("10_74mp2")
 name = "Poison"
 description = ""
@@ -180,7 +180,7 @@ metadata/_custom_type_script = "uid://dfncltihfaxrq"
 [node name="projectile_emitter" type="Node2D" parent="."]
 position = Vector2(0, 9)
 script = ExtResource("9_gk6dx")
-projectile_types = Array[ExtResource("10_74mp2")]([SubResource("Resource_06tpx"), SubResource("Resource_7g0yx")])
+projectile_types = Array[ExtResource("10_74mp2")]([SubResource("Resource_06tpx"), SubResource("Resource_hnuln")])
 universal_projectile_scene = ExtResource("10_jhyir")
 metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 

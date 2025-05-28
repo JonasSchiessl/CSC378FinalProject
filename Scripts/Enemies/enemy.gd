@@ -13,6 +13,16 @@ func _ready() -> void:
 	elif get_parent().get_parent().get_node_or_null("Player"):
 		player = get_parent().get_parent().get_node_or_null("Player")
 	
+	#Miguel-added code for enemy detection for shooting at with towers
+	# Debug collision layers
+	add_to_group("enemies")
+	print("=== ENEMY COLLISION DEBUG ===")
+	print("Enemy collision layer: ", collision_layer)
+	print("Enemy collision mask: ", collision_mask)
+	print("Enemy is in enemies group: ", is_in_group("enemies"))
+	print("=============================")
+	
+	
 	# Create projectile_timer, which fires projectiles at the player on timeout
 	var projectile_timer : Timer = Timer.new()
 	add_child(projectile_timer)

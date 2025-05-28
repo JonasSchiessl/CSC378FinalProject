@@ -127,6 +127,8 @@ cancelPlacement={
 2d_physics/layer_5="Building"
 2d_physics/layer_6="P-Projectiles"
 2d_physics/layer_7="E-Projectiles"
+2d_physics/layer_8="TowerDetect"
+2d_physics/layer_9="Layer 9"
 
 [rendering]
 

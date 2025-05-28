@@ -12,7 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://bauly11ivc0e3" path="res://Scripts/Components/hurtbox_component.tscn" id="10_3a2bb"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s7bn3"]
-height = 46.0
+radius = 12.0
+height = 54.0
 
 [sub_resource type="Animation" id="Animation_k4v85"]
 resource_name = "idle"
@@ -88,14 +89,13 @@ height = 58.0
 
 [node name="StaticBody2D" type="StaticBody2D"]
 collision_layer = 8
-collision_mask = 24
+collision_mask = 60
 script = ExtResource("1_2nxwx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_s7bn3")
-disabled = true
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_tt7e2")
@@ -110,7 +110,7 @@ libraries = {
 }
 
 [node name="projectile_emitter" type="Node2D" parent="."]
-position = Vector2(0, -8)
+position = Vector2(0, -7)
 script = ExtResource("2_rvmyp")
 projectile_types = Array[ExtResource("3_2nxwx")]([SubResource("Resource_7g0yx")])
 universal_projectile_scene = ExtResource("7_73x2u")
@@ -123,7 +123,7 @@ max_health = 10
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("10_3a2bb")]
 collision_layer = 8
-collision_mask = 32
+collision_mask = 160
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]

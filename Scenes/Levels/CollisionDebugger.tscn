@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3kvf15untun8"]
+
+[ext_resource type="Script" uid="uid://3nymg5fs5hcn" path="res://Scenes/Levels/collision_debugger.gd" id="1_mlc5l"]
+
+[node name="CollisionDebugger" type="Node2D"]
+script = ExtResource("1_mlc5l")
