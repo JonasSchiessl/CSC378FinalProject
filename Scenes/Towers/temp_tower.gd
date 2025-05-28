@@ -1,5 +1,5 @@
-extends CharacterBody2D  
-class_name TempTower
+extends CharacterBody2D  # Changed from Node2D to support physics
+class_name Tower
 
 # Tower properties
 @export var attack_range: float = 200.0
@@ -47,6 +47,8 @@ func _ready() -> void:
 	if health_bar:
 		health_bar.max_value = max_health
 		health_bar.value = current_health
+		# Hide health bar initially (only show when damaged)
+		health_bar.visible = false
 
 func _physics_process(delta: float) -> void:
 	# Only process combat during fight phase and when not in preview
@@ -217,6 +219,8 @@ func take_damage(damage: float) -> void:
 	# Update health bar
 	if health_bar:
 		health_bar.value = current_health
+		# Show health bar when damaged
+		health_bar.visible = true
 	
 	# Emit signal for other systems to react
 	health_changed.emit(current_health, max_health)
@@ -247,7 +251,7 @@ func destroy() -> void:
 	# Emit destruction signal
 	tower_destroyed.emit()
 	
-	# Play destruction effects (you can add particles, sounds, etc.)
+	# Future: play destruction effects (you can add particles, sounds, etc.)
 	# For now, let's do a simple fade out
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
@@ -257,11 +261,27 @@ func destroy() -> void:
 	if collision_shape:
 		collision_shape.disabled = true
 
-# Check if this tower can be attacked (useful for enemy AI)
+# Future: check if this tower can be attacked (useful for enemy AI)
 func can_be_attacked() -> bool:
 	return not is_preview_mode and not is_destroyed and current_health > 0
 
-# Optional: Method to upgrade the tower
+# Future: heal the tower 
+func heal(amount: float) -> void:
+	if is_destroyed:
+		return
+	
+	current_health = min(current_health + amount, max_health)
+	
+	# Update health bar
+	if health_bar:
+		health_bar.value = current_health
+		# Hide health bar when fully healed
+		if current_health >= max_health:
+			health_bar.visible = false
+	
+	health_changed.emit(current_health, max_health)
+
+# Future: method to upgrade tower
 func upgrade() -> void:
 	attack_damage *= 1.5
 	attack_range *= 1.2
@@ -273,6 +293,8 @@ func upgrade() -> void:
 	if health_bar:
 		health_bar.max_value = max_health
 		health_bar.value = current_health
+		# Hide health bar when at full health
+		health_bar.visible = false
 	
 	# Update visuals to show upgrade
 	if sprite:

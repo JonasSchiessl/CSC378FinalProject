@@ -12,9 +12,9 @@
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="10_74mp2"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="10_jhyir"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="11_06tpx"]
-[ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scenes/Player/TowerPlacementSystem.gd" id="11_74mp2"]
+[ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scripts/Player/TowerPlacementSystem.gd" id="11_74mp2"]
 [ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="11_dey5f"]
-[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/Projectiles/Fireball.tres" id="11_oikmp"]
+[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/projectiles/Fireball.tres" id="11_oikmp"]
 [ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
@@ -64,8 +64,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pu2lt"]
-radius = 5.0
-height = 18.0
+radius = 9.0
+height = 28.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x3wgy"]
 size = Vector2(13.5, 11)
@@ -143,16 +143,18 @@ frame_progress = 0.373154
 speed_scale = 0.8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 5)
+position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_pu2lt")
 
 [node name="attack_component" parent="." instance=ExtResource("1_vgqql")]
 base_damage = 5.0
 
 [node name="health_component" parent="." instance=ExtResource("2_fkybt")]
+visible = false
 max_health = 100
 
 [node name="hitbox_component" parent="." node_paths=PackedStringArray("attack_component") instance=ExtResource("3_x3wgy")]
+visible = false
 attack_component = NodePath("../attack_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox_component"]
@@ -160,6 +162,7 @@ position = Vector2(-11, 4)
 shape = SubResource("RectangleShape2D_x3wgy")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
+visible = false
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
@@ -187,3 +190,4 @@ metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 script = ExtResource("11_74mp2")
 player = NodePath("..")
 tower_scene = ExtResource("12_oikmp")
+grid_size = 50.0
