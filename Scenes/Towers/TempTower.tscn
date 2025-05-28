@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="4_dbmra"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_gk5pf"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="5_w37wc"]
-[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/projectiles/Fireball.tres" id="6_3jyt2"]
+[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/Projectiles/Fireball.tres" id="6_3jyt2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_butbb"]
 size = Vector2(50, 55)
@@ -38,7 +38,7 @@ default_lingering_duration = 5.0
 default_lingering_damage = 1.0
 default_effects = {}
 mana_cost = 0
-cooldown = 0.5
+cooldown = 2.0
 required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 

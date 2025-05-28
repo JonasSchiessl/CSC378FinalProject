@@ -1,1 +1,0 @@
-Given all of these godot files (which have been taken out of their respective folder structure and just dumped here). I am trying to fix my TempTower.tscn so that it can detect enemies when they enter the relevant AttackRange and shoot the default projectile at them. Please give me any code and steps I need to take to fix this please.

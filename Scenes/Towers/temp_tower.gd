@@ -1,16 +1,16 @@
 extends CharacterBody2D
 class_name Tower
 
-# Tower properties - these control the tower's combat behavior
+# Tower properties
 @export var attack_range: float = 200.0
 @export var attack_damage: float = 10.0
 @export var attack_cooldown: float = 0.5
 
-# Health properties - towers can be destroyed by enemies
+# Health properties
 @export var max_health: float = 100.0
 @export var current_health: float = 100.0
 
-# Visual components - these handle the tower's appearance and UI
+# Visual components
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var range_indicator: Node2D = $RangeIndicator
 @onready var collision_shape: CollisionShape2D = $PhysicalCollision
@@ -18,19 +18,19 @@ class_name Tower
 @onready var projectile_emitter = $projectile_emitter
 @onready var attack_range_area = $AttackRange
 
-# State management - these track what the tower is currently doing
+# State management
 var is_preview_mode: bool = false
 var can_attack: bool = true
 var current_target: Node2D = null
 var is_destroyed: bool = false
-var enemies_in_range: Array[Node2D] = []  # Keep track of all enemies we can attack
+var enemies_in_range: Array[Node2D] = []
 
 # Visual feedback colors
 var preview_valid_color: Color = Color(0, 1, 0, 0.5)
 var preview_invalid_color: Color = Color(1, 0, 0, 0.5)
 var normal_color: Color = Color.WHITE
 
-# Signals for communication with other systems
+# Signals
 signal tower_destroyed()
 signal health_changed(new_health: float, max_health: float)
 
@@ -42,12 +42,10 @@ func _ready() -> void:
 	if not is_preview_mode and GameManager.instance:
 		GameManager.instance.phase_changed.connect(_on_phase_changed)
 	
-	# Set up enemy detection signals - this is the key improvement!
-	# Instead of constantly checking for enemies, we listen for when they enter/leave our range
+	# Set up enemy detection signals
 	if attack_range_area:
-		attack_range_area.body_entered.connect(_on_enemy_entered_range)
-		attack_range_area.body_exited.connect(_on_enemy_left_range)
-		print("Tower: Connected attack range signals")
+		attack_range_area.area_entered.connect(_on_enemy_entered_range)
+		attack_range_area.area_exited.connect(_on_enemy_left_range)
 	else:
 		push_error("Tower: No AttackRange Area2D found! Cannot detect enemies.")
 	
@@ -57,7 +55,6 @@ func _ready() -> void:
 	# Configure the projectile emitter for tower combat
 	if projectile_emitter:
 		projectile_emitter.set_as_player_projectiles()  # Use player layer so projectiles hit enemies
-		print("Tower: Projectile emitter configured")
 	else:
 		push_error("Tower: No projectile_emitter found! Cannot attack enemies.")
 	
@@ -70,24 +67,14 @@ func _ready() -> void:
 		health_bar.max_value = max_health
 		health_bar.value = current_health
 		health_bar.visible = false  # Only show when damaged
-	# Debug collision layers
-	print("=== TOWER COLLISION DEBUG ===")
-	print("Tower physical collision layer: ", collision_layer)
-	print("Tower physical collision mask: ", collision_mask)
-	if attack_range_area:
-		print("Tower attack range collision layer: ", attack_range_area.collision_layer)
-		print("Tower attack range collision mask: ", attack_range_area.collision_mask)
-	print("==============================")
 
 func setup_attack_range() -> void:
-	"""Configure the attack range collision shape to match our attack_range property"""
 	if not attack_range_area:
 		return
 		
 	var collision_node = attack_range_area.get_node_or_null("AttackCollision")
 	if collision_node and collision_node.shape is CircleShape2D:
 		collision_node.shape.radius = attack_range
-		print("Tower: Attack range set to ", attack_range)
 	else:
 		push_warning("Tower: Could not find or configure AttackCollision shape")
 
@@ -101,52 +88,29 @@ func _physics_process(delta: float) -> void:
 		attack_nearest_enemy()
 
 func _on_enemy_entered_range(body: Node2D) -> void:
-	"""Enhanced version with detailed logging for debugging"""
+	"""Called when something enters our attack range"""
 	if is_preview_mode:
-		print("Tower: Ignoring range entry - in preview mode")
 		return
 	
-	print("Tower: Something entered attack range: ", body.name, " (", body.get_class(), ")")
-	print("  - Global position: ", body.global_position)
-	print("  - Collision layer: ", body.collision_layer if body.get("collision_layer") != null else "N/A")
-	print("  - Is in enemies group: ", body.is_in_group("enemies"))
+	print("Tower: Something entered attack range: ", body.name)
 	
-	# Check if this is a valid target using our enhanced detection
+	# Check if this is a valid target
 	if is_enemy(body):
-		enemies_in_range.append(body)
-		print("Tower: ✓ VALID TARGET added to list - Total targets: ", enemies_in_range.size())
-		
+		enemies_in_range.append(body)		
 		# If this is our first target and we can attack, start attacking immediately
 		if enemies_in_range.size() == 1 and can_attack:
 			current_target = body
-			print("Tower: Set as current target: ", body.name)
 	else:
-		print("Tower: ✗ NOT a valid target, ignoring")
+		pass
 
 func _on_enemy_left_range(body: Node2D) -> void:
-	"""Enhanced version with detailed logging for debugging"""
+	"""Called when something leaves our attack range"""
 	if is_preview_mode:
 		return
-	
-	print("Tower: Something left attack range: ", body.name)
-	
+		
 	# Remove from our tracking list if it was there
 	if body in enemies_in_range:
 		enemies_in_range.erase(body)
-		print("Tower: Removed from target list - Remaining targets: ", enemies_in_range.size())
-		
-		# If this was our current target, find a new one
-		if current_target == body:
-			current_target = null
-			print("Tower: Cleared current target, will find new one")
-	if is_preview_mode:
-		return
-		
-	# Remove the enemy from our tracking list
-	if body in enemies_in_range:
-		enemies_in_range.erase(body)
-		print("Tower: Enemy left range - ", body.name, " (Remaining enemies: ", enemies_in_range.size(), ")")
-		
 		# If this was our current target, find a new one
 		if current_target == body:
 			current_target = null
@@ -155,43 +119,15 @@ func _on_enemy_left_range(body: Node2D) -> void:
 func is_enemy(node: Node) -> bool:
 	"""Determine if a node is a valid target for this tower"""
 	
-	# In test mode, also consider the player as a valid target
-	if test_mode_enabled and can_target_player:
-		if node is Player or node.name.to_lower().contains("player"):
-			print("Tower: Detected player as valid target (TEST MODE)")
-			return true
-	
-	# Normal enemy detection logic
+	# Check if the node is in the enemies group (most reliable)
 	if node.is_in_group("enemies"):
-		print("Tower: Detected enemy in group 'enemies': ", node.name)
 		return true
 	
 	# Check collision layer - enemies should be on layer 8
 	if node.collision_layer & 8:  # Bitwise check for layer 8
-		print("Tower: Detected enemy on collision layer 8: ", node.name)
 		return true
 	
 	# Check for enemy-specific components or methods
-	if node.has_method("_on_health_component_health_depleted"):
-		print("Tower: Detected enemy with health component: ", node.name)
-		return true
-	
-	# If we get here, this is not a valid target
-	print("Tower: Node ", node.name, " is NOT considered a valid target")
-	print("  - Is in enemies group: ", node.is_in_group("enemies"))
-	print("  - Collision layer: ", node.collision_layer if node.get("collision_layer") != null else "N/A")
-	print("  - Has health method: ", node.has_method("_on_health_component_health_depleted"))
-	
-	return false
-	# Method 1: Check if the node is in the enemies group (most reliable)
-	if node.is_in_group("enemies"):
-		return true
-	
-	# Method 2: Check collision layer - enemies should be on layer 8
-	if node.collision_layer & 8:  # Bitwise check for layer 8
-		return true
-	
-	# Method 3: Check for enemy-specific components or methods
 	if node.has_method("_on_health_component_health_depleted"):
 		return true
 	
@@ -242,7 +178,6 @@ func attack_target(target: Node2D) -> void:
 	var projectile_fired = projectile_emitter.fire_projectile(direction)
 	
 	if projectile_fired:
-		print("Tower: Fired projectile at ", target.name)
 		# Start our attack cooldown
 		can_attack = false
 		
@@ -293,7 +228,6 @@ func set_preview_state(is_valid: bool) -> void:
 
 # Initialize the tower after it's been placed
 func initialize() -> void:
-	print("Tower: Initializing at position ", global_position)
 	set_preview_mode(false)
 	setup_attack_range()
 
@@ -306,12 +240,10 @@ func set_enabled(enabled: bool) -> void:
 	
 	if enabled:
 		can_attack = true
-		print("Tower: Enabled for combat")
 	else:
 		can_attack = false
 		current_target = null
 		enemies_in_range.clear()
-		print("Tower: Disabled for build phase")
 
 # Handle game phase changes
 func _on_phase_changed(new_phase: GameManager.Phase) -> void:
@@ -345,7 +277,6 @@ func take_damage(damage: float) -> void:
 		destroy()
 
 func flash_damage() -> void:
-	"""Provide visual feedback when the tower takes damage"""
 	var original_modulate = modulate
 	modulate = Color(1.5, 0.5, 0.5)  # Flash red
 	
@@ -354,14 +285,12 @@ func flash_damage() -> void:
 		modulate = original_modulate
 
 func destroy() -> void:
-	"""Handle tower destruction"""
 	if is_destroyed:
 		return
 	
 	is_destroyed = true
 	can_attack = false
 	
-	print("Tower: Destroyed!")
 	tower_destroyed.emit()
 	
 	# Disable collision immediately
@@ -389,83 +318,3 @@ func heal(amount: float) -> void:
 			health_bar.visible = false
 	
 	health_changed.emit(current_health, max_health)
-	
-	# Test mode variables - add these to your Tower class variables section
-var test_mode_enabled: bool = false
-var can_target_player: bool = false
-
-# Add this function to your Tower class to enable player testing
-func enable_player_targeting_test() -> void:
-	"""Enable test mode where towers can detect and shoot at the player"""
-	test_mode_enabled = true
-	can_target_player = true
-	
-	print("Tower: Player targeting test mode ENABLED")
-	print("Tower: Will now treat player as a valid target")
-	
-	# Temporarily modify our collision mask to also detect player (layer 4)
-	if attack_range_area:
-		# Add player layer (4) to our detection mask while keeping enemy layer (8)
-		attack_range_area.collision_mask = 8 | 4  # Binary OR to include both layers
-		print("Tower: Attack range now detects layers: ", attack_range_area.collision_mask)
-
-func disable_player_targeting_test() -> void:
-	"""Disable test mode and return to normal enemy-only targeting"""
-	test_mode_enabled = false
-	can_target_player = false
-	
-	print("Tower: Player targeting test mode DISABLED")
-	
-	# Restore normal collision mask (enemies only)
-	if attack_range_area:
-		attack_range_area.collision_mask = 8  # Only enemy layer
-		print("Tower: Attack range restored to enemy-only detection")
-
-func _input(event: InputEvent) -> void:
-	"""Handle test mode input - only for debugging"""
-	if not OS.is_debug_build():
-		return  # Only allow in debug builds
-		
-	# Toggle player targeting test with T key
-	if event.is_action_pressed("ui_accept"):  # Space bar - you can change this
-		if test_mode_enabled:
-			disable_player_targeting_test()
-		else:
-			enable_player_targeting_test()
-	
-	# Force attack current target with F key (for testing)
-	if event.is_action_pressed("ui_cancel") and current_target:  # Escape key
-		print("Tower: FORCED ATTACK on ", current_target.name)
-		attack_target(current_target)
-
-# Add this function to manually trigger detection testing
-func test_detection_range() -> void:
-	"""Manually test what's currently in our detection range"""
-	if not attack_range_area:
-		print("Tower: No attack range area to test!")
-		return
-		
-	print("\n=== TOWER DETECTION RANGE TEST ===")
-	print("Tower position: ", global_position)
-	print("Attack range monitoring: ", attack_range_area.monitoring)
-	print("Attack range collision_mask: ", attack_range_area.collision_mask)
-	
-	var overlapping_bodies = attack_range_area.get_overlapping_bodies()
-	print("Total overlapping bodies: ", overlapping_bodies.size())
-	
-	for i in range(overlapping_bodies.size()):
-		var body = overlapping_bodies[i]
-		print("  Body ", i, ": ", body.name, " (", body.get_class(), ")")
-		print("    Position: ", body.global_position)
-		print("    Distance: ", global_position.distance_to(body.global_position))
-		print("    Collision layer: ", body.collision_layer if body.get("collision_layer") != null else "N/A")
-		print("    Is valid target: ", is_enemy(body))
-	
-	print("Currently tracked enemies: ", enemies_in_range.size())
-	for enemy in enemies_in_range:
-		if is_instance_valid(enemy):
-			print("  - ", enemy.name, " at ", enemy.global_position)
-	
-	print("Current target: ", current_target.name if current_target else "None")
-	print("Can attack: ", can_attack)
-	print("=== END TEST ===\n")

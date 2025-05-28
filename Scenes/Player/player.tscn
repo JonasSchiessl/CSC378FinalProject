@@ -14,7 +14,7 @@
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="11_06tpx"]
 [ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scripts/Player/TowerPlacementSystem.gd" id="11_74mp2"]
 [ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="11_dey5f"]
-[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/projectiles/Fireball.tres" id="11_oikmp"]
+[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Assets/Projectiles/Fireball.tres" id="11_oikmp"]
 [ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
