@@ -6,6 +6,10 @@ class_name ProjectileEmitter
 @export var default_projectile_index: int = 0
 @export var universal_projectile_scene: PackedScene  # The universal projectile scene
 
+# Collision layer configuration
+@export var projectile_layer: int = 32  # What layer this emitter's projectiles are on
+@export var target_mask: int = 8        # What layer this emitter's projectiles target
+
 # Owner of this component (player/enemy)
 @onready var entity = get_parent()
 
@@ -65,7 +69,10 @@ func fire_projectile(direction: Vector2) -> bool:
 							current_projectile_type.default_penetration, current_projectile_type.can_area_effect, 
 							current_projectile_type.default_area_radius, current_projectile_type.can_create_lingering, 
 							current_projectile_type.default_lingering_type, current_projectile_type.default_lingering_radius,
-							current_projectile_type.default_lingering_duration, current_projectile_type.default_lingering_damage)
+							current_projectile_type.default_lingering_duration, current_projectile_type.default_lingering_damage,
+							current_projectile_type, 
+							projectile_layer, 
+							target_mask)
 	
 	# Update last fire time
 	last_fire_times[current_projectile_type.name] = Time.get_ticks_msec() / 1000.0
@@ -136,7 +143,9 @@ func fire_projectile_advanced(direction: Vector2, speed: float, damage: float,
 							area_radius: float = 100.0, lingering: bool = false,
 							lingering_type: String = "fire", lingering_radius: float = 100.0,
 							lingering_duration: float = 5.0, lingering_damage: float = 1.0,
-							projectile_type_override: ProjectileType = null) -> void:
+							projectile_type_override: ProjectileType = null,
+							override_collision_layer: int = -1,
+							override_collision_mask: int = -1) -> void:
 	
 	var projectile_type_to_use = projectile_type_override if projectile_type_override else current_projectile_type
 	
@@ -167,11 +176,17 @@ func fire_projectile_advanced(direction: Vector2, speed: float, damage: float,
 	# Use global_position to ensure correct world positioning
 	projectile.global_position = global_position
 	
+	# Determine collision layers to use
+	var use_collision_layer = override_collision_layer if override_collision_layer != -1 else projectile_layer
+	var use_collision_mask = override_collision_mask if override_collision_mask != -1 else target_mask
+	
+	
 	# Set up projectile with all parameters AFTER positioning
 	projectile.setup(attack, direction, speed, proj_range, arc_height, 
 					penetration, area_effect, area_radius,
 					lingering, lingering_type, lingering_radius,
-					lingering_duration, lingering_damage, projectile_type_to_use)
+					lingering_duration, lingering_damage, projectile_type_to_use,
+					use_collision_layer, use_collision_mask)
 	
 	# Set lingering effect scene if needed
 	if lingering and projectile.create_lingering_effect and projectile_type_to_use and projectile_type_to_use.lingering_effect_scene:
@@ -233,3 +248,11 @@ func cycle_projectile_type() -> void:
 	var current_index = projectile_types.find(current_projectile_type)
 	var next_index = (current_index + 1) % projectile_types.size()
 	current_projectile_type = projectile_types[next_index]
+
+func set_as_player_projectiles() -> void:
+	projectile_layer = 32  # Player projectile layer
+	target_mask = 8        # Enemy layer
+
+func set_as_enemy_projectiles() -> void:
+	projectile_layer = 64  # Enemy projectile layer (you'll need to define this)
+	target_mask = 4        # Player layer

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d047ywamaokp" path="res://Scripts/Enemies/enemy.gd" id="1_2nxwx"]
 [ext_resource type="Texture2D" uid="uid://ctyoy63ay0gaw" path="res://Assets/Enemies/poison-rat-sprites.png" id="1_tt7e2"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="2_rvmyp"]
-[ext_resource type="Script" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="3_2nxwx"]
+[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="3_2nxwx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="4_52xpa"]
 [ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="5_jdgko"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="6_j4qr3"]
@@ -13,6 +13,22 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s7bn3"]
 height = 46.0
+
+[sub_resource type="Animation" id="Animation_k4v85"]
+resource_name = "idle"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
 [sub_resource type="Animation" id="Animation_tt7e2"]
 resource_name = "run"
@@ -29,22 +45,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [2, 3, 1]
-}
-
-[sub_resource type="Animation" id="Animation_k4v85"]
-resource_name = "idle"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s7bn3"]
@@ -73,7 +73,7 @@ default_area_radius = 100.0
 can_create_lingering = true
 lingering_effect_scene = ExtResource("4_52xpa")
 default_lingering_type = "poison"
-default_lingering_radius = 10.0
+default_lingering_radius = 100.0
 default_lingering_duration = 3.0
 default_lingering_damage = 3.0
 default_effects = {}
@@ -88,7 +88,7 @@ height = 58.0
 
 [node name="StaticBody2D" type="StaticBody2D"]
 collision_layer = 8
-collision_mask = 32
+collision_mask = 24
 script = ExtResource("1_2nxwx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -114,15 +114,22 @@ position = Vector2(0, -8)
 script = ExtResource("2_rvmyp")
 projectile_types = Array[ExtResource("3_2nxwx")]([SubResource("Resource_7g0yx")])
 universal_projectile_scene = ExtResource("7_73x2u")
+projectile_layer = 64
+target_mask = 4
 metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 
 [node name="health_component" parent="." instance=ExtResource("9_k4v85")]
 max_health = 10
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("10_3a2bb")]
+collision_layer = 8
+collision_mask = 32
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
 position = Vector2(0, -3)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_d330j")
+
+[connection signal="health_change" from="health_component" to="." method="_on_health_component_health_change"]
+[connection signal="health_depleted" from="health_component" to="." method="_on_health_component_health_depleted"]

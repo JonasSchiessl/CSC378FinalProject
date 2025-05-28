@@ -27,6 +27,10 @@ var penetration_remaining: int = 0
 @export var lingering_effect_duration: float = 5.0
 @export var lingering_effect_damage: float = 1.0
 
+# Collision layer configuration
+@export var projectile_collision_layer: int = 32  # Default layer for projectiles
+@export var target_collision_mask: int = 8        # What this projectile can hit
+
 # Runtime variables
 var direction: Vector2 = Vector2.RIGHT
 var start_position: Vector2
@@ -52,7 +56,8 @@ func setup(new_attack: Attack, new_direction: Vector2,
 		   new_lingering: bool = create_lingering_effect, new_lingering_type: String = lingering_effect_type,
 		   new_lingering_radius: float = lingering_effect_radius, new_lingering_duration: float = lingering_effect_duration,
 		   new_lingering_damage: float = lingering_effect_damage,
-		   projectile_type: ProjectileType = null) -> void:
+		   projectile_type: ProjectileType = null,
+			collision_layer: int = -1, collision_mask: int = -1) -> void:
 	
 	attack = new_attack
 	direction = new_direction.normalized()
@@ -70,6 +75,17 @@ func setup(new_attack: Attack, new_direction: Vector2,
 	lingering_effect_radius = new_lingering_radius
 	lingering_effect_duration = new_lingering_duration
 	lingering_effect_damage = new_lingering_damage
+	
+	# Collision layer setup
+	if collision_layer != -1:
+		projectile_collision_layer = collision_layer
+	if collision_mask != -1:
+		target_collision_mask = collision_mask
+	
+	# Apply collision settings to hitbox
+	if hitbox_component:
+		hitbox_component.collision_layer = projectile_collision_layer
+		hitbox_component.collision_mask = target_collision_mask
 	
 	# Configure visual/audio based on projectile type
 	if projectile_type:
@@ -263,7 +279,7 @@ func trigger_area_effect() -> void:
 		return
 	
 	# Enable area effect zone
-	$AreaEffectZone.monitoring = true
+	$AreaEffectZone.set_deferred("monitoring", true)
 	
 	# Find all hurtboxes in area
 	var overlapping_areas = $AreaEffectZone.get_overlapping_areas()
@@ -294,8 +310,8 @@ func trigger_area_effect() -> void:
 		spawn_lingering_effect()
 	
 	# Disable collision and make invisible but don't destroy yet
-	hitbox_component.monitoring = false
-	hitbox_component.monitorable = false
+	hitbox_component.set_deferred("monitoring", false)
+	hitbox_component.set_deferred("monitorable", false)
 	sprite.visible = false
 	
 	# Stop particles and handle cleanup
@@ -304,6 +320,7 @@ func trigger_area_effect() -> void:
 # Spawn a lingering effect at the current position
 func spawn_lingering_effect() -> void:
 	if not create_lingering_effect or not lingering_effect_scene:
+		print("Cannot spawn lingering effect - missing scene or disabled")
 		return
 		
 	var effect = lingering_effect_scene.instantiate()
@@ -311,17 +328,18 @@ func spawn_lingering_effect() -> void:
 	# Find the best parent for the lingering effect
 	var target_parent = get_tree().current_scene
 	
-	# If we're testing in the player scene, find a better parent
-	# Look for a Node2D that isn't the player or projectile emitter
-	if target_parent.name == "Player" or target_parent is CharacterBody2D:
-		# Try to find the world/level node, or create one if needed
-		var world_node = target_parent.get_parent()
-		if world_node and world_node != get_tree().root:
-			target_parent = world_node
-		else:
-			# Last resort: add to scene tree root
-			target_parent = get_tree().root
-	
+	# If we're in a nested scene, try to find the main game world
+	var current_node = self
+	while current_node.get_parent() != null:
+		var parent = current_node.get_parent()
+		# Look for a main game node or level node
+		if parent.name.to_lower().contains("level") or parent.name.to_lower().contains("game") or parent.name.to_lower().contains("world"):
+			target_parent = parent
+			break
+		# If we find a Node2D that's not a character, use it
+		elif parent is Node2D and not parent is CharacterBody2D and not parent is RigidBody2D:
+			target_parent = parent
+		current_node = parent
 	# Add to the chosen parent
 	target_parent.add_child(effect)
 	
@@ -331,9 +349,10 @@ func spawn_lingering_effect() -> void:
 	effect.global_position = spawn_position
 	
 	# Setup the effect with proper parameters
-	effect.setup(attack.attack_source, lingering_effect_radius, 
+	effect.setup(null, lingering_effect_radius, 
 				lingering_effect_duration, lingering_effect_damage, 
-				lingering_effect_type)
+				lingering_effect_type, projectile_collision_layer,
+				target_collision_mask)
 	
 	# Stop particles after spawning lingering effect
 	stop_particles()
@@ -346,3 +365,11 @@ func on_projectile_expire() -> void:
 		spawn_lingering_effect()
 	else:
 		stop_particles()
+
+func set_collision_layers(layer: int, mask: int) -> void:
+	projectile_collision_layer = layer
+	target_collision_mask = mask
+	
+	if hitbox_component:
+		hitbox_component.collision_layer = layer
+		hitbox_component.collision_mask = mask

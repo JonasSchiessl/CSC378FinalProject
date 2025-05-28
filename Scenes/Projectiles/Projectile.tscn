@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dtxe34f4qw2x6"]
+[gd_scene load_steps=6 format=3 uid="uid://dtxe34f4qw2x6"]
 
 [ext_resource type="Script" uid="uid://dfdp3ym6rt4x0" path="res://Scripts/Components/Projectiles/projectile.gd" id="1_vku8s"]
 [ext_resource type="Script" uid="uid://dkpjiqlnfvmww" path="res://Scripts/Components/hitbox_component.gd" id="3_cxq0p"]
+[ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="3_vku8s"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xn66u"]
 radius = 1.0
@@ -15,10 +16,11 @@ metadata/_custom_type_script = "uid://dfdp3ym6rt4x0"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
-[node name="HitboxComponent" type="Area2D" parent="."]
+[node name="HitboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("attack_component")]
 collision_layer = 32
 collision_mask = 8
 script = ExtResource("3_cxq0p")
+attack_component = NodePath("../attack_component")
 metadata/_custom_type_script = "uid://dkpjiqlnfvmww"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
@@ -33,3 +35,5 @@ disabled = true
 [node name="TrailParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 50
+
+[node name="attack_component" parent="." instance=ExtResource("3_vku8s")]
