@@ -51,7 +51,7 @@ func fire_projectile():
 func _on_health_component_health_change(old_value: Variant, new_value: Variant) -> void:
 	print("Enemy took damage! Health: ", old_value, " -> ", new_value)
 	
-	# Flashig logic and damage number
+	# Flashing logic and damage number
 	if new_value < old_value:
 		print("took damage")
 
