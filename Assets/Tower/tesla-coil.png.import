@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cb5f21a7dln8v"
-path="res://.godot/imported/fireball-Sheet.png-77504d08781637459d3e8c1e4b66e809.ctex"
+uid="uid://b26gxc0qfdg1q"
+path="res://.godot/imported/tesla-coil.png-39de9b5a05d272ddd843694eba62a959.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/projectiles/fireball-Sheet.png"
-dest_files=["res://.godot/imported/fireball-Sheet.png-77504d08781637459d3e8c1e4b66e809.ctex"]
+source_file="res://Assets/Tower/tesla-coil.png"
+dest_files=["res://.godot/imported/tesla-coil.png-39de9b5a05d272ddd843694eba62a959.ctex"]
 
 [params]
 
