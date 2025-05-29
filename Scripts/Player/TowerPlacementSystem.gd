@@ -7,18 +7,30 @@ class_name TowerPlacementSystem
 @export var grid_size: float = 64.0  # Size of each grid cell
 @export var tower_spacing: int = 1  # Minimum grid cells between towers (1 = 3x3 exclusion zone)
 
-# Preview system
 var preview_tower: Node2D = null  # The ghost/preview tower
 var current_grid_position: Vector2i = Vector2i.ZERO
 var can_place: bool = false
 
-# Visual feedback
 @export var valid_placement_color: Color = Color(0, 1, 0, 0.5)  # Green with transparency
 @export var invalid_placement_color: Color = Color(1, 0, 0, 0.5)  # Red with transparency
 
 # Tower management
 var placed_towers: Array[Node2D] = []  # Keep track of all placed towers
 var occupied_positions: Dictionary = {}  # Track which grid positions are occupied
+
+#Cost defaults
+@export var default_tower_cost: int = 100
+@export var tower_type_name: String = "basic_tower"  # What type of tower this placement system creates
+
+# Visual feedback for affordability
+@export var affordable_preview_color: Color = Color(0, 1, 0, 0.5)  # Green when affordable
+@export var unaffordable_preview_color: Color = Color(1, 0, 0, 0.5)  # Red when can't afford
+
+# Add these variables to track affordability state
+var can_afford_tower: bool = true
+var last_affordability_check: float = 0.0
+var affordability_check_interval: float = 0.1  # Check 10 times per second
+
 
 func _ready() -> void:
 	# Auto-find player if not set in inspector
@@ -32,10 +44,17 @@ func _ready() -> void:
 	if GameManager.instance:
 		GameManager.instance.phase_changed.connect(_on_phase_changed)
 	
-	# Set initial visibility
+	# Connect to currency changes to update affordability in real-time
+	if CurrencyManager:
+		CurrencyManager.currency_changed.connect(_on_currency_changed)
+		# Initial affordability check
+		update_affordability()
+	else:
+		push_error("TowerPlacementSystem: CurrencyManager not found!")
+		
 	visible = GameManager.instance and GameManager.instance.is_build_phase()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	# Only process during build phase
 	if not GameManager.instance or not GameManager.instance.is_build_phase():
 		return
@@ -44,10 +63,14 @@ func _process(_delta: float) -> void:
 		push_error("TowerPlacementSystem: No player reference set!")
 		return
 	
-	# Update preview position based on mouse
 	update_preview_position()
 	
-	# Redraw debug visualization if needed
+	last_affordability_check += delta
+	if last_affordability_check >= affordability_check_interval:
+		update_affordability()
+		last_affordability_check = 0.0
+	
+	# Redraw debug visualization if enabled
 	if OS.is_debug_build() and visible:
 		queue_redraw()
 
@@ -56,12 +79,12 @@ func _input(event: InputEvent) -> void:
 	if not GameManager.instance or not GameManager.instance.is_build_phase():
 		return
 	
-	# Place tower on click
-	if event.is_action_pressed("placeTower"):  # You'll need to add this to input map (left click)
+	# Place with left click
+	if event.is_action_pressed("placeTower"):  
 		attempt_place_tower()
 	
 	# Cancel placement with right click
-	if event.is_action_pressed("cancelPlacement"):  # Right click
+	if event.is_action_pressed("cancelPlacement"): 
 		hide_preview()
 
 # Calculate grid position from world position
@@ -98,7 +121,7 @@ func is_on_player(grid_pos: Vector2i) -> bool:
 	var grid_world_pos = grid_to_world(grid_pos)
 	
 	# Check if the player's center is within this grid cell
-	# This accounts for the player being slightly off-grid
+	# This accounts for the player being slightly off-grid (kinda? it could be better)
 	var half_grid = grid_size / 2.0
 	var player_pos = player.global_position
 	
@@ -122,7 +145,9 @@ func is_valid_placement(grid_pos: Vector2i) -> bool:
 	if is_on_player(grid_pos):
 		return false
 	
-	#Future: we can add more checks here
+	if not can_afford_tower:
+		return false
+	#Future: we can add more checks here for greater precision if need be
 	
 	return true
 
@@ -134,38 +159,46 @@ func get_placement_error(grid_pos: Vector2i) -> String:
 		return "Too close to another tower"
 	elif is_on_player(grid_pos):
 		return "Cannot place on player"
+	elif not can_afford_tower:
+		var cost = get_tower_cost()
+		var current = CurrencyManager.get_current_currency() if CurrencyManager else 0
+		return "Insufficient funds (Need: " + str(cost) + ", Have: " + str(current) + ")"
 	else:
 		return ""  # Valid placement
 
 # Update the preview tower position
 func update_preview_position() -> void:
-	# Get mouse position in world
 	var mouse_pos = get_global_mouse_position()
 	
-	# Convert to grid position
 	current_grid_position = world_to_grid(mouse_pos)
-	
-	# Check if placement is valid
 	can_place = is_valid_placement(current_grid_position)
 	
 	# Debug: Print when hovering over player
 	if is_on_player(current_grid_position) and OS.is_debug_build():
 		print("Preview is on player position - should be RED")
 	
-	# Show or create preview if needed
 	if not preview_tower:
 		show_preview()
 	
-	# Update preview position and appearance
 	if preview_tower:
 		preview_tower.global_position = grid_to_world(current_grid_position)
 		
-		# Update color based on validity
+		var preview_color: Color
+		if not can_afford_tower:
+			# Special color for insufficient funds
+			preview_color = unaffordable_preview_color
+		elif can_place:
+			# Can place and can afford
+			preview_color = affordable_preview_color
+		else:
+			# Can afford but can't place for other reasons
+			preview_color = invalid_placement_color
+		
+		# Update preview appearance
 		if preview_tower.has_method("set_preview_state"):
 			preview_tower.set_preview_state(can_place)
 		else:
-			# Fallback: just change modulate
-			preview_tower.modulate = valid_placement_color if can_place else invalid_placement_color
+			preview_tower.modulate = preview_color
 
 # Show the preview tower
 func show_preview() -> void:
@@ -173,29 +206,53 @@ func show_preview() -> void:
 		push_error("TowerPlacementSystem: No tower scene assigned!")
 		return
 	
-	# Create preview instance
 	preview_tower = tower_scene.instantiate()
 	add_child(preview_tower)
 	
-	# Set as preview mode
 	if preview_tower.has_method("set_preview_mode"):
 		preview_tower.set_preview_mode(true)
 	
-	# Set initial color based on current validity
 	if preview_tower.has_method("set_preview_state"):
 		preview_tower.set_preview_state(can_place)
 	else:
 		# Fallback: set the modulate directly
 		preview_tower.modulate = valid_placement_color if can_place else invalid_placement_color
 
-# Hide the preview tower
 func hide_preview() -> void:
 	if preview_tower:
 		preview_tower.queue_free()
 		preview_tower = null
 
-# Attempt to place a tower at current position
+#Tower placement that handles currency transaction
 func attempt_place_tower() -> void:
+	if not can_place:
+		# Provide specific feedback about why placement failed
+		var error = get_placement_error(current_grid_position)
+		print("Cannot place tower: " + error)
+		
+		# Special handling for currency issues
+		if not can_afford_tower:
+			show_insufficient_funds_feedback()
+		
+		return
+	
+	if not tower_scene:
+		push_error("TowerPlacementSystem: No tower scene assigned!")
+		return
+	
+	# NEW: Attempt to purchase the tower before placing it
+	var cost = get_tower_cost()
+	if not CurrencyManager or not CurrencyManager.spend_currency(cost, tower_type_name):
+		print("Tower placement failed: Could not complete currency transaction")
+		show_insufficient_funds_feedback()
+		return
+	
+	# Currency transaction successful, proceed with placement
+	place_tower_at_position(current_grid_position)
+	
+	# Update affordability after purchase
+	update_affordability()
+
 	if not can_place:
 		# Provide specific feedback about why placement failed
 		if occupied_positions.has(current_grid_position):
@@ -215,26 +272,23 @@ func attempt_place_tower() -> void:
 	# Create the actual tower
 	var new_tower = tower_scene.instantiate()
 	
-	# CRITICAL: Add tower to the game world, not to the player!
 	var game_root = get_tree().current_scene
 	game_root.add_child(new_tower)
 	
-	# IMPORTANT: Use global_position to place the tower in world space
-	# This ensures the position is absolute, not relative to any parent
+	# IMPORTANT: This uses global_position to place the tower in world space
 	var world_position = grid_to_world(current_grid_position)
 	new_tower.global_position = world_position
 	
-	# Mark position as occupied
 	occupied_positions[current_grid_position] = new_tower
 	placed_towers.append(new_tower)
 	
-	#Initialize the tower
+	#Init tower
 	if new_tower.has_method("initialize"):
 		new_tower.initialize()
 	
 	print("Tower placed at world position: ", world_position)
 	
-	# Update debug visualization if in debug mode
+	# Update debug visualization if in debug
 	if OS.is_debug_build():
 		queue_redraw()
 	
@@ -244,18 +298,15 @@ func _on_phase_changed(new_phase: GameManager.Phase) -> void:
 	match new_phase:
 		GameManager.Phase.BUILD:
 			visible = true
-			# Show preview again if needed
+			update_affordability()  # Check if we can afford towers when entering build phase
 		GameManager.Phase.FIGHT:
 			visible = false
 			hide_preview()
 
-# Get all placed towers
 func get_all_towers() -> Array[Node2D]:
 	return placed_towers
 
-# Remove a tower (if needed)
 func remove_tower(tower: Node2D) -> void:
-	# Find and remove from occupied positions
 	for pos in occupied_positions:
 		if occupied_positions[pos] == tower:
 			occupied_positions.erase(pos)
@@ -264,13 +315,97 @@ func remove_tower(tower: Node2D) -> void:
 	# Remove from placed towers array
 	placed_towers.erase(tower)
 	
-	# Remove from scene
 	tower.queue_free()
 	
-	# Update debug visualization
 	if OS.is_debug_build():
 		queue_redraw()
 
+func get_tower_cost() -> int:
+	"""Get the cost of placing a tower with this placement system"""
+	if CurrencyManager:
+		return CurrencyManager.get_item_cost(tower_type_name, "tower")
+	else:
+		return default_tower_cost
+
+func update_affordability() -> void:
+	"""Update whether the player can afford to place a tower"""
+	if not CurrencyManager:
+		can_afford_tower = false
+		return
+	
+	var cost = get_tower_cost()
+	can_afford_tower = CurrencyManager.can_afford(cost)
+
+func place_tower_at_position(grid_pos: Vector2i) -> void:
+	# Create the actual tower
+	var new_tower = tower_scene.instantiate()
+	
+	# Add tower to the game world
+	var game_root = get_tree().current_scene
+	game_root.add_child(new_tower)
+	
+	# Position the tower
+	var world_position = grid_to_world(grid_pos)
+	new_tower.global_position = world_position
+	
+	# Mark position as occupied
+	occupied_positions[grid_pos] = new_tower
+	placed_towers.append(new_tower)
+	
+	# Initialize the tower
+	if new_tower.has_method("initialize"):
+		new_tower.initialize()
+	
+	print("Tower placed at ", world_position, " for ", get_tower_cost(), " currency")
+	
+	# Provide positive feedback
+	show_successful_placement_feedback()
+
+func show_insufficient_funds_feedback() -> void:
+	print("Insufficient funds to place tower!")
+	
+	# Flash the preview tower red to indicate the issue
+	if preview_tower:
+		var flash_tween = create_tween()
+		flash_tween.tween_property(preview_tower, "modulate", Color.RED, 0.1)
+		flash_tween.tween_property(preview_tower, "modulate", unaffordable_preview_color, 0.1)
+
+func show_successful_placement_feedback() -> void:
+	# We could add celebratory effects here:
+	# Particle effect
+	# Sound effect
+	pass
+	
+func _on_currency_changed(new_amount: int, change_amount: int) -> void:
+	update_affordability()
+	
+	if preview_tower and visible:
+		update_preview_position()
+
+
+func set_tower_cost(cost: int) -> void:
+	"""Set the cost for towers placed by this placement system"""
+	default_tower_cost = cost
+	if CurrencyManager:
+		CurrencyManager.set_tower_cost(tower_type_name, cost)
+	update_affordability()
+
+func set_tower_type(type_name: String) -> void:
+	"""Set what type of tower this placement system creates"""
+	tower_type_name = type_name
+	update_affordability()
+
+# Debug function to test the currency integration
+func debug_currency_integration() -> void:
+	"""Debug function to test currency integration"""
+	print("\n=== TOWER PLACEMENT CURRENCY DEBUG ===")
+	print("Tower Type: ", tower_type_name)
+	print("Tower Cost: ", get_tower_cost())
+	print("Current Currency: ", CurrencyManager.get_current_currency() if CurrencyManager else "N/A")
+	print("Can Afford: ", can_afford_tower)
+	print("Can Place at Current Position: ", can_place)
+	print("Placement Error: ", get_placement_error(current_grid_position))
+	print("======================================\n")
 """
 # Debug visualization (optional - remove in production)
 func _draw() -> void:

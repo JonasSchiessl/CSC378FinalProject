@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://brn38dy1vsdyi"]
+
+[ext_resource type="Script" uid="uid://c1mm5ey06ou5i" path="res://Scenes/CurrencyManager/CurrencyUI.gd" id="1_qwtle"]
+
+[node name="CurrencyUi" type="CanvasLayer"]
+
+[node name="CurrencyUiControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_qwtle")
+
+[node name="CurrencyContainer" type="Control" parent="CurrencyUiControl"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CurrencyLabel" type="Label" parent="CurrencyUiControl/CurrencyContainer"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="ChangeIndicator" type="Label" parent="CurrencyUiControl/CurrencyContainer"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="TransactionLog" type="RichTextLabel" parent="CurrencyUiControl"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AffordabilityIndicator" type="Control" parent="CurrencyUiControl"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

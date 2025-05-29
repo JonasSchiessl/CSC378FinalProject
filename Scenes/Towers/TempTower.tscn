@@ -11,7 +11,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_w37wc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_butbb"]
-radius = 188.011
+radius = 145.169
 
 [sub_resource type="Resource" id="Resource_8xilq"]
 script = ExtResource("4_gk5pf")
@@ -21,7 +21,7 @@ sprite_frames = ExtResource("6_3jyt2")
 projectile_color = Color(1, 1, 1, 1)
 particle_material = ExtResource("5_w37wc")
 base_speed = 300.0
-base_damage = 5.0
+base_damage = 1.0
 base_range = 200.0
 base_knockback = 50.0
 can_arc = false
@@ -37,7 +37,7 @@ default_lingering_duration = 5.0
 default_lingering_damage = 1.0
 default_effects = {}
 mana_cost = 0
-cooldown = 2.0
+cooldown = 2.5
 required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 

@@ -45,8 +45,7 @@ func can_fire_projectile(projectile_type: ProjectileType) -> bool:
 	var engine_time = Time.get_time_dict_from_system()
 	var time_since_last = Time.get_time_dict_from_system().second - last_fire_times.get(projectile_type.name, 0.0)
 	
-	# Better approach: use get_time_dict_from_system() or Engine.get_process_frames()
-	# Actually, let's use a simpler approach with get_tree().current_scene process time
+	
 	var current_game_time = Time.get_ticks_msec() / 1000.0  # Convert to seconds
 	var last_fire_time = last_fire_times.get(projectile_type.name, 0.0)
 	
@@ -254,5 +253,5 @@ func set_as_player_projectiles() -> void:
 	target_mask = 8        # Enemy layer
 
 func set_as_enemy_projectiles() -> void:
-	projectile_layer = 64  # Enemy projectile layer (you'll need to define this)
+	projectile_layer = 64  # Enemy projectile layer
 	target_mask = 4        # Player layer
