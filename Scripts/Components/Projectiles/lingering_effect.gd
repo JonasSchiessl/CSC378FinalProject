@@ -30,7 +30,6 @@ func _ready() -> void:
 	var stored_global_pos = global_position
 	global_position = stored_global_pos
 	
-	print("Lingering effect created at: ", global_position, " with radius: ", effect_radius)
 
 func _process(delta: float) -> void:
 	timer += delta

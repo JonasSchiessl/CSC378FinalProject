@@ -10,7 +10,9 @@ class_name Player
 @onready var state_machine = $StateMachine
 @onready var projectile_emitter = $projectile_emitter
 @onready var status_effect_component = $status_effect_component
+@onready var health_bar = $HealthBar
 
+signal player_death
 # Movement Variables
 @export var move_speed: float = 200.0 # Movement Speed
 var facing_direction: Vector2 = Vector2.RIGHT # Direction sprite is facing
@@ -31,6 +33,11 @@ func _ready() -> void:
 	
 	# Initialize state machine
 	state_machine.initialize("idle")
+	
+	# Initialize Healthbar
+	if health_bar:
+			health_bar.update_health(health_component.health, health_component.max_health)
+
 
 func _input(event: InputEvent) -> void:
 	# Handle movement input always
@@ -166,3 +173,39 @@ func select_projectile(index: int) -> void:
 # Fire specific projectile by name
 func fire_projectile_by_name(projectile_name: String) -> void:
 	projectile_emitter.fire_projectile_by_name(projectile_name, aim_direction)
+
+# Handle health changes
+func _on_health_component_health_change(old_value: Variant, new_value: Variant) -> void:
+	print("Player health changed from ", old_value, " to ", new_value)
+	
+	# Update health bar
+	if health_bar and health_component:
+		health_bar.update_health(new_value, health_component.max_health)
+	
+	# Optional: Add other effects like screen shake, damage numbers, etc.
+	if new_value < old_value:
+		# Player took damage
+		handle_damage_effects(old_value - new_value)
+
+# Handle when health reaches zero
+func _on_health_component_health_depleted() -> void:
+	print("Player died!")
+	
+	# Hide health bar
+	if health_bar:
+		health_bar.visible = false
+	
+	# Add death logic here
+	handle_player_death()
+
+# Optional: Handle damage visual effects
+func handle_damage_effects(damage_amount: float) -> void:
+	# Screen shake, particle effects, etc.
+	pass
+
+# Optional: Handle player death
+func handle_player_death() -> void:
+	# Disable input, play death animation, restart level, etc.
+	set_physics_process(false)
+	player_death.emit()
+	
