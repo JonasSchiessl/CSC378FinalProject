@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dxhony1kmfltv"]
+[gd_scene load_steps=32 format=3 uid="uid://dxhony1kmfltv"]
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
@@ -18,6 +18,9 @@
 [ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
+[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/pixil-layer-Under.png" id="19_rcvs5"]
+[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/pixil-layer-Over.png" id="20_h8ma5"]
+[ext_resource type="Script" path="res://Scripts/Player/health_bar.gd" id="21_h8ma5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]
 atlas = ExtResource("2_hnuln")
@@ -68,8 +71,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pu2lt"]
-radius = 9.0
-height = 28.0
+radius = 8.0
+height = 26.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x3wgy"]
 size = Vector2(13.5, 11)
@@ -155,7 +158,7 @@ base_damage = 5.0
 
 [node name="health_component" parent="." instance=ExtResource("2_fkybt")]
 visible = false
-max_health = 100
+max_health = 1000
 
 [node name="hitbox_component" parent="." node_paths=PackedStringArray("attack_component") instance=ExtResource("3_x3wgy")]
 visible = false
@@ -167,6 +170,8 @@ shape = SubResource("RectangleShape2D_x3wgy")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
 visible = false
+collision_layer = 4
+collision_mask = 64
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
@@ -195,3 +200,16 @@ script = ExtResource("11_74mp2")
 player = NodePath("..")
 tower_scene = ExtResource("12_oikmp")
 grid_size = 50.0
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -18.0
+offset_right = 16.0
+offset_bottom = -14.0
+value = 50.0
+texture_under = ExtResource("19_rcvs5")
+texture_progress = ExtResource("20_h8ma5")
+script = ExtResource("21_h8ma5")
+
+[connection signal="health_change" from="health_component" to="." method="_on_health_component_health_change"]
+[connection signal="health_depleted" from="health_component" to="." method="_on_health_component_health_depleted"]

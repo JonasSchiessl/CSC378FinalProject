@@ -22,7 +22,11 @@ func start_wave() -> void:
 
 func end_wave() -> void:
 	print("WAVE ENDED")
-	enemy_container.queue_free()
+	
+	if is_instance_valid(enemy_container):
+		enemy_container.queue_free()
+		enemy_container = null
+	
 	$Timer.stop()
 
 # Handle phase changes

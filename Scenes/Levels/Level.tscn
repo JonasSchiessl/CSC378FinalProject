@@ -1,9 +1,11 @@
+
 [gd_scene load_steps=10 format=4 uid="uid://d0pagwu80pd6l"]
 
 [ext_resource type="PackedScene" uid="uid://dxhony1kmfltv" path="res://Scenes/Player/player.tscn" id="1_0ba56"]
 [ext_resource type="Script" uid="uid://dxgssf4qmvpgx" path="res://Scenes/Levels/level.gd" id="1_02k47"]
 [ext_resource type="Texture2D" uid="uid://dlgulf1xlklu2" path="res://Assets/Backgrounds/lab-tiles.png" id="2_65pnq"]
 [ext_resource type="PackedScene" uid="uid://cv8cqk5hxkr5k" path="res://Scenes/Enemies/enemy_spawner.tscn" id="3_bk2yi"]
+[ext_resource type="PackedScene" uid="uid://brn38dy1vsdyi" path="res://Scenes/CurrencyManager/CurrencyUI.tscn" id="4_65pnq"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_65pnq"]
 tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 1610612736, 1, 0, 1342177280, 65537, 0, 805306368)
@@ -40,3 +42,5 @@ position = Vector2(540, 360)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_bk2yi")]
 position = Vector2(539, 365)
+
+[node name="CurrencyUi" parent="." instance=ExtResource("4_65pnq")]
