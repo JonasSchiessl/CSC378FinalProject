@@ -49,20 +49,16 @@ func _ready() -> void:
 	else:
 		push_error("Tower: No AttackRange Area2D found! Cannot detect enemies.")
 	
-	# Set up the attack range collision shape to match our attack_range property
 	setup_attack_range()
 	
-	# Configure the projectile emitter for tower combat
 	if projectile_emitter:
-		projectile_emitter.set_as_player_projectiles()  # Use player layer so projectiles hit enemies
+		projectile_emitter.set_as_player_projectiles()  
 	else:
 		push_error("Tower: No projectile_emitter found! Cannot attack enemies.")
 	
-	# Set initial enabled state based on current game phase
 	if GameManager.instance:
 		set_enabled(GameManager.instance.is_fight_phase())
 	
-	# Set up health bar display
 	if health_bar:
 		health_bar.max_value = max_health
 		health_bar.value = current_health
@@ -97,7 +93,6 @@ func _on_enemy_entered_range(body: Node2D) -> void:
 	# Check if this is a valid target
 	if is_enemy(body):
 		enemies_in_range.append(body)		
-		# If this is our first target and we can attack, start attacking immediately
 		if enemies_in_range.size() == 1 and can_attack:
 			current_target = body
 	else:
@@ -127,7 +122,7 @@ func is_enemy(node: Node) -> bool:
 	if node.collision_layer & 8:  # Bitwise check for layer 8
 		return true
 	
-	# Check for enemy-specific components or methods
+	# REALLY hacky check, but sometimes worked?
 	if node.has_method("_on_health_component_health_depleted"):
 		return true
 	
@@ -145,8 +140,7 @@ func attack_nearest_enemy() -> void:
 	if enemies_in_range.is_empty():
 		current_target = null
 		return
-	
-	# Find the closest valid enemy
+		
 	var closest_enemy = null
 	var closest_distance = INF
 	
@@ -156,7 +150,6 @@ func attack_nearest_enemy() -> void:
 			closest_distance = distance
 			closest_enemy = enemy
 	
-	# Update our target and attack
 	current_target = closest_enemy
 	if current_target:
 		attack_target(current_target)
@@ -166,26 +159,21 @@ func attack_target(target: Node2D) -> void:
 	if not can_attack or not target or not is_instance_valid(target):
 		return
 		
-	# Safety check for projectile emitter
 	if not projectile_emitter:
 		push_error("Tower: Cannot attack - no projectile_emitter!")
 		return
 	
-	# Calculate the direction to shoot
 	var direction = (target.global_position - global_position).normalized()
 	
-	# Attempt to fire a projectile
 	var projectile_fired = projectile_emitter.fire_projectile(direction)
 	
 	if projectile_fired:
 		# Start our attack cooldown
 		can_attack = false
-		
 		# Use a timer to reset our attack capability
 		var cooldown_timer = get_tree().create_timer(attack_cooldown)
 		cooldown_timer.timeout.connect(func(): can_attack = true)
 	else:
-		# The projectile emitter has its own cooldown, so we just wait and try again next frame
 		pass
 
 # Preview mode management - used by the tower placement system
@@ -266,10 +254,9 @@ func take_damage(damage: float) -> void:
 		health_bar.value = current_health
 		health_bar.visible = true
 	
-	# Emit signal for other systems
+	# Emit signal for other entities
 	health_changed.emit(current_health, max_health)
 	
-	# Visual feedback
 	flash_damage()
 	
 	# Check for destruction
@@ -293,7 +280,6 @@ func destroy() -> void:
 	
 	tower_destroyed.emit()
 	
-	# Disable collision immediately
 	if collision_shape:
 		collision_shape.disabled = true
 	
@@ -302,7 +288,7 @@ func destroy() -> void:
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(queue_free)
 
-# Utility methods for tower management
+# Utility method for tower management
 func can_be_attacked() -> bool:
 	return not is_preview_mode and not is_destroyed and current_health > 0
 

@@ -18,9 +18,12 @@ config/icon="res://icon.svg"
 [autoload]
 
 Game_Manager="*res://Scenes/GameManager/GameManager.tscn"
+CurrencyManager="*res://Scenes/CurrencyManager/CurrencyManager.gd"
 
 [display]
 
+window/size/viewport_width=1080
+window/size/viewport_height=720
 window/stretch/mode="viewport"
 window/stretch/scale=1.5
 

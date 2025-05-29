@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dxhony1kmfltv"]
+[gd_scene load_steps=33 format=3 uid="uid://dxhony1kmfltv"]
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://dlr8hb66x3wl0" path="res://Scripts/Components/state_machine.gd" id="7_3smsa"]
 [ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="8_jlvik"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="9_gk6dx"]
-[ext_resource type="Script" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="10_74mp2"]
+[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="10_74mp2"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="10_jhyir"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="11_06tpx"]
 [ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scripts/Player/TowerPlacementSystem.gd" id="11_74mp2"]
@@ -18,6 +18,9 @@
 [ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
+[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/pixil-layer-Under.png" id="19_rcvs5"]
+[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/pixil-layer-Over.png" id="20_h8ma5"]
+[ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="21_h8ma5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]
 atlas = ExtResource("2_hnuln")
@@ -68,15 +71,15 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pu2lt"]
-radius = 9.0
-height = 28.0
+radius = 8.0
+height = 26.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x3wgy"]
 size = Vector2(13.5, 11)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ukyrk"]
-radius = 7.0
-height = 24.0
+radius = 9.0
+height = 26.0
 
 [sub_resource type="Resource" id="Resource_06tpx"]
 script = ExtResource("10_74mp2")
@@ -147,7 +150,7 @@ animation = &"Idle"
 speed_scale = 0.8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1)
+position = Vector2(-2, -1)
 shape = SubResource("CapsuleShape2D_pu2lt")
 
 [node name="attack_component" parent="." instance=ExtResource("1_vgqql")]
@@ -155,7 +158,7 @@ base_damage = 5.0
 
 [node name="health_component" parent="." instance=ExtResource("2_fkybt")]
 visible = false
-max_health = 100
+max_health = 1000
 
 [node name="hitbox_component" parent="." node_paths=PackedStringArray("attack_component") instance=ExtResource("3_x3wgy")]
 visible = false
@@ -166,11 +169,12 @@ position = Vector2(-11, 4)
 shape = SubResource("RectangleShape2D_x3wgy")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
-visible = false
+collision_layer = 4
+collision_mask = 64
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
-position = Vector2(0, 1)
+position = Vector2(-2, -1)
 shape = SubResource("CapsuleShape2D_ukyrk")
 
 [node name="StateMachine" type="Node" parent="."]
@@ -189,9 +193,27 @@ universal_projectile_scene = ExtResource("10_jhyir")
 metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+limit_left = 0
+limit_top = 0
+limit_right = 1800
+limit_bottom = 1200
+editor_draw_limits = true
 
 [node name="TowerPlacementSystem" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("11_74mp2")
 player = NodePath("..")
 tower_scene = ExtResource("12_oikmp")
 grid_size = 50.0
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -43.0
+offset_right = 16.0
+offset_bottom = -39.0
+value = 50.0
+texture_under = ExtResource("19_rcvs5")
+texture_progress = ExtResource("20_h8ma5")
+script = ExtResource("21_h8ma5")
+
+[connection signal="health_change" from="health_component" to="." method="_on_health_component_health_change"]
+[connection signal="health_depleted" from="health_component" to="." method="_on_health_component_health_depleted"]
