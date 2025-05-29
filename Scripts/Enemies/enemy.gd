@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 @export var speed = 1
-
 @onready var projectile_emitter = $projectile_emitter
 @onready var parent = get_parent()
 @onready var player
@@ -13,15 +12,7 @@ func _ready() -> void:
 	elif get_parent().get_parent().get_node_or_null("Player"):
 		player = get_parent().get_parent().get_node_or_null("Player")
 	
-	#Miguel-added code for enemy detection for shooting at with towers
-	# Debug collision layers
 	add_to_group("enemies")
-	print("=== ENEMY COLLISION DEBUG ===")
-	print("Enemy collision layer: ", collision_layer)
-	print("Enemy collision mask: ", collision_mask)
-	print("Enemy is in enemies group: ", is_in_group("enemies"))
-	print("=============================")
-	
 	
 	# Create projectile_timer, which fires projectiles at the player on timeout
 	var projectile_timer : Timer = Timer.new()
@@ -43,6 +34,7 @@ func _physics_process(delta: float) -> void:
 		$AnimationPlayer.play("run")
 	global_position += direction * speed
 	move_and_slide()
+	
 
 func fire_projectile():
 	var direction = (player.global_position - global_position).normalized()
@@ -52,10 +44,10 @@ func fire_projectile():
 func _on_health_component_health_change(old_value: Variant, new_value: Variant) -> void:
 	print("Enemy took damage! Health: ", old_value, " -> ", new_value)
 	
-	# Flashing logic and damage number
+	# Flashing logic and damage number 
 	if new_value < old_value:
-		print("took damage")
-
+		pass
+		
 # Handle death logic
 func _on_health_component_health_depleted() -> void:
 	print("Enemy died!")
