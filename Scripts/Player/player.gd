@@ -114,10 +114,10 @@ func update_sprite_facing(move_input: Vector2) -> void:
 		# Update sprite orientation
 		if facing_direction.x > 0:
 			# Moving right, so flip the sprite
-			animated_sprite.flip_h = true
+			animated_sprite.flip_h = false
 		else:
 			# Moving left, no need to flip
-			animated_sprite.flip_h = false
+			animated_sprite.flip_h = true
 
 # Returns the direction player is aiming (for attacks)
 func get_aim_direction() -> Vector2:
