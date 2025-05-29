@@ -1,6 +1,4 @@
-
-[gd_scene load_steps=10 format=4 uid="uid://d0pagwu80pd6l"]
-
+[gd_scene load_steps=13 format=4 uid="uid://d0pagwu80pd6l"]
 [ext_resource type="PackedScene" uid="uid://dxhony1kmfltv" path="res://Scenes/Player/player.tscn" id="1_0ba56"]
 [ext_resource type="Script" uid="uid://dxgssf4qmvpgx" path="res://Scenes/Levels/level.gd" id="1_02k47"]
 [ext_resource type="Texture2D" uid="uid://dlgulf1xlklu2" path="res://Assets/Backgrounds/lab-tiles.png" id="2_65pnq"]
@@ -29,6 +27,13 @@ pattern_0 = SubResource("TileMapPattern_65pnq")
 pattern_1 = SubResource("TileMapPattern_5lnup")
 pattern_2 = SubResource("TileMapPattern_l0mwj")
 
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_l0mwj"]
+a = Vector2(-8, 0)
+b = Vector2(1808, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_4nh8f"]
+b = Vector2(0, 1208)
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_02k47")
 
@@ -44,3 +49,19 @@ position = Vector2(540, 360)
 position = Vector2(539, 365)
 
 [node name="CurrencyUi" parent="." instance=ExtResource("4_65pnq")]
+
+[node name="Border" type="StaticBody2D" parent="."]
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+shape = SubResource("SegmentShape2D_l0mwj")
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(0, 1200)
+shape = SubResource("SegmentShape2D_l0mwj")
+
+[node name="Side" type="CollisionShape2D" parent="Border"]
+shape = SubResource("SegmentShape2D_4nh8f")
+
+[node name="Side2" type="CollisionShape2D" parent="Border"]
+position = Vector2(1800, -8)
+shape = SubResource("SegmentShape2D_4nh8f")
