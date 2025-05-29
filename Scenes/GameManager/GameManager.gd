@@ -1,7 +1,7 @@
 extends Node
 class_name GameManager
 
-# Singleton pattern - accessible from anywhere via GameManager
+# Singleton pattern
 static var instance: GameManager
 
 # Game phases
@@ -10,7 +10,6 @@ enum Phase {
 	FIGHT
 }
 
-# Current phase
 var current_phase: Phase = Phase.BUILD
 
 # Signals for phase changes
@@ -26,8 +25,8 @@ func _ready() -> void:
 	set_phase(Phase.BUILD)
 
 func _input(event: InputEvent) -> void:
-	# Toggle between phases with Tab key (you can change this)
-	if event.is_action_pressed("togglePhase"):  # You'll need to add this to input map
+	# Toggle between phases with Tab key for now
+	if event.is_action_pressed("togglePhase"): 
 		toggle_phase()
 
 # Set the current phase
@@ -46,17 +45,17 @@ func set_phase(new_phase: Phase) -> void:
 			print("Entering FIGHT phase")
 			fight_phase_started.emit()
 
-# Toggle between phases
+
 func toggle_phase() -> void:
 	if current_phase == Phase.BUILD:
 		set_phase(Phase.FIGHT)
 	else:
 		set_phase(Phase.BUILD)
 
-# Check if we're in build phase
+
 func is_build_phase() -> bool:
 	return current_phase == Phase.BUILD
 
-# Check if we're in fight phase
+
 func is_fight_phase() -> bool:
 	return current_phase == Phase.FIGHT
