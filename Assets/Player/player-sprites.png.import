@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlgulf1xlklu2"
-path="res://.godot/imported/lab-tiles.png-cdfb4eba16ef3db95f1a6b654a58037b.ctex"
+uid="uid://cc8fkks8jaqj1"
+path="res://.godot/imported/player-sprites.png-d8530291ab03c89f8e4d5748478fc807.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Backgrounds/lab-tiles.png"
-dest_files=["res://.godot/imported/lab-tiles.png-cdfb4eba16ef3db95f1a6b654a58037b.ctex"]
+source_file="res://Assets/Player/player-sprites.png"
+dest_files=["res://.godot/imported/player-sprites.png-d8530291ab03c89f8e4d5748478fc807.ctex"]
 
 [params]
 

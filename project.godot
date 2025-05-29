@@ -22,8 +22,6 @@ CurrencyManager="*res://Scenes/CurrencyManager/CurrencyManager.gd"
 
 [display]
 
-window/size/viewport_width=1080
-window/size/viewport_height=720
 window/stretch/mode="viewport"
 window/stretch/scale=1.5
 

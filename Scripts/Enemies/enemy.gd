@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @export var speed = 1
+@export var projectile_wait_time = 3.5
 @onready var projectile_emitter = $projectile_emitter
 @onready var parent = get_parent()
 @onready var player
@@ -22,7 +23,7 @@ func _ready() -> void:
 	# Create projectile_timer, which fires projectiles at the player on timeout
 	var projectile_timer : Timer = Timer.new()
 	add_child(projectile_timer)
-	projectile_timer.wait_time = 3
+	projectile_timer.wait_time = projectile_wait_time
 	projectile_timer.timeout.connect(func(): fire_projectile())
 	projectile_timer.start()
 	
