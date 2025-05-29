@@ -2,7 +2,6 @@ extends CharacterBody2D
 
 @export var speed = 1
 @export var projectile_wait_time = 3.5
-
 @onready var projectile_emitter = $projectile_emitter
 @onready var parent = get_parent()
 @onready var player
