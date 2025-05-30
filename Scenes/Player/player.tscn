@@ -1,6 +1,4 @@
-
 [gd_scene load_steps=33 format=3 uid="uid://dxhony1kmfltv"]
-
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
@@ -23,7 +21,6 @@
 [ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/pixil-layer-Under.png" id="19_rcvs5"]
 [ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/pixil-layer-Over.png" id="20_h8ma5"]
 [ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="21_h8ma5"]
-
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]
 atlas = ExtResource("2_hnuln")
@@ -172,7 +169,6 @@ position = Vector2(-11, 4)
 shape = SubResource("RectangleShape2D_x3wgy")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
-
 visible = false
 collision_layer = 4
 collision_mask = 64
@@ -215,7 +211,6 @@ offset_left = -16.0
 offset_top = -43.0
 offset_right = 16.0
 offset_bottom = -39.0
-
 value = 50.0
 texture_under = ExtResource("19_rcvs5")
 texture_progress = ExtResource("20_h8ma5")
