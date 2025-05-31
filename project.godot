@@ -25,6 +25,10 @@ CurrencyManager="*res://Scenes/CurrencyManager/CurrencyManager.gd"
 window/stretch/mode="viewport"
 window/stretch/scale=1.5
 
+[gui]
+
+theme/custom_font="uid://dekgc0wplsp1y"
+
 [input]
 
 move_down={
