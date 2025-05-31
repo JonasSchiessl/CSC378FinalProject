@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://dlr8hb66x3wl0" path="res://Scripts/Components/state_machine.gd" id="7_3smsa"]
 [ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="8_jlvik"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="9_gk6dx"]
-[ext_resource type="Script" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="10_74mp2"]
+[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="10_74mp2"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="10_jhyir"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="11_06tpx"]
 [ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scripts/Player/TowerPlacementSystem.gd" id="11_74mp2"]
@@ -79,8 +79,8 @@ radius = 11.0
 height = 28.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ukyrk"]
-radius = 7.0
-height = 24.0
+radius = 9.0
+height = 26.0
 
 [sub_resource type="Resource" id="Resource_06tpx"]
 script = ExtResource("10_74mp2")
@@ -178,7 +178,7 @@ collision_mask = 64
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
-position = Vector2(0, 1)
+position = Vector2(-2, -1)
 shape = SubResource("CapsuleShape2D_ukyrk")
 
 [node name="StateMachine" type="Node" parent="."]
@@ -197,6 +197,11 @@ universal_projectile_scene = ExtResource("10_jhyir")
 metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+limit_left = 0
+limit_top = 0
+limit_right = 1800
+limit_bottom = 1200
+editor_draw_limits = true
 
 [node name="TowerPlacementSystem" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("11_74mp2")
@@ -205,11 +210,11 @@ tower_scene = ExtResource("12_oikmp")
 grid_size = 50.0
 
 [node name="HealthBar" type="TextureProgressBar" parent="."]
-offset_left = -15.0
-offset_top = -46.0
-offset_right = 17.0
-offset_bottom = -42.0
-value = 100.0
+offset_left = -16.0
+offset_top = -43.0
+offset_right = 16.0
+offset_bottom = -39.0
+value = 50.0
 texture_under = ExtResource("19_rcvs5")
 texture_progress = ExtResource("20_h8ma5")
 script = ExtResource("21_h8ma5")

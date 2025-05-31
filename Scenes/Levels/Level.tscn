@@ -38,6 +38,13 @@ pattern_1 = SubResource("TileMapPattern_5lnup")
 pattern_2 = SubResource("TileMapPattern_l0mwj")
 pattern_3 = SubResource("TileMapPattern_4nh8f")
 
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_l0mwj"]
+a = Vector2(-8, 0)
+b = Vector2(1808, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_4nh8f"]
+b = Vector2(0, 1208)
+
 [node name="Node2D" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_02k47")
@@ -54,3 +61,19 @@ position = Vector2(540, 360)
 position = Vector2(539, 365)
 
 [node name="CurrencyUi" parent="." instance=ExtResource("4_65pnq")]
+
+[node name="Border" type="StaticBody2D" parent="."]
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+shape = SubResource("SegmentShape2D_l0mwj")
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(0, 1200)
+shape = SubResource("SegmentShape2D_l0mwj")
+
+[node name="Side" type="CollisionShape2D" parent="Border"]
+shape = SubResource("SegmentShape2D_4nh8f")
+
+[node name="Side2" type="CollisionShape2D" parent="Border"]
+position = Vector2(1800, -8)
+shape = SubResource("SegmentShape2D_4nh8f")
