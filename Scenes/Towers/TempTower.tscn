@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="2_gk5pf"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_t2g34"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="4_dbmra"]
-[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_gk5pf"]
+[ext_resource type="Script" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_gk5pf"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="5_w37wc"]
 [ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Scenes/Projectiles/Fireball.tres" id="6_3jyt2"]
 
@@ -42,12 +42,13 @@ required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [node name="TempTower" type="CharacterBody2D"]
-z_index = 1
+y_sort_enabled = true
 collision_layer = 16
 collision_mask = 28
 script = ExtResource("1_u0wx6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+y_sort_enabled = true
 position = Vector2(0, -16)
 texture = ExtResource("2_gk5pf")
 
