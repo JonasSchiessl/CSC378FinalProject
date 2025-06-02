@@ -44,7 +44,8 @@ tile_map_data = PackedByteArray("AAABAAAAAAABAAAAAAABAAEAAAABAAAAADAAAAEAAAAAAAA
 tile_set = SubResource("TileSet_l0mwj")
 
 [node name="Player" parent="." instance=ExtResource("1_0ba56")]
-position = Vector2(540, 360)
+position = Vector2(900, 600)
+metadata/_edit_group_ = true
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_bk2yi")]
 position = Vector2(539, 365)
