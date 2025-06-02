@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv6orydsi4261"
-path="res://.godot/imported/lab-tiles.png-cdfb4eba16ef3db95f1a6b654a58037b.ctex"
+uid="uid://c3dmb2nb8xw4r"
+path="res://.godot/imported/poison-puddle.png-ef3973b5f41d9adc5ac9408a60c7ed4b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Backgrounds/lab-tiles.png"
-dest_files=["res://.godot/imported/lab-tiles.png-cdfb4eba16ef3db95f1a6b654a58037b.ctex"]
+source_file="res://Assets/Effects/poison-puddle.png"
+dest_files=["res://.godot/imported/poison-puddle.png-ef3973b5f41d9adc5ac9408a60c7ed4b.ctex"]
 
 [params]
 

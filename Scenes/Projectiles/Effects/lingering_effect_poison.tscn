@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://4ydf4y6sgq8n"]
 
 [ext_resource type="Script" uid="uid://h7mwt32so6i0" path="res://Scripts/Components/Projectiles/lingering_effect.gd" id="1_jnw74"]
-[ext_resource type="Texture2D" uid="uid://csmrsh8v05ns7" path="res://Assets/Effects/poison.png" id="2_jnw74"]
+[ext_resource type="Texture2D" uid="uid://c3dmb2nb8xw4r" path="res://Assets/Effects/poison-puddle.png" id="2_jnw74"]
 
 [node name="LingeringEffect" type="Node2D"]
 script = ExtResource("1_jnw74")

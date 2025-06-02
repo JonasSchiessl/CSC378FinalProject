@@ -49,8 +49,6 @@ func setup_ui_layout() -> void:
 		currency_container.position = Vector2(20, 20)
 	
 	if currency_label:
-		currency_label.add_theme_font_size_override("font_size", 24)
-		
 		var style_box = StyleBoxFlat.new()
 		style_box.bg_color = Color(0, 0, 0, 0.7)  
 		style_box.corner_radius_top_left = 5
