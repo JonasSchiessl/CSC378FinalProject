@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d047ywamaokp" path="res://Scripts/Enemies/enemy.gd" id="1_2nxwx"]
 [ext_resource type="Texture2D" uid="uid://ctyoy63ay0gaw" path="res://Assets/Enemies/poison-rat-sprites.png" id="1_tt7e2"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="2_rvmyp"]
-[ext_resource type="Script" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="3_2nxwx"]
+[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="3_2nxwx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="4_52xpa"]
 [ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="5_jdgko"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="6_j4qr3"]

@@ -17,7 +17,7 @@ func damage(attack: Attack) -> void:
 		# Apply base damage
 		health_component.damage(attack)
 		
-		# Apply any status effects
+		# Future: Apply any status effects
 		if status_effect_component and attack.effects.size() > 0:
 			for effect_name in attack.effects:
 				var effect = attack.effects[effect_name]
