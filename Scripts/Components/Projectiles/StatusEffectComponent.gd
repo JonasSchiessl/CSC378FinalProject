@@ -161,34 +161,47 @@ func apply_poison(damage_per_second: float, duration: float) -> void:
 	poison_timer.wait_time = tick_interval
 	poison_timer.one_shot = false  # Allow repeating
 	
-	# Connect the timeout signal
-	poison_timer.timeout.connect(func():
-		# Apply damage
-		var poison_attack = Attack.new(damage_per_tick, Vector2.ZERO, null)
-		health_component.damage(poison_attack)
-		
-		tick_count += 1
-		
-		# Check if effect should end AFTER incrementing
-		if tick_count >= total_ticks or not is_instance_valid(entity) or not is_instance_valid(health_component):
-			_cleanup_effect(effect_id, poison_timer)
-			if poison_particles and is_instance_valid(poison_particles):
-				poison_particles.emitting = false
-			return
-	)
-	
-	# Start the timer
-	poison_timer.start()
-	
-	# Store effect data
+	# Store effect data FIRST so we can track it properly
 	active_effects[effect_id] = {
 		"timer": poison_timer,
 		"ticks_remaining": total_ticks,
 		"damage_per_tick": damage_per_tick,
 		"duration": duration,
 		"tick_count": 0,
-		"total_ticks": total_ticks
+		"total_ticks": total_ticks,
+		"active": true  # Add active flag
 	}
+	
+	# Connect the timeout signal
+	poison_timer.timeout.connect(func():
+		# CRITICAL: Check if this effect is still active and valid
+		if not active_effects.has(effect_id) or not active_effects[effect_id].get("active", false):
+			return
+			
+		if not is_instance_valid(entity) or not is_instance_valid(health_component):
+			force_cleanup_poison_effect(effect_id)
+			return
+		
+		# Get current tick count from stored data
+		var current_tick_count = active_effects[effect_id]["tick_count"]
+		
+		# Check if we've reached the tick limit BEFORE applying damage
+		if current_tick_count >= total_ticks:
+			force_cleanup_poison_effect(effect_id)
+			return
+		
+		# Apply damage
+		var poison_attack = Attack.new(damage_per_tick, Vector2.ZERO, null)
+		health_component.damage(poison_attack)
+		
+		# Update tick count
+		active_effects[effect_id]["tick_count"] = current_tick_count + 1
+		
+		print("Poison tick: ", current_tick_count + 1, "/", total_ticks)  # Debug output
+	)
+	
+	# Start the timer
+	poison_timer.start()
 	
 	# Visual effect
 	_apply_visual_effect(effect_id, damage_per_second, duration)
@@ -204,7 +217,7 @@ func apply_poison(damage_per_second: float, duration: float) -> void:
 	
 	# Emit signal
 	effect_applied.emit(effect_id, damage_per_second, duration)
-
+	
 # FIXED: Handle stun effect
 func apply_stun(duration: float) -> void:
 	var effect_id = "stun"
@@ -249,6 +262,11 @@ func apply_stun(duration: float) -> void:
 # Helper function to clear existing effects
 func _clear_existing_effect(effect_id: String, original_value: Variant = null, stat_name: String = "") -> void:
 	if active_effects.has(effect_id):
+		print("Clearing existing effect: ", effect_id)
+		
+		# Mark as inactive immediately
+		active_effects[effect_id]["active"] = false
+		
 		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
 			# Restore original value if provided
 			if original_value != null and stat_name != "":
@@ -261,16 +279,56 @@ func _clear_existing_effect(effect_id: String, original_value: Variant = null, s
 				if is_instance_valid(entity) and entity.get("move_speed"):
 					entity.move_speed = active_effects[effect_id].original_value
 			
-			active_effects[effect_id].timer.stop()
-			active_effects[effect_id].timer.queue_free()
+			# Stop and free the timer
+			var timer = active_effects[effect_id].timer
+			timer.stop()
+			timer.queue_free()
+		
 		active_effects.erase(effect_id)
 
 # Helper function to cleanup effect
 func _cleanup_effect(effect_id: String, timer: Timer) -> void:
-	active_effects.erase(effect_id)
+	print("Cleaning up effect: ", effect_id)
+	
+	# Mark effect as inactive first
+	if active_effects.has(effect_id):
+		active_effects[effect_id]["active"] = false
+	
+	# Stop timer immediately
 	if is_instance_valid(timer):
 		timer.stop()
 		timer.queue_free()
+	
+	# Remove from active effects
+	active_effects.erase(effect_id)
+	
+	# Emit signal
+	effect_removed.emit(effect_id)
+
+	
+
+func force_cleanup_poison_effect(effect_id: String) -> void:
+	print("Force cleaning up poison effect: ", effect_id)
+	
+	if active_effects.has(effect_id):
+		# Mark as inactive first
+		active_effects[effect_id]["active"] = false
+		
+		# Stop and remove timer
+		if active_effects[effect_id].has("timer"):
+			var timer = active_effects[effect_id]["timer"]
+			if is_instance_valid(timer):
+				timer.stop()
+				timer.queue_free()
+		
+		# Remove from active effects
+		active_effects.erase(effect_id)
+	
+	# Stop particles
+	if poison_particles and is_instance_valid(poison_particles):
+		poison_particles.emitting = false
+	
+	# Emit signal
 	effect_removed.emit(effect_id)
 
 # Helper function to apply visual effects
