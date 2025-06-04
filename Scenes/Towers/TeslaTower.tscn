@@ -1,11 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://wael2dq1ktnn"]
+[gd_scene load_steps=13 format=3 uid="uid://wael2dq1ktnn"]
 
 [ext_resource type="Script" uid="uid://b3eo8alao27n6" path="res://Scenes/Towers/tesla_tower.gd" id="1_hyll0"]
 [ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="2_883p3"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_o2tct"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_dc2tg"]
-[ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="5_1k8mm"]
-[ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Scenes/Projectiles/Fireball.tres" id="6_hhxxs"]
+[ext_resource type="SpriteFrames" uid="uid://dtkm26cxfxb7k" path="res://Scenes/Projectiles/lightning.tres" id="5_883p3"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="7_bw2t5"]
 [ext_resource type="Script" uid="uid://dlgp4xkt45ocl" path="res://Scripts/Components/hurtbox_component.gd" id="8_o2tct"]
 [ext_resource type="Script" uid="uid://bf45ufg6dyex6" path="res://Scripts/Components/health_component.gd" id="9_dc2tg"]
@@ -21,9 +20,8 @@ radius = 145.169
 script = ExtResource("4_dc2tg")
 name = "Fireball"
 description = "Basic Fireball"
-sprite_frames = ExtResource("6_hhxxs")
+sprite_frames = ExtResource("5_883p3")
 projectile_color = Color(1, 1, 1, 1)
-particle_material = ExtResource("5_1k8mm")
 base_speed = 300.0
 base_damage = 1.0
 base_range = 200.0

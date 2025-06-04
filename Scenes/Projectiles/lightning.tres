@@ -1,0 +1,60 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://dtkm26cxfxb7k"]
+
+[ext_resource type="Texture2D" uid="uid://dsswrovineduh" path="res://Assets/projectiles/lightningEnlarged.png" id="1_nvoaw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ctnn"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6gqam"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1c0jj"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5qqrx"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iqcxi"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mh2u0"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i0eix"]
+atlas = ExtResource("1_nvoaw")
+region = Rect2(384, 0, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ctnn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6gqam")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1c0jj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5qqrx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iqcxi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mh2u0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i0eix")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
