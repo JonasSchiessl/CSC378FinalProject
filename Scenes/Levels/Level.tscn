@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=4 uid="uid://d0pagwu80pd6l"]
 
 [ext_resource type="PackedScene" uid="uid://dxhony1kmfltv" path="res://Scenes/Player/player.tscn" id="1_0ba56"]
-[ext_resource type="Script" uid="uid://dxgssf4qmvpgx" path="res://Scenes/Levels/level.gd" id="1_02k47"]
+[ext_resource type="Script" uid="uid://dxgssf4qmvpgx" path="res://Scripts/Game Manager&Levels/level.gd" id="1_02k47"]
 [ext_resource type="Texture2D" uid="uid://dv6orydsi4261" path="res://Assets/Backgrounds/lab-tiles.png" id="2_5lnup"]
 [ext_resource type="PackedScene" uid="uid://cv8cqk5hxkr5k" path="res://Scenes/Enemies/enemy_spawner.tscn" id="3_bk2yi"]
 [ext_resource type="PackedScene" uid="uid://brn38dy1vsdyi" path="res://Scenes/CurrencyManager/CurrencyUI.tscn" id="4_65pnq"]
