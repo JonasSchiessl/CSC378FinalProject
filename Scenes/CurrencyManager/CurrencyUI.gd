@@ -11,7 +11,7 @@ var currency_display_tween: Tween
 var flash_tween: Tween
 
 @export var show_change_animation: bool = true
-@export var show_transaction_log: bool = true
+@export var show_transaction_log: bool = false
 @export var max_log_entries: int = 10
 
 # Color scheme for different types of currency change

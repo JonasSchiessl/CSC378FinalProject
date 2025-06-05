@@ -6,9 +6,8 @@ class_name Tower
 @export var attack_damage: float = 10.0
 @export var attack_cooldown: float = 0.5
 
-# Health properties
-@export var max_health: float = 100.0
-@export var current_health: float = 100.0
+@onready var health_component: HealthComponent = $health_component
+@onready var hurtbox_component: HurtboxComponent = $hurtbox_component
 
 # Visual components
 @onready var sprite: Sprite2D = $Sprite2D
@@ -32,13 +31,10 @@ var normal_color: Color = Color.WHITE
 
 # Signals
 signal tower_destroyed()
-signal health_changed(new_health: float, max_health: float)
+signal health_change(new_health: float, max_health: float)
 
 func _ready() -> void:
-	# Initialize the tower's starting state
-	current_health = max_health
-	
-	# Connect to the game phase system if we're not in preview mode
+	# Connect to the game phase system if not in preview
 	if not is_preview_mode and GameManager.instance:
 		GameManager.instance.phase_changed.connect(_on_phase_changed)
 	
@@ -59,10 +55,18 @@ func _ready() -> void:
 	if GameManager.instance:
 		set_enabled(GameManager.instance.is_fight_phase())
 	
-	if health_bar:
-		health_bar.max_value = max_health
-		health_bar.value = current_health
+	# Initialize health bar with component vals
+	if health_bar and health_component:
+		health_bar.max_value = health_component.max_health
+		health_bar.value = health_component.health
 		health_bar.visible = false  # Only show when damaged
+
+# Connect to health component signals 
+func connect_health_signals() -> void:
+	if health_component:
+		# Connect to health change events (should be basically same as player?)
+		health_component.health_change.connect(_on_health_component_health_change)
+		health_component.health_depleted.connect(_on_health_component_health_depleted)
 
 func setup_attack_range() -> void:
 	if not attack_range_area:
@@ -75,11 +79,10 @@ func setup_attack_range() -> void:
 		push_warning("Tower: Could not find or configure AttackCollision shape")
 
 func _physics_process(delta: float) -> void:
-	# Only process combat during fight phase and when not in preview mode
+	# Only process combat during fight phase and when not in preview
 	if is_preview_mode or not GameManager.instance or not GameManager.instance.is_fight_phase():
 		return
 	
-	# Attack logic - find and attack the best target from our detected enemies
 	if can_attack and not enemies_in_range.is_empty():
 		attack_nearest_enemy()
 
@@ -90,7 +93,7 @@ func _on_enemy_entered_range(body: Node2D) -> void:
 	
 	print("Tower: Something entered attack range: ", body.name)
 	
-	# Check if this is a valid target
+	# Check if valid target
 	if is_enemy(body):
 		enemies_in_range.append(body)		
 		if enemies_in_range.size() == 1 and can_attack:
@@ -176,7 +179,7 @@ func attack_target(target: Node2D) -> void:
 	else:
 		pass
 
-# Preview mode management - used by the tower placement system
+# Preview mode management used by tower placement system
 func set_preview_mode(preview: bool) -> void:
 	is_preview_mode = preview
 	
@@ -189,6 +192,10 @@ func set_preview_mode(preview: bool) -> void:
 			attack_range_area.monitoring = false
 		if collision_shape:
 			collision_shape.disabled = true
+		
+		# Disable hurtbox during preview mode
+		if hurtbox_component:
+			hurtbox_component.monitoring = false
 		
 		# Make the tower transparent
 		modulate = preview_valid_color
@@ -206,8 +213,15 @@ func set_preview_mode(preview: bool) -> void:
 		if collision_shape:
 			collision_shape.disabled = false
 		
+		# Enable hurtbox for placed towers
+		if hurtbox_component:
+			hurtbox_component.monitoring = true
+		
 		# Restore normal appearance
 		modulate = normal_color
+		
+		# Connect health signals now that the tower is placed
+		connect_health_signals()
 
 # Update preview appearance based on placement validity
 func set_preview_state(is_valid: bool) -> void:
@@ -226,6 +240,10 @@ func set_enabled(enabled: bool) -> void:
 	if attack_range_area:
 		attack_range_area.monitoring = enabled
 	
+	# Also enable/disable hurtbox based on game phase
+	if hurtbox_component:
+		hurtbox_component.monitoring = enabled
+	
 	if enabled:
 		can_attack = true
 	else:
@@ -241,28 +259,52 @@ func _on_phase_changed(new_phase: GameManager.Phase) -> void:
 		GameManager.Phase.FIGHT:
 			set_enabled(true)
 
-# Damage and destruction system
+func _on_health_component_health_change(old_value: Variant, new_value: Variant) -> void:
+	print("Tower health changed from ", old_value, " to ", new_value)
+	
+	if health_bar and health_component:
+		health_bar.value = new_value
+		health_bar.visible = true  # Show health bar when damaged
+		
+		# Hide health bar if at full health
+		if new_value >= health_component.max_health:
+			health_bar.visible = false
+	
+	# Emit signal for other systems and stuff
+	health_change.emit(new_value, health_component.max_health)
+	
+	"""
+	# Visual feedback for damage (if we want it)
+	if new_value < old_value:
+		flash_damage()
+	"""
+	
+func _on_health_component_health_depleted() -> void:
+	print("Tower destroyed!")
+	
+	# Hide health bar
+	if health_bar:
+		health_bar.visible = false
+	
+	# Handle tower destruction
+	destroy()
+
+# Kept the old take_damage method for backwards compatibility, but it routes through the health component now or whateva
 func take_damage(damage: float) -> void:
 	if is_destroyed or is_preview_mode:
 		return
 	
-	current_health -= damage
-	current_health = max(0, current_health)
-	
-	# Update health display
-	if health_bar:
-		health_bar.value = current_health
-		health_bar.visible = true
-	
-	# Emit signal for other entities
-	health_changed.emit(current_health, max_health)
-	
-	flash_damage()
-	
-	# Check for destruction
-	if current_health <= 0:
-		destroy()
+	if health_component:
+		# Create a basic attack object and apply it through the health component
+		# This maintains compatibility with any existing code that calls take_damage directly
+		var attack = Attack.new()
+		attack.damage = damage
+		health_component.damage(attack)
+	else:
+		# Warn of no health component for debug
+		push_warning("Tower: No health component found, using fallback damage system")
 
+"""
 func flash_damage() -> void:
 	var original_modulate = modulate
 	modulate = Color(1.5, 0.5, 0.5)  # Flash red
@@ -270,6 +312,7 @@ func flash_damage() -> void:
 	await get_tree().create_timer(0.1).timeout
 	if is_instance_valid(self):
 		modulate = original_modulate
+"""
 
 func destroy() -> void:
 	if is_destroyed:
@@ -283,6 +326,10 @@ func destroy() -> void:
 	if collision_shape:
 		collision_shape.disabled = true
 	
+	# Disable hurtbox when destroyed
+	if hurtbox_component:
+		hurtbox_component.monitoring = false
+	
 	# Fade out and remove
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
@@ -290,17 +337,27 @@ func destroy() -> void:
 
 # Utility method for tower management
 func can_be_attacked() -> bool:
-	return not is_preview_mode and not is_destroyed and current_health > 0
+	return not is_preview_mode and not is_destroyed and health_component and health_component.health > 0
 
 func heal(amount: float) -> void:
-	if is_destroyed:
+	if is_destroyed or not health_component:
 		return
 	
-	current_health = min(current_health + amount, max_health)
-	
-	if health_bar:
-		health_bar.value = current_health
-		if current_health >= max_health:
-			health_bar.visible = false
-	
-	health_changed.emit(current_health, max_health)
+	# Use the health component's heal method if it exists, otherwise modify directly
+	if health_component.has_method("heal"):
+		health_component.heal(amount)
+	else:
+		health_component.health = min(health_component.health + amount, health_component.max_health)
+
+# Future: Status effects if we want it
+func set_effect_tint(color: Color, duration: float) -> void:
+	modulate = color
+	get_tree().create_timer(duration).timeout.connect(func(): 
+		if is_instance_valid(self):
+			modulate = Color.WHITE
+	)
+
+# Future: Stun effects if we want it 
+func set_stun_state(is_stunned: bool) -> void:
+	can_attack = !is_stunned
+	# Could also disable other tower abilities here
