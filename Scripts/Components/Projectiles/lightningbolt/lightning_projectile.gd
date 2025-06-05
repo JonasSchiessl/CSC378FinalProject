@@ -2,18 +2,20 @@
 extends Node2D
 class_name LightningProjectile
 
-# Lightning properties
+# Lightning Stat properties
 @export var max_chains: int = 3
 @export var chain_range: float = 200.0
 @export var beam_width: float = 8.0
 @export var beam_duration: float = 0.3
-@export var damage_falloff: float = 0.8  # Each chain does 80% of previous damage
-@export var shock_chance: float = 0.4  # 40% chance to apply shock per hit
+@export var damage_falloff: float = 0.8  
+@export var shock_chance: float = 0.4  
 
 # Visual properties
-@export var lightning_color: Color = Color(0.8, 0.9, 1.0, 1.0)
+@export var lightning_color: Color = Color(1.0, 1.0, 1.0, 1.0)
 @export var lightning_flicker_speed: float = 20.0
-@export var branch_probability: float = 0.3  # Chance for visual branches
+@export var branch_probability: float = 0.3  
+@export var enable_glow: bool = false
+@export var glow_width: float = 1.0 
 
 # Runtime variables
 var attack: Attack
@@ -23,8 +25,8 @@ var beam_segments: Array[LightningBeam] = []
 var is_active: bool = true
 
 # Collision configuration
-var collision_layer: int = 32  # Player projectile layer
-var collision_mask: int = 8    # Enemy layer
+var collision_layer: int = 32 
+var collision_mask: int = 8    
 
 # Audio and particles
 @onready var lightning_sound: AudioStreamPlayer2D = $LightningSound if has_node("LightningSound") else null
@@ -38,17 +40,18 @@ class LightningBeam extends Line2D:
 	var lifetime: float = 0.0
 	var max_lifetime: float
 	var branches: Array[Line2D] = []
-	var base_points: PackedVector2Array  # Store original path
-	var crackling_speed: float = 30.0  # How fast the lightning crackles
-	var intensity_variation: float = 0.4  # How much the lightning varies
+	var base_points: PackedVector2Array 
+	var crackling_speed: float = 30.0  
+	var intensity_variation: float = 0.4  
+	var enable_glow: bool =  false
 	
-	func _init(start_pos: Vector2, end_pos: Vector2, width: float, color: Color, duration: float):
+	func _init(start_pos: Vector2, end_pos: Vector2, width: float, color: Color, duration: float, glow_width: float, enable_glow: bool):
 		# Set basic Line2D properties first
 		default_color = color
 		self.width = width
 		base_width = width
 		max_lifetime = duration
-		z_index = 100  # Draw above other objects
+		z_index = 100  
 		
 		# Lightning line style
 		end_cap_mode = Line2D.LINE_CAP_ROUND
@@ -62,13 +65,14 @@ class LightningBeam extends Line2D:
 		base_points = PackedVector2Array([start_pos, end_pos])
 		points = base_points
 		
-		print("Created crackling lightning from ", start_pos, " to ", end_pos)
+		#print("Created crackling lightning from ", start_pos, " to ", end_pos)
 		
 		# Generate initial crackling pattern
 		call_deferred("generate_crackling_path")
 		
-		# Create glow effect
-		call_deferred("create_glow_effect", start_pos, end_pos, width, color)
+		if enable_glow:
+			# Create glow effect
+			call_deferred("create_glow_effect", start_pos, end_pos, width, color, glow_width)
 	
 	func generate_crackling_path():
 		if base_points.size() < 2:
@@ -121,7 +125,7 @@ class LightningBeam extends Line2D:
 		# Create new crackling branches
 		var branch_count = randi_range(1, 3)
 		for i in range(branch_count):
-			if randf() < 0.6:  # 60% chance per potential branch
+			if randf() < 0.6: 
 				create_crackling_branch()
 	
 	func create_crackling_branch():
@@ -133,7 +137,7 @@ class LightningBeam extends Line2D:
 		
 		# Create branch direction with some randomness
 		var main_direction = (points[-1] - points[0]).normalized()
-		var branch_angle = randf_range(-PI/3, PI/3)  # ±60 degrees from main direction
+		var branch_angle = randf_range(-PI/3, PI/3) 
 		var branch_direction = main_direction.rotated(branch_angle)
 		
 		var branch_length = randf_range(30.0, 80.0)
@@ -164,13 +168,13 @@ class LightningBeam extends Line2D:
 		get_tree().current_scene.add_child(branch)
 		branches.append(branch)
 	
-	func create_glow_effect(start_pos: Vector2, end_pos: Vector2, base_width: float, base_color: Color):
+	func create_glow_effect(start_pos: Vector2, end_pos: Vector2, base_width: float, base_color: Color, glow_width: float):
 		# Create a wider, more transparent line behind the main lightning for glow
 		var glow = Line2D.new()
 		glow.points = PackedVector2Array([start_pos, end_pos])
-		glow.width = base_width * 4.0  # 4x wider
+		glow.width = base_width * glow_width  
 		glow.default_color = Color(base_color.r, base_color.g, base_color.b, 0.2)  # More transparent
-		glow.z_index = z_index - 2  # Behind everything
+		glow.z_index = z_index - 2  
 		glow.antialiased = true
 		glow.end_cap_mode = Line2D.LINE_CAP_ROUND
 		
@@ -265,7 +269,7 @@ func fire_lightning_chain(start_pos: Vector2, search_direction: Vector2, last_ta
 	print("Lightning chain ", current_chains, ": from ", start_pos, " to ", target_pos)
 	
 	# Create visual lightning beam directly in the world
-	var beam = LightningBeam.new(start_pos, target_pos, beam_width, lightning_color, beam_duration)
+	var beam = LightningBeam.new(start_pos, target_pos, beam_width, lightning_color, beam_duration, enable_glow, glow_width)
 	get_tree().current_scene.add_child(beam)  # Add to scene root instead of self
 	beam_segments.append(beam)
 	
@@ -299,10 +303,7 @@ func fire_lightning_chain(start_pos: Vector2, search_direction: Vector2, last_ta
 	
 	# Continue chain after a short delay for visual effect
 	if current_chains < max_chains:
-		get_tree().create_timer(0.08).timeout.connect(func():
-			if is_instance_valid(self) and is_active:
-				fire_lightning_chain(target_pos, Vector2.ZERO, target)
-		)
+		get_tree().create_timer(0.08).timeout.connect(_continue_chain.bind(target_pos))
 	else:
 		call_deferred("finish_lightning")
 
@@ -371,6 +372,27 @@ func get_enemies_in_range(center: Vector2, range: float) -> Array[Node2D]:
 	
 	return enemies
 
+func _continue_chain(target_pos: Vector2) -> void:
+	if not is_instance_valid(self) or not is_active:
+		return
+	
+	# Continue from the position, find_next_target will avoid already hit enemies
+	fire_lightning_chain(target_pos, Vector2.ZERO, null)
+
+func finish_lightning() -> void:
+	is_active = false
+	
+	# Wait for all visual effects to finish before cleaning up
+	var max_beam_duration = beam_duration
+	get_tree().create_timer(max_beam_duration + 0.1).timeout.connect(func():
+		if is_instance_valid(self):
+			queue_free()
+	)
+
+func set_collision_layers(layer: int, mask: int) -> void:
+	collision_layer = layer
+	collision_mask = mask
+
 func show_impact_effect(position: Vector2) -> void:
 	# Create impact particles
 	if impact_particles:
@@ -387,20 +409,5 @@ func show_impact_effect(position: Vector2) -> void:
 	
 	# Create a small electric burst effect
 	var burst = LightningBeam.new(position, position + Vector2(randf_range(-20, 20), randf_range(-20, 20)), 
-								  beam_width * 0.5, lightning_color, 0.2)
+								  beam_width * 0.5, lightning_color, 0.2, enable_glow, glow_width)
 	get_tree().current_scene.add_child(burst)  # Add to scene root
-
-func finish_lightning() -> void:
-	is_active = false
-	
-	# Wait for all visual effects to finish before cleaning up
-	var max_beam_duration = beam_duration
-	get_tree().create_timer(max_beam_duration + 0.1).timeout.connect(func():
-		if is_instance_valid(self):
-			queue_free()
-	)
-
-# Helper method to set collision layers (called from projectile emitter)
-func set_collision_layers(layer: int, mask: int) -> void:
-	collision_layer = layer
-	collision_mask = mask

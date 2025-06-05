@@ -17,9 +17,9 @@ func _init():
 	description = "Chains between enemies with electrical damage"
 	
 	# Set base properties
-	base_speed = 0.0  # Instant raycast
+	base_speed = 0.0  
 	base_damage = 8.0
-	base_range = 200.0  # Initial search range
+	base_range = 200.0  
 	base_knockback = 50.0
 	cooldown = 1.5
 	
