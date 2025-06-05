@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://dxhony1kmfltv"]
+[gd_scene load_steps=37 format=3 uid="uid://dxhony1kmfltv"]
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TeslaTower.tscn" id="20_qr1w5"]
 [ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="21_h8ma5"]
 [ext_resource type="PackedScene" uid="uid://cj0law2b0g4t0" path="res://Scenes/Towers/LavaTower.tscn" id="21_ythyg"]
+[ext_resource type="PackedScene" uid="uid://dthrnl8i5x8kk" path="res://Scenes/Towers/TurretTower.tscn" id="22_qr1w5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]
 atlas = ExtResource("2_hnuln")
@@ -237,7 +238,7 @@ player = NodePath("..")
 grid_size = 50.0
 tesla_tower_scene = ExtResource("20_qr1w5")
 lava_tower_scene = ExtResource("21_ythyg")
-turret_tower_scene = ExtResource("20_qr1w5")
+turret_tower_scene = ExtResource("22_qr1w5")
 
 [node name="HealthBar" type="TextureProgressBar" parent="."]
 offset_left = -16.0

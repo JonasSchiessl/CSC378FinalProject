@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://cj0law2b0g4t0"]
 
 [ext_resource type="Script" uid="uid://b3eo8alao27n6" path="res://Scenes/Towers/baseTower.gd" id="1_hyll0"]
-[ext_resource type="Texture2D" uid="uid://ppfdhn8rtkg2" path="res://Assets/Tower/lavaTower.png" id="2_nn5rn"]
+[ext_resource type="Texture2D" uid="uid://btnsttvu4aai8" path="res://Assets/Tower/lavaNoWings.png" id="2_nn5rn"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_o2tct"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_dc2tg"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="5_1k8mm"]
@@ -11,8 +11,8 @@
 [ext_resource type="Script" uid="uid://bf45ufg6dyex6" path="res://Scripts/Components/health_component.gd" id="9_dc2tg"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hyll0"]
-radius = 32.0
-height = 80.0
+radius = 24.0
+height = 70.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_butbb"]
 radius = 145.169
@@ -25,7 +25,7 @@ sprite_frames = ExtResource("6_hhxxs")
 projectile_color = Color(1, 1, 1, 1)
 particle_material = ExtResource("5_1k8mm")
 base_speed = 300.0
-base_damage = 1.0
+base_damage = 4.0
 base_range = 200.0
 base_knockback = 50.0
 can_arc = false
@@ -59,7 +59,7 @@ metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o2tct"]
 radius = 22.0
-height = 82.0
+height = 68.0
 
 [node name="LavaTower" type="CharacterBody2D"]
 y_sort_enabled = true
@@ -74,7 +74,7 @@ scale = Vector2(0.593814, 0.593814)
 texture = ExtResource("2_nn5rn")
 
 [node name="PhysicalCollision" type="CollisionShape2D" parent="."]
-position = Vector2(0, -33)
+position = Vector2(-3, -27)
 shape = SubResource("CapsuleShape2D_hyll0")
 
 [node name="AttackRange" type="Area2D" parent="."]
@@ -110,7 +110,7 @@ health_component = NodePath("../health_component")
 metadata/_custom_type_script = "uid://dlgp4xkt45ocl"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
-position = Vector2(0, -33)
+position = Vector2(-3, -29)
 shape = SubResource("CapsuleShape2D_o2tct")
 
 [node name="health_component" type="Node2D" parent="."]
