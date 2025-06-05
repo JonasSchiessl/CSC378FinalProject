@@ -1,7 +1,7 @@
 [gd_resource type="SpriteFrames" load_steps=8 format=3 uid="uid://bbokd1mf2gws7"]
 
 [ext_resource type="Texture2D" uid="uid://csw1vw0pui2hm" path="res://Assets/Tower/turret-sprites.png" id="1_fh03j"]
-[ext_resource type="Texture2D" uid="uid://d0sgdyclsj1c2" path="res://Assets/Tower/leftFacing.png" id="2_x0fde"]
+[ext_resource type="Texture2D" uid="uid://7dygixd17g18" path="res://Assets/Tower/leftFacing.png" id="2_x0fde"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ktgst"]
 atlas = ExtResource("1_fh03j")

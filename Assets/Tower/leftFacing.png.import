@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl6ud7mjq75"
-path="res://.godot/imported/Chibi-character-template_skin0_part2_by_AxulArt.png-ba90decb2271e862bff1ede490c84507.ctex"
+uid="uid://7dygixd17g18"
+path="res://.godot/imported/leftFacing.png-d38cad259f734e9e69115ad8e74f65fc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Player/Chibi-character-template_skin0_part2_by_AxulArt.png"
-dest_files=["res://.godot/imported/Chibi-character-template_skin0_part2_by_AxulArt.png-ba90decb2271e862bff1ede490c84507.ctex"]
+source_file="res://Assets/Tower/leftFacing.png"
+dest_files=["res://.godot/imported/leftFacing.png-d38cad259f734e9e69115ad8e74f65fc.ctex"]
 
 [params]
 
