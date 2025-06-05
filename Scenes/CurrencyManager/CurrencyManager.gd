@@ -1,7 +1,7 @@
 extends Node
 
 # Core currency state - this persists across all scenes and rounds
-var current_currency: int = 300  
+var current_currency: int = 200  
 
 # Configuration for different rewards and costs
 var enemy_kill_rewards: Dictionary = {
@@ -10,7 +10,8 @@ var enemy_kill_rewards: Dictionary = {
 	"boss_enemy": 100,
 	"poison_rat": 15 
 }
-
+  
+#Being unsure of implementation plans at the time these existed but are no longer needed.
 var tower_costs: Dictionary = {
 	"basic_tower": 100,
 	"advanced_tower": 250,

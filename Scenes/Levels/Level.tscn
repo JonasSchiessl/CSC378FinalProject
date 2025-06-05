@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=4 uid="uid://d0pagwu80pd6l"]
+[gd_scene load_steps=15 format=4 uid="uid://d0pagwu80pd6l"]
 
 [ext_resource type="PackedScene" uid="uid://dxhony1kmfltv" path="res://Scenes/Player/player.tscn" id="1_0ba56"]
 [ext_resource type="Script" uid="uid://dxgssf4qmvpgx" path="res://Scenes/Levels/level.gd" id="1_02k47"]
 [ext_resource type="Texture2D" uid="uid://dv6orydsi4261" path="res://Assets/Backgrounds/lab-tiles.png" id="2_5lnup"]
 [ext_resource type="PackedScene" uid="uid://cv8cqk5hxkr5k" path="res://Scenes/Enemies/enemy_spawner.tscn" id="3_bk2yi"]
 [ext_resource type="PackedScene" uid="uid://brn38dy1vsdyi" path="res://Scenes/CurrencyManager/CurrencyUI.tscn" id="4_65pnq"]
+[ext_resource type="AudioStream" uid="uid://cth6hijgl2eq7" path="res://Assets/Music/DavidKBD - Pink Bloom Pack - 02 - Portal to Underworld.ogg" id="6_l0mwj"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_65pnq"]
 tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 1610612736, 1, 0, 1342177280, 65537, 0, 805306368)
@@ -78,3 +79,8 @@ shape = SubResource("SegmentShape2D_4nh8f")
 [node name="Side2" type="CollisionShape2D" parent="Border"]
 position = Vector2(1800, -8)
 shape = SubResource("SegmentShape2D_4nh8f")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_l0mwj")
+autoplay = true
+parameters/looping = true
