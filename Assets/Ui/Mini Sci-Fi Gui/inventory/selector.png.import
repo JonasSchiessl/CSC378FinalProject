@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bi35c5dj6wiqh"
-path="res://.godot/imported/pixil-layer-Over.png-31eb9668e0d73434327ac7ea69bb2817.ctex"
+uid="uid://c560d0spfb4ks"
+path="res://.godot/imported/selector.png-697e0e4fe3a119c9fb364f566bc2c422.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Ui/pixil-layer-Over.png"
-dest_files=["res://.godot/imported/pixil-layer-Over.png-31eb9668e0d73434327ac7ea69bb2817.ctex"]
+source_file="res://Assets/Ui/Mini Sci-Fi Gui/inventory/selector.png"
+dest_files=["res://.godot/imported/selector.png-697e0e4fe3a119c9fb364f566bc2c422.ctex"]
 
 [params]
 

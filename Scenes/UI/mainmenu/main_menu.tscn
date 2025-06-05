@@ -1,0 +1,379 @@
+[gd_scene load_steps=11 format=3 uid="uid://dbwimi1hpri3g"]
+
+[ext_resource type="Script" uid="uid://bos0xvkhcysw6" path="res://Scenes/UI/mainmenu/main_menu.gd" id="1_2ksgt"]
+[ext_resource type="Texture2D" uid="uid://dcbibb2wdxu65" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/colossal_button1_scaled_5x_pngcrushed.png" id="1_8qc4y"]
+[ext_resource type="Texture2D" uid="uid://vwgac48pe2tw" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/colossal_button2_scaled_5x_pngcrushed.png" id="2_2ksgt"]
+[ext_resource type="FontFile" uid="uid://cgtuesu7rhf7d" path="res://Assets/Ui/Mini Sci-Fi Gui/Cyberphont 2.0/Cyberphont 2.0.ttf" id="3_8pvuc"]
+[ext_resource type="Script" uid="uid://dc31ym7wsiwm6" path="res://Scenes/UI/mainmenu/start_button.gd" id="4_8pvuc"]
+[ext_resource type="AudioStream" uid="uid://dhshp26pmoecp" path="res://Assets/Music/DavidKBD - Pink Bloom Pack - 03 - To the Unknown.ogg" id="6_16o10"]
+[ext_resource type="Texture2D" uid="uid://txpr138y0pfy" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/Screen_combinedBG_scaled_9x_pngcrushed.png" id="7_qrcm0"]
+[ext_resource type="Texture2D" uid="uid://dc5fl2t0shsha" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/screen_bg_pattern.png" id="8_gfjmo"]
+[ext_resource type="Texture2D" uid="uid://b3rsf7rnyaswj" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/small_button1.png" id="9_an3td"]
+[ext_resource type="Texture2D" uid="uid://rl3meomtx6r1" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/small_button2.png" id="10_3o3u4"]
+
+[node name="Main_Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2ksgt")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(7.82125e-08, 0.0729655, 9.02452e-09, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -199.0
+offset_top = -82.0
+offset_right = 211.0
+offset_bottom = -82.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Start" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("1_8qc4y")
+texture_pressed = ExtResource("2_2ksgt")
+stretch_mode = 0
+script = ExtResource("4_8pvuc")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Start"]
+layout_mode = 2
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 405.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
+theme_override_fonts/normal_font = ExtResource("3_8pvuc")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "START"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="Settings" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("1_8qc4y")
+texture_pressed = ExtResource("2_2ksgt")
+stretch_mode = 0
+script = ExtResource("4_8pvuc")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Settings"]
+layout_mode = 2
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 405.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
+theme_override_fonts/normal_font = ExtResource("3_8pvuc")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "SETTINGS
+"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="Credits" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("1_8qc4y")
+texture_pressed = ExtResource("2_2ksgt")
+stretch_mode = 0
+script = ExtResource("4_8pvuc")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Credits"]
+layout_mode = 2
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 405.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
+theme_override_fonts/normal_font = ExtResource("3_8pvuc")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "CREDITS"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_16o10")
+autoplay = true
+parameters/looping = true
+
+[node name="Settings" type="NinePatchRect" parent="."]
+z_index = 3
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 76.0
+offset_right = -1078.0
+offset_bottom = -522.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_qrcm0")
+metadata/_edit_group_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="Settings"]
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0810811
+anchor_top = 0.0899471
+anchor_right = 0.897297
+anchor_bottom = 0.915344
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Settings/BoxContainer"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("8_gfjmo")
+
+[node name="ColorRect" type="ColorRect" parent="Settings"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0841908
+anchor_top = 0.0845443
+anchor_right = 0.898036
+anchor_bottom = 0.915456
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Credits" type="NinePatchRect" parent="."]
+z_index = 3
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = 77.0
+offset_right = -1002.0
+offset_bottom = -521.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_qrcm0")
+metadata/_edit_group_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="Credits"]
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0810811
+anchor_top = 0.0899471
+anchor_right = 0.897297
+anchor_bottom = 0.915344
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Credits/BoxContainer"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("8_gfjmo")
+
+[node name="ColorRect" type="ColorRect" parent="Credits"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0841908
+anchor_top = 0.0845443
+anchor_right = 0.898036
+anchor_bottom = 0.915456
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="SettingsOverlay" type="Control" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Exit" type="TextureButton" parent="SettingsOverlay"]
+layout_mode = 2
+offset_left = 972.0
+offset_top = 66.0
+offset_right = 1027.0
+offset_bottom = 117.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("9_an3td")
+texture_pressed = ExtResource("10_3o3u4")
+stretch_mode = 0
+script = ExtResource("4_8pvuc")
+metadata/_edit_group_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsOverlay/Exit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
+theme_override_fonts/normal_font = ExtResource("3_8pvuc")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "X
+"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -204.0
+offset_top = -72.0
+offset_right = 204.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+text = "No Settings yet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CreditsOverlay" type="Control" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Exit" type="TextureButton" parent="CreditsOverlay"]
+visible = false
+layout_mode = 2
+offset_left = 972.0
+offset_top = 67.0
+offset_right = 1027.0
+offset_bottom = 118.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("9_an3td")
+texture_pressed = ExtResource("10_3o3u4")
+stretch_mode = 0
+script = ExtResource("4_8pvuc")
+metadata/_edit_group_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CreditsOverlay/Exit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
+theme_override_fonts/normal_font = ExtResource("3_8pvuc")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "X
+"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CreditsOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -204.0
+offset_top = -72.0
+offset_right = 204.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+text = "No Credits yet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="button_down" from="VBoxContainer/Start" to="VBoxContainer/Start" method="_on_button_down"]
+[connection signal="button_is_pressed" from="VBoxContainer/Start" to="." method="on_start_button_is_pressed"]
+[connection signal="button_up" from="VBoxContainer/Start" to="VBoxContainer/Start" method="_on_button_up"]
+[connection signal="button_down" from="VBoxContainer/Settings" to="VBoxContainer/Settings" method="_on_button_down"]
+[connection signal="button_is_pressed" from="VBoxContainer/Settings" to="." method="on_settings_button_is_pressed"]
+[connection signal="button_up" from="VBoxContainer/Settings" to="VBoxContainer/Settings" method="_on_button_up"]
+[connection signal="button_down" from="VBoxContainer/Credits" to="VBoxContainer/Credits" method="_on_button_down"]
+[connection signal="button_is_pressed" from="VBoxContainer/Credits" to="." method="on_credits_button_is_pressed"]
+[connection signal="button_up" from="VBoxContainer/Credits" to="VBoxContainer/Credits" method="_on_button_up"]
+[connection signal="button_down" from="SettingsOverlay/Exit" to="SettingsOverlay/Exit" method="_on_button_down"]
+[connection signal="button_is_pressed" from="SettingsOverlay/Exit" to="." method="_on_settings_back"]
+[connection signal="button_up" from="SettingsOverlay/Exit" to="SettingsOverlay/Exit" method="_on_button_up"]
+[connection signal="button_down" from="CreditsOverlay/Exit" to="CreditsOverlay/Exit" method="_on_button_down"]
+[connection signal="button_is_pressed" from="CreditsOverlay/Exit" to="." method="_on_credits_back"]
+[connection signal="button_up" from="CreditsOverlay/Exit" to="CreditsOverlay/Exit" method="_on_button_up"]
