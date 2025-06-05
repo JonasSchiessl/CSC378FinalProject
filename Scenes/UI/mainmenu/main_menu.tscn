@@ -308,7 +308,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Exit" type="TextureButton" parent="CreditsOverlay"]
-visible = false
 layout_mode = 2
 offset_left = 972.0
 offset_top = 67.0

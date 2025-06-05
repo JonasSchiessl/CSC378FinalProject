@@ -51,20 +51,19 @@ _data = {
 &"run": SubResource("Animation_tt7e2")
 }
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7x3ry"]
+radius = 18.0
+height = 72.0
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_aeqx5"]
 radius = 14.0
 height = 54.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7x3ry"]
-radius = 12.0
-height = 52.0
 
 [node name="Node2D" type="CharacterBody2D" groups=["enemies"]]
 collision_layer = 8
 collision_mask = 28
 script = ExtResource("1_op3ri")
 speed = 100
-enemy_type = "melee_rat"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
@@ -83,8 +82,20 @@ libraries = {
 &"": SubResource("AnimationLibrary_s7bn3")
 }
 
+[node name="attack_component" parent="." instance=ExtResource("6_7x3ry")]
+base_damage = 5.0
+
 [node name="health_component" parent="." instance=ExtResource("8_kjiap")]
 max_health = 5
+
+[node name="hitbox_component" parent="." instance=ExtResource("5_7x3ry")]
+collision_layer = 64
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox_component"]
+position = Vector2(-6, 2)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_7x3ry")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("9_6ooun")]
 collision_layer = 8
@@ -95,19 +106,6 @@ health_component = NodePath("../health_component")
 position = Vector2(0, 2)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_aeqx5")
-
-[node name="hitbox_component" parent="." node_paths=PackedStringArray("attack_component") instance=ExtResource("5_7x3ry")]
-collision_layer = 8
-collision_mask = 36
-attack_component = NodePath("../attack_component")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox_component"]
-position = Vector2(0, 2)
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_7x3ry")
-
-[node name="attack_component" parent="." instance=ExtResource("6_7x3ry")]
-base_damage = 5.0
 
 [node name="StatusEffectComponent" type="Node" parent="."]
 script = ExtResource("10_07num")

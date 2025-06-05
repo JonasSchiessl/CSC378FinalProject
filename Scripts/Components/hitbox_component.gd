@@ -12,12 +12,15 @@ func _ready() -> void:
 
 # Called when this hitbox enters a hurtbox
 func _on_area_entered(area: Area2D) -> void:
-	print("HITBOX ENTERED AREA: ", area)
 	if not active:
 		return
 	
 	if area is HurtboxComponent:
-		print("AREA IS HURTBOX")
-		# Create an attack and apply it to the hurtbox
-		var attack = attack_component.create_attack()
-		area.damage(attack)
+		if attack_component:
+			# Create an attack and apply it to the hurtbox
+			var attack = attack_component.create_attack()
+			area.damage(attack)
+		else:
+			print("ERROR: No attack component to create attack!")
+	else:
+		print("AREA IS NOT HURTBOX: ", area.get_class())
