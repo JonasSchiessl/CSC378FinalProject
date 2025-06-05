@@ -1,4 +1,4 @@
-# status_effect_component.gd
+# status_effect_component.gd - FIXED VERSION
 extends Node
 class_name StatusEffectComponent
 
@@ -24,7 +24,7 @@ func _ready() -> void:
 		var health_comp = entity.get_node("health_component")
 		health_comp.health_depleted.connect(_on_health_depleted)
 
-# Handle movement speed modifications
+# FIXED: Handle movement speed modifications
 func apply_speed_modifier(amount: float, duration: float) -> void:
 	# Skip if entity doesn't have move_speed
 	if not entity.get("move_speed"):
@@ -33,10 +33,8 @@ func apply_speed_modifier(amount: float, duration: float) -> void:
 	var effect_id = "speed_modifier"
 	var original_speed = entity.move_speed
 	
-	# Clear existing effect timer if any
-	if active_effects.has(effect_id):
-		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
-			active_effects[effect_id].timer.queue_free()
+	# FIXED: Clear existing effect timer if any
+	_clear_existing_effect(effect_id, original_speed)
 	
 	# Apply effect
 	entity.move_speed *= amount
@@ -49,9 +47,7 @@ func apply_speed_modifier(amount: float, duration: float) -> void:
 	timer.timeout.connect(func():
 		if is_instance_valid(entity) and entity.get("move_speed"):
 			entity.move_speed = original_speed
-		active_effects.erase(effect_id)
-		timer.queue_free()
-		effect_removed.emit(effect_id)
+		_cleanup_effect(effect_id, timer)
 	)
 	timer.start()
 	
@@ -64,15 +60,7 @@ func apply_speed_modifier(amount: float, duration: float) -> void:
 	}
 	
 	# Visual effect
-	if entity.has_method("set_visual_effect"):
-		if amount < 1.0:  # Slow
-			entity.set_visual_effect("slow", duration)
-		else:  # Speed up
-			entity.set_visual_effect("speed_up", duration)
-	else:
-		# Default visual - tint the entity
-		if entity.has_method("set_effect_tint"):
-			entity.set_effect_tint(Color(0.7, 0.7, 1.0), duration)  # Blue tint for slow
+	_apply_visual_effect(effect_id, amount, duration)
 	
 	# Enable ice particles if available
 	if ice_particles and amount < 1.0:
@@ -85,7 +73,7 @@ func apply_speed_modifier(amount: float, duration: float) -> void:
 	# Emit signal
 	effect_applied.emit(effect_id, amount, duration)
 
-# Handle burning damage over time
+# FIXED: Handle burning damage over time with proper tick counting
 func apply_burning(damage_per_second: float, duration: float) -> void:
 	# Skip if entity doesn't have health_component
 	if not entity.has_node("health_component"):
@@ -93,32 +81,37 @@ func apply_burning(damage_per_second: float, duration: float) -> void:
 		
 	var health_component = entity.get_node("health_component")
 	var effect_id = "burning"
-	var total_ticks = int(duration / 0.5)  # Damage every 0.5 seconds
-	var damage_per_tick = damage_per_second * 0.5
+	var tick_interval = 0.5  # Damage every 0.5 seconds
+	var total_ticks = int(duration / tick_interval)
+	var damage_per_tick = damage_per_second * tick_interval
 	
-	# Clear existing effect timer if any
-	if active_effects.has(effect_id):
-		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
-			active_effects[effect_id].timer.queue_free()
+	# FIXED: Clear existing effect timer if any
+	_clear_existing_effect(effect_id)
 	
 	# Create a timer for burning damage
 	var tick_count = 0
 	var burn_timer = Timer.new()
 	add_child(burn_timer)
-	burn_timer.wait_time = 0.5
+	burn_timer.wait_time = tick_interval
+	burn_timer.one_shot = false  # Allow repeating
+	
+	# Connect the timeout signal
 	burn_timer.timeout.connect(func():
-		tick_count += 1
-		if tick_count > total_ticks or not is_instance_valid(entity) or not is_instance_valid(health_component):
-			if is_instance_valid(burn_timer):
-				burn_timer.queue_free()
-			active_effects.erase(effect_id)
-			effect_removed.emit(effect_id)
-			return
-		
-		# Apply damage directly to health component
+		# Apply damage
 		var burn_attack = Attack.new(damage_per_tick, Vector2.ZERO, null)
 		health_component.damage(burn_attack)
+		
+		tick_count += 1
+		
+		# Check if effect should end AFTER incrementing
+		if tick_count >= total_ticks or not is_instance_valid(entity) or not is_instance_valid(health_component):
+			_cleanup_effect(effect_id, burn_timer)
+			if burning_particles and is_instance_valid(burning_particles):
+				burning_particles.emitting = false
+			return
 	)
+	
+	# Start the timer
 	burn_timer.start()
 	
 	# Store effect data
@@ -126,20 +119,18 @@ func apply_burning(damage_per_second: float, duration: float) -> void:
 		"timer": burn_timer,
 		"ticks_remaining": total_ticks,
 		"damage_per_tick": damage_per_tick,
-		"duration": duration
+		"duration": duration,
+		"tick_count": 0,
+		"total_ticks": total_ticks
 	}
 	
 	# Visual effect
-	if entity.has_method("set_visual_effect"):
-		entity.set_visual_effect("burning", duration)
-	else:
-		# Default visual - tint the entity
-		if entity.has_method("set_effect_tint"):
-			entity.set_effect_tint(Color(1.0, 0.6, 0.3), duration)  # Orange tint
+	_apply_visual_effect(effect_id, damage_per_second, duration)
 	
 	# Enable burning particles if available
 	if burning_particles:
 		burning_particles.emitting = true
+		# Create a separate timer to stop particles after duration
 		get_tree().create_timer(duration).timeout.connect(func(): 
 			if is_instance_valid(burning_particles):
 				burning_particles.emitting = false
@@ -148,7 +139,7 @@ func apply_burning(damage_per_second: float, duration: float) -> void:
 	# Emit signal
 	effect_applied.emit(effect_id, damage_per_second, duration)
 
-# Handle poison damage over time
+# FIXED: Handle poison damage over time with proper tick counting
 func apply_poison(damage_per_second: float, duration: float) -> void:
 	# Skip if entity doesn't have health_component
 	if not entity.has_node("health_component"):
@@ -156,53 +147,69 @@ func apply_poison(damage_per_second: float, duration: float) -> void:
 		
 	var health_component = entity.get_node("health_component")
 	var effect_id = "poison"
-	var total_ticks = int(duration / 0.5)
-	var damage_per_tick = damage_per_second * 0.5
+	var tick_interval = 0.5  # Damage every 0.5 seconds
+	var total_ticks = int(duration / tick_interval)
+	var damage_per_tick = damage_per_second * tick_interval
 	
-	# Clear existing effect timer if any
-	if active_effects.has(effect_id):
-		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
-			active_effects[effect_id].timer.queue_free()
+	# FIXED: Clear existing effect timer if any
+	_clear_existing_effect(effect_id)
 	
 	# Create a timer for poison damage
 	var tick_count = 0
 	var poison_timer = Timer.new()
 	add_child(poison_timer)
-	poison_timer.wait_time = 0.5
+	poison_timer.wait_time = tick_interval
+	poison_timer.one_shot = false  # Allow repeating
+	
+	# Store effect data FIRST so we can track it properly
+	active_effects[effect_id] = {
+		"timer": poison_timer,
+		"ticks_remaining": total_ticks,
+		"damage_per_tick": damage_per_tick,
+		"duration": duration,
+		"tick_count": 0,
+		"total_ticks": total_ticks,
+		"active": true  # Add active flag
+	}
+	
+	# Connect the timeout signal
 	poison_timer.timeout.connect(func():
-		tick_count += 1
-		if tick_count > total_ticks or not is_instance_valid(entity) or not is_instance_valid(health_component):
-			if is_instance_valid(poison_timer):
-				poison_timer.queue_free()
-			active_effects.erase(effect_id)
-			effect_removed.emit(effect_id)
+		# CRITICAL: Check if this effect is still active and valid
+		if not active_effects.has(effect_id) or not active_effects[effect_id].get("active", false):
+			return
+			
+		if not is_instance_valid(entity) or not is_instance_valid(health_component):
+			force_cleanup_poison_effect(effect_id)
+			return
+		
+		# Get current tick count from stored data
+		var current_tick_count = active_effects[effect_id]["tick_count"]
+		
+		# Check if we've reached the tick limit BEFORE applying damage
+		if current_tick_count >= total_ticks:
+			force_cleanup_poison_effect(effect_id)
 			return
 		
 		# Apply damage
 		var poison_attack = Attack.new(damage_per_tick, Vector2.ZERO, null)
 		health_component.damage(poison_attack)
+		
+		# Update tick count
+		active_effects[effect_id]["tick_count"] = current_tick_count + 1
+		
+		print("Poison tick: ", current_tick_count + 1, "/", total_ticks)  # Debug output
 	)
+	
+	# Start the timer
 	poison_timer.start()
 	
-	# Store effect data
-	active_effects[effect_id] = {
-		"timer": poison_timer,
-		"ticks_remaining": total_ticks,
-		"damage_per_tick": damage_per_tick,
-		"duration": duration
-	}
-	
 	# Visual effect
-	if entity.has_method("set_visual_effect"):
-		entity.set_visual_effect("poison", duration)
-	else:
-		# Default visual - tint the entity
-		if entity.has_method("set_effect_tint"):
-			entity.set_effect_tint(Color(0.6, 1.0, 0.6), duration)  # Green tint
+	_apply_visual_effect(effect_id, damage_per_second, duration)
 	
 	# Enable poison particles if available
 	if poison_particles:
 		poison_particles.emitting = true
+		# Create a separate timer to stop particles after duration
 		get_tree().create_timer(duration).timeout.connect(func(): 
 			if is_instance_valid(poison_particles):
 				poison_particles.emitting = false
@@ -210,8 +217,8 @@ func apply_poison(damage_per_second: float, duration: float) -> void:
 	
 	# Emit signal
 	effect_applied.emit(effect_id, damage_per_second, duration)
-
-# Handle stun effect
+	
+# FIXED: Handle stun effect
 func apply_stun(duration: float) -> void:
 	var effect_id = "stun"
 	
@@ -223,9 +230,7 @@ func apply_stun(duration: float) -> void:
 		return
 	
 	# Clear existing effect timer if any
-	if active_effects.has(effect_id):
-		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
-			active_effects[effect_id].timer.queue_free()
+	_clear_existing_effect(effect_id)
 	
 	# Apply stun effect to entity
 	entity.set_stun_state(true)
@@ -238,9 +243,7 @@ func apply_stun(duration: float) -> void:
 	timer.timeout.connect(func():
 		if is_instance_valid(entity) and entity.has_method("set_stun_state"):
 			entity.set_stun_state(false)
-		active_effects.erase(effect_id)
-		timer.queue_free()
-		effect_removed.emit(effect_id)
+		_cleanup_effect(effect_id, timer)
 	)
 	timer.start()
 	
@@ -251,67 +254,106 @@ func apply_stun(duration: float) -> void:
 	}
 	
 	# Visual effect
-	if entity.has_method("set_visual_effect"):
-		entity.set_visual_effect("stun", duration)
-	else:
-		# Default visual - tint the entity
-		if entity.has_method("set_effect_tint"):
-			entity.set_effect_tint(Color(1.0, 1.0, 0.5), duration)  # Yellow tint
+	_apply_visual_effect(effect_id, 1.0, duration)
 	
 	# Emit signal
 	effect_applied.emit(effect_id, 1.0, duration)
 
-# Handle armor reduction
-func apply_armor_reduction(amount: float, duration: float) -> void:
-	# Skip if entity doesn't have armor/defense stat
-	if not entity.get("defense") and not entity.get("armor"):
-		return
-		
-	var effect_id = "armor_reduction"
-	var stat_name = "defense" if entity.get("defense") != null else "armor"
-	var original_value = entity.get(stat_name)
-	
-	# Clear existing effect timer if any
+# Helper function to clear existing effects
+func _clear_existing_effect(effect_id: String, original_value: Variant = null, stat_name: String = "") -> void:
 	if active_effects.has(effect_id):
+		print("Clearing existing effect: ", effect_id)
+		
+		# Mark as inactive immediately
+		active_effects[effect_id]["active"] = false
+		
 		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
-			active_effects[effect_id].timer.queue_free()
-	
-	# Apply effect - reduce armor by percentage
-	entity.set(stat_name, original_value * (1.0 - amount))
-	
-	# Create timer to restore armor
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = duration
-	timer.one_shot = true
-	timer.timeout.connect(func():
-		if is_instance_valid(entity):
-			entity.set(stat_name, original_value)
+			# Restore original value if provided
+			if original_value != null and stat_name != "":
+				if is_instance_valid(entity):
+					entity.set(stat_name, original_value)
+			elif active_effects[effect_id].has("original_value") and active_effects[effect_id].has("stat_name"):
+				if is_instance_valid(entity):
+					entity.set(active_effects[effect_id].stat_name, active_effects[effect_id].original_value)
+			elif effect_id == "speed_modifier" and active_effects[effect_id].has("original_value"):
+				if is_instance_valid(entity) and entity.get("move_speed"):
+					entity.move_speed = active_effects[effect_id].original_value
+			
+			# Stop and free the timer
+			var timer = active_effects[effect_id].timer
+			timer.stop()
+			timer.queue_free()
+		
 		active_effects.erase(effect_id)
+
+# Helper function to cleanup effect
+func _cleanup_effect(effect_id: String, timer: Timer) -> void:
+	print("Cleaning up effect: ", effect_id)
+	
+	# Mark effect as inactive first
+	if active_effects.has(effect_id):
+		active_effects[effect_id]["active"] = false
+	
+	# Stop timer immediately
+	if is_instance_valid(timer):
+		timer.stop()
 		timer.queue_free()
-		effect_removed.emit(effect_id)
-	)
-	timer.start()
 	
-	# Store effect data
-	active_effects[effect_id] = {
-		"timer": timer,
-		"original_value": original_value,
-		"stat_name": stat_name,
-		"strength": amount,
-		"duration": duration
-	}
+	# Remove from active effects
+	active_effects.erase(effect_id)
 	
-	# Visual effect
+	# Emit signal
+	effect_removed.emit(effect_id)
+
+	
+
+func force_cleanup_poison_effect(effect_id: String) -> void:
+	print("Force cleaning up poison effect: ", effect_id)
+	
+	if active_effects.has(effect_id):
+		# Mark as inactive first
+		active_effects[effect_id]["active"] = false
+		
+		# Stop and remove timer
+		if active_effects[effect_id].has("timer"):
+			var timer = active_effects[effect_id]["timer"]
+			if is_instance_valid(timer):
+				timer.stop()
+				timer.queue_free()
+		
+		# Remove from active effects
+		active_effects.erase(effect_id)
+	
+	# Stop particles
+	if poison_particles and is_instance_valid(poison_particles):
+		poison_particles.emitting = false
+	
+	# Emit signal
+	effect_removed.emit(effect_id)
+
+# Helper function to apply visual effects
+func _apply_visual_effect(effect_id: String, strength: float, duration: float) -> void:
 	if entity.has_method("set_visual_effect"):
-		entity.set_visual_effect("armor_break", duration)
+		entity.set_visual_effect(effect_id, duration)
 	else:
 		# Default visual - tint the entity
 		if entity.has_method("set_effect_tint"):
-			entity.set_effect_tint(Color(0.8, 0.8, 0.2), duration)  # Yellow-brown tint
-	
-	# Emit signal
-	effect_applied.emit(effect_id, amount, duration)
+			var tint_color: Color
+			match effect_id:
+				"speed_modifier":
+					tint_color = Color(0.7, 0.7, 1.0) if strength < 1.0 else Color(1.0, 1.0, 0.7)
+				"burning":
+					tint_color = Color(1.0, 0.6, 0.3)  # Orange tint
+				"poison":
+					tint_color = Color(0.6, 1.0, 0.6)  # Green tint
+				"stun":
+					tint_color = Color(1.0, 1.0, 0.5)  # Yellow tint
+				"armor_reduction":
+					tint_color = Color(0.8, 0.8, 0.2)  # Yellow-brown tint
+				_:
+					tint_color = Color.WHITE
+			
+			entity.set_effect_tint(tint_color, duration)
 
 # Check if an effect is currently active
 func has_effect(effect_name: String) -> bool:
@@ -323,11 +365,22 @@ func get_effect_data(effect_name: String) -> Dictionary:
 		return active_effects[effect_name]
 	return {}
 
-# Clean up effects when entity dies
+# Get remaining duration for an effect
+func get_effect_remaining_duration(effect_name: String) -> float:
+	if not active_effects.has(effect_name):
+		return 0.0
+	
+	var effect_data = active_effects[effect_name]
+	if effect_data.has("timer") and is_instance_valid(effect_data.timer):
+		return effect_data.timer.time_left
+	return 0.0
+
+# FIXED: Clean up effects when entity dies
 func _on_health_depleted() -> void:
 	# Stop all effects
 	for effect_id in active_effects.keys():
 		if active_effects[effect_id].has("timer") and is_instance_valid(active_effects[effect_id].timer):
+			active_effects[effect_id].timer.stop()
 			active_effects[effect_id].timer.queue_free()
 	
 	# Clear effects dictionary
@@ -340,3 +393,8 @@ func _on_health_depleted() -> void:
 		poison_particles.emitting = false
 	if ice_particles:
 		ice_particles.emitting = false
+
+# FIXED: Clear all effects (useful for phase changes)
+func clear_all_effects() -> void:
+	print("StatusEffectComponent: Clearing all active effects")
+	_on_health_depleted()  # Reuse the cleanup logic
