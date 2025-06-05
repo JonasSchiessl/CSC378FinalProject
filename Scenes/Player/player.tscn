@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://dxhony1kmfltv"]
+[gd_scene load_steps=37 format=3 uid="uid://dxhony1kmfltv"]
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
@@ -15,14 +15,16 @@
 [ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scripts/Player/TowerPlacementSystem.gd" id="11_74mp2"]
 [ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="11_dey5f"]
 [ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Scenes/Projectiles/Fireball.tres" id="11_oikmp"]
-[ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TempTower.tscn" id="12_oikmp"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
 [ext_resource type="Resource" uid="uid://b1fja6mbt8opd" path="res://Scenes/Projectiles/lightningbolt.tres" id="16_eksi1"]
 [ext_resource type="PackedScene" uid="uid://n70pmkp7lwkr" path="res://Scenes/Projectiles/Lighningbolt.tscn" id="18_jincj"]
-[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/Mini Sci-Fi Gui/Health/pixil-layer-Under.png" id="19_rcvs5"]
-[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/Mini Sci-Fi Gui/Health/pixil-layer-Over.png" id="20_h8ma5"]
+[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/Health/pixil-layer-Under.png" id="19_rcvs5"]
+[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/Health/pixil-layer-Over.png" id="20_h8ma5"]
+[ext_resource type="PackedScene" uid="uid://wael2dq1ktnn" path="res://Scenes/Towers/TeslaTower.tscn" id="20_qr1w5"]
 [ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="21_h8ma5"]
+[ext_resource type="PackedScene" uid="uid://cj0law2b0g4t0" path="res://Scenes/Towers/LavaTower.tscn" id="21_ythyg"]
+[ext_resource type="PackedScene" uid="uid://dthrnl8i5x8kk" path="res://Scenes/Towers/TurretTower.tscn" id="22_qr1w5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]
 atlas = ExtResource("2_hnuln")
@@ -233,8 +235,10 @@ editor_draw_limits = true
 [node name="TowerPlacementSystem" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("11_74mp2")
 player = NodePath("..")
-tower_scene = ExtResource("12_oikmp")
 grid_size = 50.0
+tesla_tower_scene = ExtResource("20_qr1w5")
+lava_tower_scene = ExtResource("21_ythyg")
+turret_tower_scene = ExtResource("22_qr1w5")
 
 [node name="HealthBar" type="TextureProgressBar" parent="."]
 offset_left = -16.0
