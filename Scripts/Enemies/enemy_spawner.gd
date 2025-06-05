@@ -52,14 +52,16 @@ func _on_phase_changed(new_phase: GameManager.Phase) -> void:
 
 func _on_timer_timeout() -> void:
 	if player and enemies_remaining > 0:
-		var enemy = EnemyClass.instantiate()
-		var angle = randf_range(0, 2 * PI)
-		var spawn_position = player.global_position + Vector2.RIGHT.rotated(angle) * spawn_radius
-		enemy.global_position = spawn_position
-		enemy_container.add_child(enemy)
-
-		enemies_remaining -= 1
-		update_wave_label()
+		var i = current_wave
+		while i > 0:
+			var enemy = EnemyClass.instantiate()
+			var angle = randf_range(0, 2 * PI)
+			var spawn_position = player.global_position + Vector2.RIGHT.rotated(angle) * spawn_radius
+			enemy.global_position = spawn_position
+			enemy_container.add_child(enemy)
+			enemies_remaining -= 1
+			i -= 1
+			update_wave_label()
 		if current_wave > 5:
 			$Timer.stop()
 		if enemies_remaining <= 0:
@@ -68,4 +70,3 @@ func _on_timer_timeout() -> void:
 
 func update_wave_label() -> void:
 	wave_label.text = "Wave %d: %d Enemies To Spawn" % [current_wave, enemies_remaining]
-
