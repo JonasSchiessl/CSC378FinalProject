@@ -5,7 +5,9 @@ extends Node2D
 @onready var player = parent.get_node_or_null("Player")
 @onready var enemy_container
 
-var EnemyClass = preload("res://Scenes/Enemies/Enemy.tscn")
+var PoisonRatClass = preload("res://Scenes/Enemies/poison_rat.tscn")
+var MeleeRatClass = preload("res://Scenes/Enemies/melee_rat.tscn")
+
 
 func _ready() -> void:
 	if GameManager.instance:
@@ -39,7 +41,7 @@ func _on_phase_changed(new_phase: GameManager.Phase) -> void:
 
 func _on_timer_timeout() -> void:
 	if player: # Spawn an enemy within the spawn_radius if player was set correctly
-		var enemy = EnemyClass.instantiate()
+		var enemy = MeleeRatClass.instantiate()
 		var angle = randf_range(0,2*PI)
 		var spawn_position = player.global_position + Vector2.RIGHT.rotated(angle) * spawn_radius
 		enemy.global_position = spawn_position

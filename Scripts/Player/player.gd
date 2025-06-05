@@ -176,7 +176,7 @@ func fire_projectile_by_name(projectile_name: String) -> void:
 
 # Handle health changes
 func _on_health_component_health_change(old_value: Variant, new_value: Variant) -> void:
-	print("Player health changed from ", old_value, " to ", new_value)
+	# print("Player health changed from ", old_value, " to ", new_value)
 	
 	# Update health bar
 	if health_bar and health_component:

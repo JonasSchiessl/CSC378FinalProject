@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
-@export var speed = 1
-@export var projectile_wait_time = 3.5
+@export var speed = 80
+@export var projectile_wait_time = 2
 @onready var projectile_emitter = $projectile_emitter
 @onready var parent = get_parent()
 @onready var player
@@ -27,7 +27,6 @@ func _ready() -> void:
 	projectile_timer.timeout.connect(func(): fire_projectile())
 	projectile_timer.start()
 	
-	#Miguel-added currency code
 	if CurrencyManager:
 		var actual_reward = int(currency_reward * bonus_multiplier)
 		CurrencyManager.set_enemy_reward(enemy_type, actual_reward)
@@ -37,41 +36,52 @@ func _ready() -> void:
 	set_meta("enemy_type", enemy_type)
 	set_meta("currency_reward", currency_reward)
 
-
 func _physics_process(delta: float) -> void:
-	if global_position.distance_to(player.global_position) < 100:
-		$AnimationPlayer.play("idle")
-		return
 	var direction = (player.global_position - global_position).normalized()
+	# Shoot projectiles at player
+	if global_position.distance_to(player.global_position) > 120 && global_position.distance_to(player.global_position) < 200: 
+		if direction.x < 0: # Run left animation
+			$Sprite.flip_h = false
+			$AnimationPlayer.play("idle")
+		elif direction.x > 0: # Run right animation
+			$Sprite.flip_h = true
+			$AnimationPlayer.play("idle")
+		return
+	
+	# Run to or from the player
+	if global_position.distance_to(player.global_position) <= 120: 
+		direction = -direction
+	
 	if direction.x < 0: # Run left animation
 		$Sprite.flip_h = false
 		$AnimationPlayer.play("run")
 	elif direction.x > 0: # Run right animation
 		$Sprite.flip_h = true
 		$AnimationPlayer.play("run")
-	global_position += direction * speed
+	velocity = direction * speed
 	move_and_slide()
-	
 
 func fire_projectile():
+	if $AnimationPlayer.current_animation == "run":
+		return
 	var direction = (player.global_position - global_position).normalized()
 	projectile_emitter.fire_projectile(direction)
+	print(name, " has fired a projectile!")
 
 # Handle health change logic
 func _on_health_component_health_change(old_value: Variant, new_value: Variant) -> void:
 	print("Enemy took damage! Health: ", old_value, " -> ", new_value)
-	
 	# Flashing logic and damage number 
 	if new_value < old_value:
 		pass
-		
+
 # Handle death logic
 func _on_health_component_health_depleted() -> void:
 	print("Enemy died!")
 	
 	if reward_granted:
 		return
-		
+	
 	death_position = global_position
 	
 	award_kill_reward()
@@ -115,7 +125,10 @@ func show_reward_feedback(reward_amount: int) -> void:
 	
 	# Create a tween for the fade out effect
 	var tween = get_tree().create_tween()
-	tween.tween_property(reward_label, "modulate:a", 0.0, 3.0)
+	tween.tween_property(reward_label, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_EXPO)
+	
+	var tween2 = get_tree().create_tween()
+	tween2.tween_property(reward_label, "position:y", reward_label.global_position.y-5.0, 1.0)
 	
 	# Remove the label when the fade animation completes
 	tween.tween_callback(func(): 
@@ -124,7 +137,7 @@ func show_reward_feedback(reward_amount: int) -> void:
 			reward_label.queue_free()
 	)
 	
-	print("Fade animation started - will fade out over 3 seconds")
+	print("Fade animation started - will fade out over 1 second")
 	
 # Configuration functions for easy balancing
 func set_enemy_type(new_type: String) -> void:

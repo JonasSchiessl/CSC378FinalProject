@@ -27,6 +27,10 @@ window/size/viewport_height=720
 window/stretch/mode="viewport"
 window/stretch/scale=1.5
 
+[global_group]
+
+enemies=""
+
 [gui]
 
 theme/custom_font="uid://dekgc0wplsp1y"
