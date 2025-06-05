@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://4cmslby34t0q"
+path="res://.godot/imported/DavidKBD - Pink Bloom Pack - 06 - Diamonds on The Ceiling.ogg-544c74fa8079f4be2392cdfb6b2cccc4.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Music/DavidKBD - Pink Bloom Pack - 06 - Diamonds on The Ceiling.ogg"
+dest_files=["res://.godot/imported/DavidKBD - Pink Bloom Pack - 06 - Diamonds on The Ceiling.ogg-544c74fa8079f4be2392cdfb6b2cccc4.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

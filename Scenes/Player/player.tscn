@@ -20,8 +20,8 @@
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
 [ext_resource type="Resource" uid="uid://b1fja6mbt8opd" path="res://Scenes/Projectiles/lightningbolt.tres" id="16_eksi1"]
 [ext_resource type="PackedScene" uid="uid://n70pmkp7lwkr" path="res://Scenes/Projectiles/Lighningbolt.tscn" id="18_jincj"]
-[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/pixil-layer-Under.png" id="19_rcvs5"]
-[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/pixil-layer-Over.png" id="20_h8ma5"]
+[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/Mini Sci-Fi Gui/Health/pixil-layer-Under.png" id="19_rcvs5"]
+[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/Mini Sci-Fi Gui/Health/pixil-layer-Over.png" id="20_h8ma5"]
 [ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="21_h8ma5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bi35c5dj6wiqh"
-path="res://.godot/imported/pixil-layer-Over.png-31eb9668e0d73434327ac7ea69bb2817.ctex"
+uid="uid://bv06m6q0xcxbb"
+path="res://.godot/imported/Preview.png-4fe5c74c6bffe00ef1d2c4a87110a974.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Ui/pixil-layer-Over.png"
-dest_files=["res://.godot/imported/pixil-layer-Over.png-31eb9668e0d73434327ac7ea69bb2817.ctex"]
+source_file="res://Assets/Ui/Mini Sci-Fi Gui/Cyberphont 2.0/Preview.png"
+dest_files=["res://.godot/imported/Preview.png-4fe5c74c6bffe00ef1d2c4a87110a974.ctex"]
 
 [params]
 
