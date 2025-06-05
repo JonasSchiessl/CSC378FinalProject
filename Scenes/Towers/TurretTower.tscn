@@ -1,0 +1,105 @@
+[gd_scene load_steps=13 format=3 uid="uid://dthrnl8i5x8kk"]
+
+[ext_resource type="Script" uid="uid://b3eo8alao27n6" path="res://Scripts/Towers/tesla_tower.gd" id="1_n5j2b"]
+[ext_resource type="Texture2D" uid="uid://csw1vw0pui2hm" path="res://Assets/Tower/turret-sprites.png" id="2_n5j2b"]
+[ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_gnrwq"]
+[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_pws5s"]
+[ext_resource type="SpriteFrames" uid="uid://dtkm26cxfxb7k" path="res://Scenes/Projectiles/lightning.tres" id="5_24o38"]
+[ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="6_kk7px"]
+[ext_resource type="Script" uid="uid://dlgp4xkt45ocl" path="res://Scripts/Components/hurtbox_component.gd" id="7_l446f"]
+[ext_resource type="Script" uid="uid://bf45ufg6dyex6" path="res://Scripts/Components/health_component.gd" id="8_uir43"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hyll0"]
+radius = 9.0
+height = 46.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_butbb"]
+radius = 145.169
+
+[sub_resource type="Resource" id="Resource_8xilq"]
+script = ExtResource("4_pws5s")
+name = "Fireball"
+description = "Basic Fireball"
+sprite_frames = ExtResource("5_24o38")
+projectile_color = Color(1, 1, 1, 1)
+base_speed = 300.0
+base_damage = 1.0
+base_range = 200.0
+base_knockback = 50.0
+can_arc = false
+default_arc_height = 0.0
+can_penetrate = false
+default_penetration = 0
+can_area_effect = true
+default_area_radius = 80.0
+can_create_lingering = false
+default_lingering_type = "fire"
+default_lingering_radius = 100.0
+default_lingering_duration = 5.0
+default_lingering_damage = 1.0
+default_effects = {}
+mana_cost = 0
+cooldown = 2.5
+required_level = 1
+metadata/_custom_type_script = "uid://dml00cd28ie6g"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o2tct"]
+height = 44.0
+
+[node name="TurretTower" type="CharacterBody2D"]
+y_sort_enabled = true
+collision_layer = 16
+collision_mask = 28
+script = ExtResource("1_n5j2b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, -16)
+texture = ExtResource("2_n5j2b")
+
+[node name="PhysicalCollision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -14)
+shape = SubResource("CapsuleShape2D_hyll0")
+
+[node name="AttackRange" type="Area2D" parent="."]
+visible = false
+collision_layer = 128
+collision_mask = 8
+
+[node name="AttackCollision" type="CollisionShape2D" parent="AttackRange"]
+shape = SubResource("CircleShape2D_butbb")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -20.0
+offset_top = -75.0
+offset_right = 20.0
+offset_bottom = -48.0
+metadata/_edit_use_anchors_ = true
+
+[node name="RangeIndicator" type="Node2D" parent="."]
+visible = false
+
+[node name="RangeCircle" type="Sprite2D" parent="RangeIndicator"]
+
+[node name="projectile_emitter" type="Node2D" parent="."]
+script = ExtResource("3_gnrwq")
+projectile_types = Array[ExtResource("4_pws5s")]([SubResource("Resource_8xilq")])
+universal_projectile_scene = ExtResource("6_kk7px")
+
+[node name="hurtbox_component" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+visible = false
+collision_layer = 256
+collision_mask = 0
+script = ExtResource("7_l446f")
+health_component = NodePath("../health_component")
+metadata/_custom_type_script = "uid://dlgp4xkt45ocl"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
+position = Vector2(0, -15)
+shape = SubResource("CapsuleShape2D_o2tct")
+
+[node name="health_component" type="Node2D" parent="."]
+position = Vector2(0, -5)
+script = ExtResource("8_uir43")
+max_health = 20
+metadata/_custom_type_script = "uid://bf45ufg6dyex6"
