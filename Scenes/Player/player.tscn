@@ -79,8 +79,8 @@ radius = 7.0
 height = 18.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_h8ma5"]
-radius = 11.0
-height = 28.0
+radius = 13.0
+height = 26.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ukyrk"]
 radius = 9.0
@@ -197,12 +197,13 @@ max_health = 100
 attack_component = NodePath("../attack_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox_component"]
+position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_h8ma5")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
 visible = false
 collision_layer = 4
-collision_mask = 64
+collision_mask = 72
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]

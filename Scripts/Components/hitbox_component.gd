@@ -9,14 +9,18 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	
 	# Disable by default until an attack happens
-	monitoring = false
 
 # Called when this hitbox enters a hurtbox
 func _on_area_entered(area: Area2D) -> void:
 	if not active:
 		return
-		
+	
 	if area is HurtboxComponent:
-		# Create an attack and apply it to the hurtbox
-		var attack = attack_component.create_attack()
-		area.damage(attack)
+		if attack_component:
+			# Create an attack and apply it to the hurtbox
+			var attack = attack_component.create_attack()
+			area.damage(attack)
+		else:
+			print("ERROR: No attack component to create attack!")
+	else:
+		print("AREA IS NOT HURTBOX: ", area.get_class())

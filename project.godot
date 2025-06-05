@@ -24,6 +24,10 @@ CurrencyManager="*res://Scenes/CurrencyManager/CurrencyManager.gd"
 
 window/stretch/mode="viewport"
 
+[global_group]
+
+enemies=""
+
 [gui]
 
 theme/custom_font="uid://dekgc0wplsp1y"
