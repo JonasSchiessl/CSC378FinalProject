@@ -1,15 +1,16 @@
-[gd_scene load_steps=17 format=3 uid="uid://bwbue855a7hvf"]
+[gd_scene load_steps=18 format=3 uid="uid://bwbue855a7hvf"]
 
 [ext_resource type="Script" uid="uid://d047ywamaokp" path="res://Scripts/Enemies/enemy.gd" id="1_2nxwx"]
 [ext_resource type="Texture2D" uid="uid://ctyoy63ay0gaw" path="res://Assets/Enemies/poison-rat-sprites.png" id="1_tt7e2"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="2_rvmyp"]
-[ext_resource type="Script" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="3_2nxwx"]
+[ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="3_2nxwx"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="4_52xpa"]
 [ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="5_jdgko"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="6_j4qr3"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="7_73x2u"]
 [ext_resource type="PackedScene" uid="uid://du3qd1ihh51o8" path="res://Scripts/Components/health_component.tscn" id="9_k4v85"]
 [ext_resource type="PackedScene" uid="uid://bauly11ivc0e3" path="res://Scripts/Components/hurtbox_component.tscn" id="10_3a2bb"]
+[ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="11_3a2bb"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s7bn3"]
 radius = 12.0
@@ -74,10 +75,22 @@ default_area_radius = 100.0
 can_create_lingering = true
 lingering_effect_scene = ExtResource("4_52xpa")
 default_lingering_type = "poison"
-default_lingering_radius = 100.0
+default_lingering_radius = 40.0
 default_lingering_duration = 3.0
-default_lingering_damage = 3.0
+default_lingering_damage = 0.0
 default_effects = {}
+can_apply_burning = false
+burning_damage_per_second = 2.0
+burning_duration = 3.0
+can_apply_poison = true
+poison_damage_per_second = 8.0
+poison_duration = 4.0
+can_apply_freeze = false
+slow_strength = 0.5
+slow_duration = 2.0
+can_apply_shock = false
+stun_chance = 0.3
+stun_duration = 0.8
 mana_cost = 0
 cooldown = 4.0
 required_level = 1
@@ -130,6 +143,10 @@ health_component = NodePath("../health_component")
 position = Vector2(0, 2)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_d330j")
+
+[node name="StatusEffectComponent" type="Node" parent="."]
+script = ExtResource("11_3a2bb")
+metadata/_custom_type_script = "uid://dfncltihfaxrq"
 
 [connection signal="health_change" from="health_component" to="." method="_on_health_component_health_change"]
 [connection signal="health_depleted" from="health_component" to="." method="_on_health_component_health_depleted"]

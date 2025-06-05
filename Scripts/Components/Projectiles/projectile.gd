@@ -1,3 +1,4 @@
+# projectile.gd - FIXED VERSION
 extends Node2D
 class_name Projectile
 
@@ -29,7 +30,7 @@ var penetration_remaining: int = 0
 
 # Collision layer configuration
 @export var projectile_collision_layer: int = 32  # Default layer for projectiles
-@export var target_collision_mask: int = 8        # What this projectile can hit
+@export var target_collision_mask: int = 8       # What this projectile can hit
 
 # Runtime variables
 var direction: Vector2 = Vector2.RIGHT
@@ -39,6 +40,10 @@ var timer: float = 0.0
 var attack: Attack
 var arc_progress: float = 0.0  # 0 to 1 for arc calculation
 var targets_hit: Array = []  # Keep track of targets already hit for penetration
+
+# FIX: Add flag to prevent multiple lingering effect spawns
+var has_spawned_lingering_effect: bool = false
+var is_expired: bool = false
 
 # Components
 @onready var hitbox_component: HitboxComponent = $HitboxComponent
@@ -57,7 +62,7 @@ func setup(new_attack: Attack, new_direction: Vector2,
 		   new_lingering_radius: float = lingering_effect_radius, new_lingering_duration: float = lingering_effect_duration,
 		   new_lingering_damage: float = lingering_effect_damage,
 		   projectile_type: ProjectileType = null,
-			collision_layer: int = -1, collision_mask: int = -1) -> void:
+		   collision_layer: int = -1, collision_mask: int = -1) -> void:
 	
 	attack = new_attack
 	direction = new_direction.normalized()
@@ -256,19 +261,25 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 		# Handle penetration
 		penetration_remaining -= 1
 		if penetration_remaining < 0:
-			if area_effect:
-				trigger_area_effect()
-			elif create_lingering_effect:
-				spawn_lingering_effect()
-			else:
-				stop_particles()
+			# FIX: Only trigger end-of-life effects once
+			_handle_projectile_end()
 
 # Called when hitting a physics body (like walls)
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	# Stop on solid objects
+	# FIX: Only trigger end-of-life effects once
+	_handle_projectile_end()
+
+# FIX: Centralized function to handle projectile end-of-life effects
+func _handle_projectile_end() -> void:
+	if is_expired:
+		return  # Prevent multiple calls
+	
+	is_expired = true
+	
 	if area_effect:
 		trigger_area_effect()
-	elif create_lingering_effect:
+	elif create_lingering_effect and not has_spawned_lingering_effect:
 		spawn_lingering_effect()
 	else:
 		stop_particles()
@@ -306,7 +317,7 @@ func trigger_area_effect() -> void:
 			area.damage(area_attack)
 	
 	# Spawn lingering effect if needed
-	if create_lingering_effect:
+	if create_lingering_effect and not has_spawned_lingering_effect:
 		spawn_lingering_effect()
 	
 	# Disable collision and make invisible but don't destroy yet
@@ -319,10 +330,16 @@ func trigger_area_effect() -> void:
 
 # Spawn a lingering effect at the current position
 func spawn_lingering_effect() -> void:
-	if not create_lingering_effect or not lingering_effect_scene:
-		print("Cannot spawn lingering effect - missing scene or disabled")
+	# FIX: Prevent multiple spawns
+	if has_spawned_lingering_effect or not create_lingering_effect or not lingering_effect_scene:
+		if not create_lingering_effect or not lingering_effect_scene:
+			print("Cannot spawn lingering effect - missing scene or disabled")
+		stop_particles()
 		return
-		
+	
+	# Mark as spawned to prevent duplicates
+	has_spawned_lingering_effect = true
+	
 	var effect = lingering_effect_scene.instantiate()
 	
 	# Find the best parent for the lingering effect
@@ -340,6 +357,7 @@ func spawn_lingering_effect() -> void:
 		elif parent is Node2D and not parent is CharacterBody2D and not parent is RigidBody2D:
 			target_parent = parent
 		current_node = parent
+	
 	# Add to the chosen parent
 	target_parent.add_child(effect)
 	
@@ -350,21 +368,17 @@ func spawn_lingering_effect() -> void:
 	
 	# Setup the effect with proper parameters
 	effect.setup(null, lingering_effect_radius, 
-				lingering_effect_duration, lingering_effect_damage, 
-				lingering_effect_type, projectile_collision_layer,
-				target_collision_mask)
+			lingering_effect_duration, lingering_effect_damage, 
+			lingering_effect_type, projectile_collision_layer,
+			target_collision_mask)
 	
 	# Stop particles after spawning lingering effect
 	stop_particles()
-	
+
 # Called when projectile expires (range/lifetime)
 func on_projectile_expire() -> void:
-	if area_effect:
-		trigger_area_effect()
-	elif create_lingering_effect:
-		spawn_lingering_effect()
-	else:
-		stop_particles()
+	# FIX: Use centralized end handling
+	_handle_projectile_end()
 
 func set_collision_layers(layer: int, mask: int) -> void:
 	projectile_collision_layer = layer
