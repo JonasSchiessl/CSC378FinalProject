@@ -100,7 +100,7 @@ metadata/_custom_type_script = "uid://dml00cd28ie6g"
 radius = 12.0
 height = 58.0
 
-[node name="Enemy" type="CharacterBody2D" groups=["enemies"]]
+[node name="PoisonRat" type="CharacterBody2D" groups=["enemies"]]
 collision_layer = 8
 collision_mask = 28
 script = ExtResource("1_lploo")
