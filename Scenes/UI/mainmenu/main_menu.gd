@@ -9,6 +9,7 @@ extends Control
 # Overlay references
 @onready var settings_overlay = $SettingsOverlay
 @onready var credits_overlay = $CreditsOverlay
+@onready var heart_monitor = $AnimatedSprite2D
 
 # Store original panel states
 var settings_original_pos: Vector2
@@ -20,6 +21,7 @@ var screen_size: Vector2
 var current_expanded_panel = null
 
 func _ready():
+	heart_monitor.play("default")
 	screen_size = get_viewport().get_visible_rect().size
 	
 	# Store original panel transforms
