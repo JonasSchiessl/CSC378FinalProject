@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dbwimi1hpri3g"]
+[gd_scene load_steps=32 format=3 uid="uid://dbwimi1hpri3g"]
 
 [ext_resource type="Script" uid="uid://bos0xvkhcysw6" path="res://Scenes/UI/mainmenu/main_menu.gd" id="1_2ksgt"]
 [ext_resource type="Texture2D" uid="uid://dcbibb2wdxu65" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/colossal_button1_scaled_5x_pngcrushed.png" id="1_8qc4y"]
@@ -8,10 +8,64 @@
 [ext_resource type="AudioStream" uid="uid://dhshp26pmoecp" path="res://Assets/Music/DavidKBD - Pink Bloom Pack - 03 - To the Unknown.ogg" id="6_16o10"]
 [ext_resource type="Texture2D" uid="uid://txpr138y0pfy" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/Screen_combinedBG_scaled_9x_pngcrushed.png" id="7_qrcm0"]
 [ext_resource type="Texture2D" uid="uid://dc5fl2t0shsha" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/screen_bg_pattern.png" id="8_gfjmo"]
-[ext_resource type="Texture2D" uid="uid://cjgudam41bfyg" path="res://Assets/Ui/Menu/ChatGPT Image Jun 6, 2025, 04_22_18 PM.png" id="9_3o3u4"]
 [ext_resource type="Texture2D" uid="uid://b3rsf7rnyaswj" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/small_button1.png" id="9_an3td"]
+[ext_resource type="Texture2D" uid="uid://3jx6tcheqpua" path="res://Assets/Ui/Menu/rat-vat.png" id="9_mkf2k"]
 [ext_resource type="Texture2D" uid="uid://rl3meomtx6r1" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/small_button2.png" id="10_3o3u4"]
+[ext_resource type="Texture2D" uid="uid://c8u0b5hdqsugv" path="res://Assets/Ui/Menu/bubbles-sheet.png" id="10_q5acx"]
+[ext_resource type="Texture2D" uid="uid://b5t1hrx5mtu2r" path="res://Assets/Ui/Menu/rat.png" id="11_q5acx"]
 [ext_resource type="Texture2D" uid="uid://bp1fkoeoco4ja" path="res://Assets/Ui/Menu/Heartbeep-Sheet.png" id="12_mkf2k"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ldl0y"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_w60jn"]
+emission_shape = 3
+emission_box_extents = Vector3(70, 1, 1)
+gravity = Vector3(0, -20, 0)
+scale_min = 4.0
+scale_max = 4.0
+anim_offset_max = 1.0
+
+[sub_resource type="Animation" id="Animation_q5acx"]
+resource_name = "bob"
+length = 2.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -6)]
+}
+
+[sub_resource type="Animation" id="Animation_5wk68"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ldl0y"]
+_data = {
+&"RESET": SubResource("Animation_5wk68"),
+&"bob": SubResource("Animation_q5acx")
+}
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3qg0f"]
 atlas = ExtResource("12_mkf2k")
@@ -148,7 +202,7 @@ offset_bottom = 55.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
 theme_override_fonts/normal_font = ExtResource("3_8pvuc")
 theme_override_font_sizes/normal_font_size = 20
@@ -178,7 +232,7 @@ offset_bottom = 55.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
 theme_override_fonts/normal_font = ExtResource("3_8pvuc")
 theme_override_font_sizes/normal_font_size = 20
@@ -209,7 +263,7 @@ offset_bottom = 55.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
 theme_override_fonts/normal_font = ExtResource("3_8pvuc")
 theme_override_font_sizes/normal_font_size = 20
@@ -279,7 +333,7 @@ offset_left = 90.0
 offset_top = 105.0
 offset_right = 154.0
 offset_bottom = 145.0
-theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 text = "Settings"
 horizontal_alignment = 1
 
@@ -336,7 +390,7 @@ offset_left = 154.0
 offset_top = 105.0
 offset_right = 218.0
 offset_bottom = 145.0
-theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 text = "Credits
 "
 horizontal_alignment = 1
@@ -348,14 +402,15 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 555.0
-offset_top = 41.0
-offset_right = -544.0
-offset_bottom = -556.0
+offset_left = 559.0
+offset_top = 20.0
+offset_right = -541.75
+offset_bottom = -575.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(9.4, 8.88)
+scale = Vector2(9.527, 9)
 texture = ExtResource("7_qrcm0")
+region_rect = Rect2(0, 0, 441, 432)
 
 [node name="BoxContainer" type="BoxContainer" parent="Border"]
 z_index = 1
@@ -378,12 +433,39 @@ draw_center = false
 
 [node name="RatVat" type="TextureRect" parent="."]
 layout_mode = 2
-offset_left = 596.0
-offset_top = 78.0
-offset_right = 1620.0
-offset_bottom = 1102.0
-scale = Vector2(0.399681, 0.371007)
-texture = ExtResource("9_3o3u4")
+offset_left = 598.0
+offset_top = 59.0
+offset_right = 698.0
+offset_bottom = 159.0
+scale = Vector2(4, 4)
+texture = ExtResource("9_mkf2k")
+
+[node name="BubblesBehind" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_ldl0y")
+position = Vector2(748, 368)
+amount = 2
+texture = ExtResource("10_q5acx")
+lifetime = 4.5
+process_material = SubResource("ParticleProcessMaterial_w60jn")
+
+[node name="RatSprite" type="Sprite2D" parent="."]
+position = Vector2(750, 270)
+scale = Vector2(4, 4)
+texture = ExtResource("11_q5acx")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RatSprite"]
+libraries = {
+&"": SubResource("AnimationLibrary_ldl0y")
+}
+autoplay = "bob"
+
+[node name="BubblesInFront" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_ldl0y")
+position = Vector2(748, 368)
+amount = 2
+texture = ExtResource("10_q5acx")
+lifetime = 4.5
+process_material = SubResource("ParticleProcessMaterial_w60jn")
 
 [node name="CreditsOverlay" type="Control" parent="."]
 visible = false
@@ -417,7 +499,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
 theme_override_fonts/normal_font = ExtResource("3_8pvuc")
 theme_override_font_sizes/normal_font_size = 20
@@ -443,7 +525,7 @@ offset_right = 204.0
 offset_bottom = 72.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_font_sizes/normal_font_size = 64
 text = "No Credits yet"
 horizontal_alignment = 1
@@ -481,7 +563,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.0117647, 1, 0.25098, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_colors/font_selected_color = Color(4.39193e-07, 0.342321, 0.0253033, 1)
 theme_override_fonts/normal_font = ExtResource("3_8pvuc")
 theme_override_font_sizes/normal_font_size = 20
@@ -507,7 +589,7 @@ offset_right = 204.0
 offset_bottom = 72.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_font_sizes/normal_font_size = 64
 text = "No Settings yet"
 horizontal_alignment = 1
@@ -538,7 +620,7 @@ offset_left = 50.0
 offset_top = 477.0
 offset_right = 522.0
 offset_bottom = 626.0
-theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
 theme_override_font_sizes/normal_font_size = 28
 text = "Vitals normal
 
