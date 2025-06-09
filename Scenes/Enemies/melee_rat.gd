@@ -42,12 +42,6 @@ func _ready() -> void:
 		hitbox_component.collision_layer = 64  
 		hitbox_component.collision_mask = 4    
 
-	
-	# Connect health component signals
-	if health_component:
-		health_component.health_change.connect(_on_health_component_health_change)
-		health_component.health_depleted.connect(_on_health_component_health_depleted)
-	
 	if CurrencyManager:
 		var actual_reward = int(currency_reward * bonus_multiplier)
 		CurrencyManager.set_enemy_reward(enemy_type, actual_reward)

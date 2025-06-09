@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://d0pagwu80pd6l"]
+[gd_scene load_steps=17 format=4 uid="uid://d0pagwu80pd6l"]
 
 [ext_resource type="PackedScene" uid="uid://dxhony1kmfltv" path="res://Scenes/Player/player.tscn" id="1_0ba56"]
 [ext_resource type="Script" uid="uid://dxgssf4qmvpgx" path="res://Scenes/Levels/level.gd" id="1_02k47"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cv8cqk5hxkr5k" path="res://Scenes/Enemies/enemy_spawner.tscn" id="3_bk2yi"]
 [ext_resource type="PackedScene" uid="uid://brn38dy1vsdyi" path="res://Scenes/CurrencyManager/CurrencyUI.tscn" id="4_65pnq"]
 [ext_resource type="AudioStream" uid="uid://cth6hijgl2eq7" path="res://Assets/Music/DavidKBD - Pink Bloom Pack - 02 - Portal to Underworld.ogg" id="6_l0mwj"]
+[ext_resource type="Script" uid="uid://b75jdpjuo0p8j" path="res://Scenes/GameManager/GameManager.gd" id="7_4nh8f"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_65pnq"]
 tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 1610612736, 1, 0, 1342177280, 65537, 0, 805306368)
@@ -46,6 +47,9 @@ b = Vector2(1808, 0)
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_4nh8f"]
 b = Vector2(0, 1208)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l0mwj"]
+size = Vector2(1786, 1184)
+
 [node name="Node2D" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_02k47")
@@ -59,8 +63,10 @@ tile_set = SubResource("TileSet_l0mwj")
 position = Vector2(900, 600)
 metadata/_edit_group_ = true
 
-[node name="EnemySpawner" parent="." instance=ExtResource("3_bk2yi")]
+[node name="EnemySpawner" parent="." node_paths=PackedStringArray("spawn_area") instance=ExtResource("3_bk2yi")]
 position = Vector2(539, 365)
+spawn_area = NodePath("../spawn_area")
+camera_margin = 50.0
 
 [node name="CurrencyUi" parent="." instance=ExtResource("4_65pnq")]
 
@@ -84,3 +90,12 @@ shape = SubResource("SegmentShape2D_4nh8f")
 stream = ExtResource("6_l0mwj")
 autoplay = true
 parameters/looping = true
+
+[node name="spawn_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="spawn_area"]
+position = Vector2(904, 600)
+shape = SubResource("RectangleShape2D_l0mwj")
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("7_4nh8f")
