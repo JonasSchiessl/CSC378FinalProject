@@ -120,10 +120,10 @@ func update_sprite_facing(move_input: Vector2) -> void:
 		
 		# Update sprite orientation
 		if facing_direction.x > 0:
-			# Moving right, so flip the sprite
+			# Moving right, no need to flip
 			animated_sprite.flip_h = false
 		else:
-			# Moving left, no need to flip
+			# Moving left, so flip the sprite
 			animated_sprite.flip_h = true
 
 # Returns the direction player is aiming (for attacks)
@@ -190,12 +190,10 @@ func _on_health_component_health_change(old_value: Variant, new_value: Variant) 
 # Handle when health reaches zero
 func _on_health_component_health_depleted() -> void:
 	print("Player died!")
-	
 	# Hide health bar
 	if health_bar:
 		health_bar.visible = false
-	
-	# Add death logic here
+	# Add death logic heredd
 	handle_player_death()
 
 # Optional: Handle damage visual effects
@@ -207,5 +205,7 @@ func handle_damage_effects(damage_amount: float) -> void:
 func handle_player_death() -> void:
 	# Disable input, play death animation, restart level, etc.
 	set_physics_process(false)
+	animated_sprite.play("Death")
+	await animated_sprite.animation_finished
 	player_death.emit()
 	

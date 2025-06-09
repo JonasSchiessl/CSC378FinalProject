@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_4iln3"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_kep0w"]
 [ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="5_j72gq"]
-[ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="6_e574l"]
+[ext_resource type="Material" uid="uid://b8kqh5njmeg1m" path="res://Scenes/Projectiles/Particles/Poison.tres" id="6_lploo"]
 [ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="7_j7upl"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="8_12nvb"]
 [ext_resource type="PackedScene" uid="uid://du3qd1ihh51o8" path="res://Scripts/Components/health_component.tscn" id="9_jjm1t"]
@@ -13,8 +13,8 @@
 [ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="11_lnsc0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s7bn3"]
-radius = 12.0
-height = 58.0
+radius = 11.0
+height = 56.0
 
 [sub_resource type="Animation" id="Animation_k4v85"]
 resource_name = "idle"
@@ -61,7 +61,7 @@ name = "Poison"
 description = ""
 sprite_frames = ExtResource("7_j7upl")
 projectile_color = Color(1, 1, 1, 1)
-particle_material = ExtResource("6_e574l")
+particle_material = ExtResource("6_lploo")
 base_speed = 200.0
 base_damage = 5.0
 base_range = 200.0
@@ -97,7 +97,7 @@ required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d330j"]
-radius = 12.0
+radius = 13.0
 height = 58.0
 
 [node name="PoisonRat" type="CharacterBody2D" groups=["enemies"]]

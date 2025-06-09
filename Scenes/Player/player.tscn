@@ -1,11 +1,13 @@
-[gd_scene load_steps=37 format=3 uid="uid://dxhony1kmfltv"]
+[gd_scene load_steps=41 format=3 uid="uid://dxhony1kmfltv"]
 
 [ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="1_vgqql"]
 [ext_resource type="Script" uid="uid://cbfbmdok5wpl7" path="res://Scripts/Player/player.gd" id="1_x3wgy"]
 [ext_resource type="PackedScene" uid="uid://du3qd1ihh51o8" path="res://Scripts/Components/health_component.tscn" id="2_fkybt"]
-[ext_resource type="Texture2D" uid="uid://cc8fkks8jaqj1" path="res://Assets/Player/player-sprites.png" id="2_hnuln"]
+[ext_resource type="Texture2D" uid="uid://qevykmkke0ym" path="res://Assets/Player/player.png" id="2_ythyg"]
 [ext_resource type="PackedScene" uid="uid://hpt6vaypagal" path="res://Scripts/Components/hitbox_component.tscn" id="3_x3wgy"]
 [ext_resource type="PackedScene" uid="uid://bauly11ivc0e3" path="res://Scripts/Components/hurtbox_component.tscn" id="4_3smsa"]
+[ext_resource type="Material" uid="uid://c3iebclotubo" path="res://Scenes/Projectiles/Particles/Syringe.tres" id="4_rqdc0"]
+[ext_resource type="Texture2D" uid="uid://c7ol0m28hh62c" path="res://Assets/Projectiles/syringe.png" id="5_rqdc0"]
 [ext_resource type="Script" uid="uid://dlr8hb66x3wl0" path="res://Scripts/Components/state_machine.gd" id="7_3smsa"]
 [ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="8_jlvik"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="9_gk6dx"]
@@ -13,10 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="10_jhyir"]
 [ext_resource type="Material" uid="uid://b80mqpb7bymk6" path="res://Scenes/Projectiles/Particles/Fireball.tres" id="11_06tpx"]
 [ext_resource type="Script" uid="uid://cjm3peod5cuys" path="res://Scripts/Player/TowerPlacementSystem.gd" id="11_74mp2"]
-[ext_resource type="Material" uid="uid://ce6kcl0p2fv3m" path="res://Scenes/Projectiles/Particles/Default.tres" id="11_dey5f"]
 [ext_resource type="SpriteFrames" uid="uid://57vovnaucy5f" path="res://Scenes/Projectiles/Fireball.tres" id="11_oikmp"]
-[ext_resource type="SpriteFrames" uid="uid://cekpv6bd5lfh1" path="res://Scenes/Projectiles/Poisonball.tres" id="13_7g0yx"]
-[ext_resource type="PackedScene" uid="uid://4ydf4y6sgq8n" path="res://Scenes/Projectiles/Effects/lingering_effect_poison.tscn" id="13_dey5f"]
 [ext_resource type="Resource" uid="uid://b1fja6mbt8opd" path="res://Scenes/Projectiles/lightningbolt.tres" id="16_eksi1"]
 [ext_resource type="PackedScene" uid="uid://n70pmkp7lwkr" path="res://Scenes/Projectiles/Lighningbolt.tscn" id="18_jincj"]
 [ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/Health/pixil-layer-Under.png" id="19_rcvs5"]
@@ -26,65 +25,56 @@
 [ext_resource type="PackedScene" uid="uid://cj0law2b0g4t0" path="res://Scenes/Towers/LavaTower.tscn" id="21_ythyg"]
 [ext_resource type="PackedScene" uid="uid://dthrnl8i5x8kk" path="res://Scenes/Towers/TurretTower.tscn" id="22_qr1w5"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_aqm4k"]
-atlas = ExtResource("2_hnuln")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rcvs5"]
-atlas = ExtResource("2_hnuln")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h8ma5"]
-atlas = ExtResource("2_hnuln")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_eksi1"]
-atlas = ExtResource("2_hnuln")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jincj"]
-atlas = ExtResource("2_hnuln")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_gymyn"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_qr1w5"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_aqm4k")
+"texture": ExtResource("5_rqdc0")
 }],
 "loop": true,
-"name": &"Idle",
+"name": &"default",
 "speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rcvs5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_h8ma5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_eksi1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jincj")
-}],
-"loop": true,
-"name": &"Walk",
-"speed": 8.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pu2lt"]
-radius = 7.0
-height = 18.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_h8ma5"]
-radius = 13.0
-height = 26.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ukyrk"]
-radius = 9.0
-height = 26.0
+[sub_resource type="Resource" id="Resource_mwii3"]
+script = ExtResource("10_74mp2")
+name = "Syringe"
+description = ""
+sprite_frames = SubResource("SpriteFrames_qr1w5")
+projectile_color = Color(1, 1, 1, 1)
+particle_material = ExtResource("4_rqdc0")
+base_speed = 300.0
+base_damage = 5.0
+base_range = 400.0
+base_knockback = 50.0
+can_arc = false
+default_arc_height = 0.0
+can_penetrate = false
+default_penetration = 0
+can_area_effect = true
+default_area_radius = 100.0
+can_create_lingering = false
+default_lingering_type = "fire"
+default_lingering_radius = 100.0
+default_lingering_duration = 5.0
+default_lingering_damage = 1.0
+default_effects = {}
+can_apply_burning = false
+burning_damage_per_second = 2.0
+burning_duration = 3.0
+can_apply_poison = false
+poison_damage_per_second = 1.5
+poison_duration = 4.0
+can_apply_freeze = false
+slow_strength = 0.5
+slow_duration = 2.0
+can_apply_shock = false
+stun_chance = 0.3
+stun_duration = 0.8
+mana_cost = 0
+cooldown = 1.0
+required_level = 1
+metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [sub_resource type="Resource" id="Resource_06tpx"]
 script = ExtResource("10_74mp2")
@@ -126,60 +116,121 @@ cooldown = 1.0
 required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
-[sub_resource type="Resource" id="Resource_hnuln"]
-script = ExtResource("10_74mp2")
-name = "Poison"
-description = ""
-sprite_frames = ExtResource("13_7g0yx")
-projectile_color = Color(1, 1, 1, 1)
-particle_material = ExtResource("11_dey5f")
-base_speed = 200.0
-base_damage = 0.0
-base_range = 200.0
-base_knockback = 0.0
-can_arc = true
-default_arc_height = 1.0
-can_penetrate = false
-default_penetration = 0
-can_area_effect = false
-default_area_radius = 100.0
-can_create_lingering = true
-lingering_effect_scene = ExtResource("13_dey5f")
-default_lingering_type = "poison"
-default_lingering_radius = 80.0
-default_lingering_duration = 5.0
-default_lingering_damage = 1.0
-default_effects = {}
-can_apply_burning = false
-burning_damage_per_second = 2.0
-burning_duration = 3.0
-can_apply_poison = false
-poison_damage_per_second = 1.5
-poison_duration = 4.0
-can_apply_freeze = false
-slow_strength = 0.5
-slow_duration = 2.0
-can_apply_shock = false
-stun_chance = 0.3
-stun_duration = 0.8
-mana_cost = 0
-cooldown = 3.0
-required_level = 1
-metadata/_custom_type_script = "uid://dml00cd28ie6g"
+[sub_resource type="AtlasTexture" id="AtlasTexture_bmb2s"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ur3l4"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ahak"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rukb4"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ythyg"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcwna"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1agin"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2jnj1"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_enij7"]
+atlas = ExtResource("2_ythyg")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gymyn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bmb2s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ur3l4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ahak")
+}, {
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_rukb4")
+}],
+"loop": false,
+"name": &"Death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ythyg")
+}],
+"loop": false,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcwna")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1agin")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2jnj1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_enij7")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pu2lt"]
+radius = 7.0
+height = 18.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_h8ma5"]
+radius = 13.0
+height = 26.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ukyrk"]
+radius = 13.0
+height = 50.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 27
 script = ExtResource("1_x3wgy")
 
+[node name="projectile_emitter" type="Node2D" parent="."]
+position = Vector2(0, -16)
+script = ExtResource("9_gk6dx")
+projectile_types = Array[ExtResource("10_74mp2")]([SubResource("Resource_mwii3"), SubResource("Resource_06tpx"), ExtResource("16_eksi1")])
+universal_projectile_scene = ExtResource("10_jhyir")
+lightning_projectile_scene = ExtResource("18_jincj")
+metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
-position = Vector2(1, -17)
+position = Vector2(0, -17)
 sprite_frames = SubResource("SpriteFrames_gymyn")
-animation = &"Walk"
-frame = 3
-frame_progress = 0.224247
+animation = &"Idle"
+autoplay = "Idle"
 speed_scale = 0.8
+centered = false
+offset = Vector2(-32, -40)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 7)
@@ -201,13 +252,12 @@ position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_h8ma5")
 
 [node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_3smsa")]
-visible = false
 collision_layer = 4
 collision_mask = 72
 health_component = NodePath("../health_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
-position = Vector2(-2, -1)
+position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_ukyrk")
 
 [node name="StateMachine" type="Node" parent="."]
@@ -217,14 +267,6 @@ metadata/_custom_type_script = "uid://dlr8hb66x3wl0"
 [node name="status_effect_component" type="Node" parent="."]
 script = ExtResource("8_jlvik")
 metadata/_custom_type_script = "uid://dfncltihfaxrq"
-
-[node name="projectile_emitter" type="Node2D" parent="."]
-position = Vector2(0, 9)
-script = ExtResource("9_gk6dx")
-projectile_types = Array[ExtResource("10_74mp2")]([SubResource("Resource_06tpx"), SubResource("Resource_hnuln"), ExtResource("16_eksi1")])
-universal_projectile_scene = ExtResource("10_jhyir")
-lightning_projectile_scene = ExtResource("18_jincj")
-metadata/_custom_type_script = "uid://b6utwqgnhbq5l"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 limit_left = 0
@@ -243,9 +285,9 @@ turret_tower_scene = ExtResource("22_qr1w5")
 
 [node name="HealthBar" type="TextureProgressBar" parent="."]
 offset_left = -16.0
-offset_top = -43.0
+offset_top = -46.0
 offset_right = 16.0
-offset_bottom = -39.0
+offset_bottom = -42.0
 value = 50.0
 texture_under = ExtResource("19_rcvs5")
 texture_progress = ExtResource("20_h8ma5")
