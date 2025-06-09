@@ -1,0 +1,402 @@
+[gd_scene load_steps=11 format=3 uid="uid://cv50x78duysxk"]
+
+[ext_resource type="Texture2D" uid="uid://txpr138y0pfy" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/Screen_combinedBG_scaled_9x_pngcrushed.png" id="1_iadjo"]
+[ext_resource type="Script" uid="uid://dvwq12yhp371l" path="res://Scripts/UI/build_phase_ui.gd" id="1_pwxe4"]
+[ext_resource type="Texture2D" uid="uid://dc5fl2t0shsha" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/screen_bg_pattern.png" id="2_cu3dh"]
+[ext_resource type="Texture2D" uid="uid://c32dfd53gh7e7" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/medium_button1_scaled_10x_pngcrushed.png" id="3_ngmcb"]
+[ext_resource type="Texture2D" uid="uid://cju167rwbqdvf" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/medium_button2_scaled_10x_pngcrushed.png" id="4_pwxe4"]
+[ext_resource type="Script" uid="uid://dc31ym7wsiwm6" path="res://Scenes/UI/mainmenu/start_button.gd" id="5_0wbnq"]
+[ext_resource type="Texture2D" uid="uid://dohlxjwhd0avc" path="res://Assets/Tower/turret.png" id="7_jiigi"]
+[ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="8_1brf8"]
+[ext_resource type="Texture2D" uid="uid://dktkiplukb8gk" path="res://Assets/Tower/lavaNoWings.png" id="9_dut2e"]
+[ext_resource type="AudioStream" uid="uid://cvi23iopnert6" path="res://Assets/SFX/UI/Select.wav" id="10_1brf8"]
+
+[node name="BuildPhaseUI" type="Control"]
+z_index = 100
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pwxe4")
+
+[node name="InfoScreen" type="NinePatchRect" parent="."]
+z_index = 100
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+anchor_left = 0.198
+anchor_top = 0.08
+anchor_right = 0.756
+anchor_bottom = 0.189
+offset_left = -20.096
+offset_top = -20.3908
+offset_right = 565.088
+offset_bottom = 108.977
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.559999, 0.559999)
+texture = ExtResource("1_iadjo")
+patch_margin_left = 100
+patch_margin_top = 100
+patch_margin_right = 100
+patch_margin_bottom = 100
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="InfoScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0322132
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_right = -30.6302
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02802, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="InfoScreen/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cu3dh")
+
+[node name="ColorRect" type="ColorRect" parent="InfoScreen"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.044
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_left = -14.1375
+offset_right = -30.2336
+offset_bottom = -1.52588e-05
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02734, 1)
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+
+[node name="InstructionLabel" type="RichTextLabel" parent="InfoScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.183
+anchor_right = 0.961
+anchor_bottom = 1.0
+offset_left = 37.0
+offset_top = -1.6
+offset_right = 2.89197
+offset_bottom = -37.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 32
+text = "Build towers and prepare for battle!
+Press the button in the bottom right corner when ready to fight."
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PhaseScreen" type="NinePatchRect" parent="."]
+z_index = 100
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+anchor_left = 0.901993
+anchor_top = 0.076
+anchor_right = 0.959
+anchor_bottom = 0.183677
+offset_left = -20.096
+offset_top = -21.248
+offset_right = 114.232
+offset_bottom = 108.977
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.559999, 0.559999)
+texture = ExtResource("1_iadjo")
+patch_margin_left = 100
+patch_margin_top = 100
+patch_margin_right = 100
+patch_margin_bottom = 100
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="PhaseScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0322132
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_left = 28.5574
+offset_right = -41.0001
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02802, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="PhaseScreen/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cu3dh")
+
+[node name="ColorRect" type="ColorRect" parent="PhaseScreen"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.18
+anchor_top = 0.185
+anchor_right = 0.776
+anchor_bottom = 0.82
+offset_left = -1.14441e-05
+offset_right = -3.20006
+offset_bottom = -1.52588e-05
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02734, 1)
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+
+[node name="PhaseInfoLabel" type="RichTextLabel" parent="PhaseScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.183
+anchor_right = 0.961
+anchor_bottom = 1.0
+offset_left = 37.0
+offset_top = -1.6
+offset_right = -37.2001
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 32
+text = " Phase 2/3"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StartFightButton" type="TextureButton" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.87458
+anchor_top = 0.905059
+anchor_right = 0.990473
+anchor_bottom = 0.982436
+offset_right = 226.49
+offset_bottom = 69.8601
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.37086, 0.417833)
+texture_normal = ExtResource("3_ngmcb")
+texture_pressed = ExtResource("4_pwxe4")
+script = ExtResource("5_0wbnq")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="StartFightButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+text = "Fight!"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -112.0
+offset_right = 448.0
+offset_bottom = 88.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.530304, 0.424532)
+
+[node name="Tower1" type="NinePatchRect" parent="HBoxContainer"]
+z_index = 100
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("1_iadjo")
+patch_margin_left = 100
+patch_margin_top = 100
+patch_margin_right = 100
+patch_margin_bottom = 100
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="HBoxContainer/Tower1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0322132
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_left = 28.5574
+offset_right = -41.0001
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02802, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="HBoxContainer/Tower1/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cu3dh")
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/Tower1"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.18
+anchor_top = 0.185
+anchor_right = 0.776
+anchor_bottom = 0.82
+offset_left = -1.14441e-05
+offset_right = -3.20006
+offset_bottom = -1.52588e-05
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02734, 1)
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+
+[node name="turret_button" type="TextureButton" parent="HBoxContainer/Tower1"]
+layout_mode = 0
+offset_left = 20.2857
+offset_top = 4.54688
+offset_right = 84.2857
+offset_bottom = 68.5469
+scale = Vector2(2.20684, 2.60175)
+texture_normal = ExtResource("7_jiigi")
+
+[node name="Tower2" type="NinePatchRect" parent="HBoxContainer"]
+z_index = 100
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("1_iadjo")
+patch_margin_left = 100
+patch_margin_top = 100
+patch_margin_right = 100
+patch_margin_bottom = 100
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="HBoxContainer/Tower2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0322132
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_left = 28.5574
+offset_right = -41.0001
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02802, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="HBoxContainer/Tower2/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cu3dh")
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/Tower2"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.18
+anchor_top = 0.185
+anchor_right = 0.776
+anchor_bottom = 0.82
+offset_left = -1.14441e-05
+offset_right = -3.20006
+offset_bottom = -1.52588e-05
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02734, 1)
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+
+[node name="tesla_button" type="TextureButton" parent="HBoxContainer/Tower2"]
+layout_mode = 0
+offset_left = 67.446
+offset_top = 37.6743
+offset_right = 131.446
+offset_bottom = 101.674
+scale = Vector2(1.99627, 2.41331)
+texture_normal = ExtResource("8_1brf8")
+
+[node name="Tower3" type="NinePatchRect" parent="HBoxContainer"]
+z_index = 100
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("1_iadjo")
+patch_margin_left = 100
+patch_margin_top = 100
+patch_margin_right = 100
+patch_margin_bottom = 100
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="HBoxContainer/Tower3"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0322132
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_left = 28.5574
+offset_right = -41.0001
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02802, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="HBoxContainer/Tower3/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cu3dh")
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/Tower3"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.18
+anchor_top = 0.185
+anchor_right = 0.776
+anchor_bottom = 0.82
+offset_left = -1.14441e-05
+offset_right = -3.20006
+offset_bottom = -1.52588e-05
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02734, 1)
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+
+[node name="fire_button" type="TextureButton" parent="HBoxContainer/Tower3"]
+layout_mode = 0
+offset_left = 72.7454
+offset_top = 38.9735
+offset_right = 142.745
+offset_bottom = 153.973
+scale = Vector2(0.773724, 1.09422)
+texture_normal = ExtResource("9_dut2e")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_1brf8")
+
+[connection signal="button_down" from="StartFightButton" to="StartFightButton" method="_on_button_down"]
+[connection signal="button_is_pressed" from="StartFightButton" to="." method="_on_fight_button_is_pressed"]
+[connection signal="button_up" from="StartFightButton" to="StartFightButton" method="_on_button_up"]
+[connection signal="pressed" from="HBoxContainer/Tower1/turret_button" to="." method="_on_turret_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Tower2/tesla_button" to="." method="_on_tesla_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Tower3/fire_button" to="." method="_on_fire_button_pressed"]

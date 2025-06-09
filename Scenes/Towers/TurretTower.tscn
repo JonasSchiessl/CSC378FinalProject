@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://dthrnl8i5x8kk"]
+[gd_scene load_steps=14 format=3 uid="uid://dthrnl8i5x8kk"]
 
 [ext_resource type="Script" uid="uid://d0rwulyprx4gg" path="res://Scenes/Towers/turretTower.gd" id="1_n5j2b"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_gnrwq"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_pws5s"]
+[ext_resource type="AudioStream" uid="uid://df8j62gxeh68b" path="res://Assets/SFX/Projectiles/turret.wav" id="5_lhear"]
 [ext_resource type="SpriteFrames" uid="uid://dq1fe0w7o1s4b" path="res://Scenes/Projectiles/bullet.tres" id="5_n5j2b"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="6_kk7px"]
 [ext_resource type="Script" uid="uid://dlgp4xkt45ocl" path="res://Scripts/Components/hurtbox_component.gd" id="7_l446f"]
@@ -22,15 +23,16 @@ name = "Bullet"
 description = "Basic Bullet"
 sprite_frames = ExtResource("5_n5j2b")
 projectile_color = Color(1, 1, 1, 1)
+launch_sound = ExtResource("5_lhear")
 base_speed = 300.0
 base_damage = 0.5
 base_range = 200.0
 base_knockback = 100.0
 can_arc = false
 default_arc_height = 0.0
-can_penetrate = false
-default_penetration = 0
-can_area_effect = true
+can_penetrate = true
+default_penetration = 1
+can_area_effect = false
 default_area_radius = 80.0
 can_create_lingering = false
 default_lingering_type = "fire"

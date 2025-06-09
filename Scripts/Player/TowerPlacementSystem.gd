@@ -12,7 +12,7 @@ class_name TowerPlacementSystem
 @export var turret_tower_scene: PackedScene # TurretTower.tscn
 
 # Tower selection
-var selected_tower_index: int = 0  # 0 = Tesla, 1 = Lava, 2 = Turret
+var selected_tower_index: int = -1  # 0 = Tesla, 1 = Lava, 2 = Turret
 var tower_scenes: Array[PackedScene] = []
 var tower_type_names: Array[String] = ["tesla_tower", "lava_tower", "turret_tower"]
 var tower_display_names: Array[String] = ["Tesla Tower", "Lava Tower", "Turret Tower"]
@@ -20,6 +20,8 @@ var tower_display_names: Array[String] = ["Tesla Tower", "Lava Tower", "Turret T
 var preview_tower: Node2D = null  # The ghost/preview tower
 var current_grid_position: Vector2i = Vector2i.ZERO
 var can_place: bool = false
+
+var has_tower_selected: bool = false
 
 @export var valid_placement_color: Color = Color(0, 1, 0, 0.5)  # Green with transparency
 @export var invalid_placement_color: Color = Color(1, 0, 0, 0.5)  # Red with transparency
@@ -43,6 +45,7 @@ var last_affordability_check: float = 0.0
 var affordability_check_interval: float = 0.1  # Check 10 times per second
 
 func _ready() -> void:
+	add_to_group("tower_placement")
 	# Initialize tower scenes array
 	tower_scenes = [tesla_tower_scene, lava_tower_scene, turret_tower_scene]
 	
@@ -94,7 +97,7 @@ func setup_tower_costs() -> void:
 		CurrencyManager.set_tower_cost("turret_tower", turret_tower_cost)
 
 func _process(delta: float) -> void:
-	# Only process during build phase
+	# Only process during build phase AND when a tower is selected
 	if not GameManager.instance or not GameManager.instance.is_build_phase():
 		return
 	
@@ -102,7 +105,9 @@ func _process(delta: float) -> void:
 		push_error("TowerPlacementSystem: No player reference set!")
 		return
 	
-	update_preview_position()
+	# Only update preview if a tower is actually selected
+	if has_tower_selected and selected_tower_index >= 0:
+		update_preview_position()
 	
 	last_affordability_check += delta
 	if last_affordability_check >= affordability_check_interval:
@@ -118,30 +123,14 @@ func _input(event: InputEvent) -> void:
 	if not GameManager.instance or not GameManager.instance.is_build_phase():
 		return
 	
-	# Tower selection with number keys
-	if event.is_action_pressed("select_tower_1"): 
-		select_tower(0)
-	elif event.is_action_pressed("select_tower_2"):
-		select_tower(1)
-	elif event.is_action_pressed("select_tower_3"):
-		select_tower(2)
-	
-	if event is InputEventKey and event.pressed:
-		match event.keycode:
-			KEY_1:
-				select_tower(0)
-			KEY_2:
-				select_tower(1)
-			KEY_3:
-				select_tower(2)
-	
-	# Place with left click
-	if event.is_action_pressed("placeTower"):  
-		attempt_place_tower()
-	
-	# Cancel placement with right click
-	if event.is_action_pressed("cancelPlacement"): 
-		hide_preview()
+	# Handle mouse clicks for tower placement
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# Try to place a tower
+			attempt_place_tower()
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			# Cancel tower selection
+			cancel_tower_selection()
 
 func select_tower(index: int) -> void:
 	"""Select a tower type by index (0-2)"""
@@ -152,31 +141,34 @@ func select_tower(index: int) -> void:
 		return  # Already selected
 	
 	selected_tower_index = index
+	has_tower_selected = true
 	
 	print("Selected: ", tower_display_names[selected_tower_index], " (Cost: ", get_current_tower_cost(), ")")
 	
 	# Update affordability for new tower type
 	update_affordability()
 	
-	# Refresh preview with new tower type
-	if preview_tower:
-		hide_preview()
-		show_preview()
+	# Show preview with new tower type
+	hide_preview()  # Hide any existing preview
+	show_preview()  # Show new preview
 
 func get_current_tower_scene() -> PackedScene:
 	"""Get the currently selected tower scene"""
-	if selected_tower_index >= 0 and selected_tower_index < tower_scenes.size():
+	if has_tower_selected and selected_tower_index >= 0 and selected_tower_index < tower_scenes.size():
 		return tower_scenes[selected_tower_index]
 	return null
 
 func get_current_tower_type() -> String:
 	"""Get the currently selected tower type name"""
-	if selected_tower_index >= 0 and selected_tower_index < tower_type_names.size():
+	if has_tower_selected and selected_tower_index >= 0 and selected_tower_index < tower_type_names.size():
 		return tower_type_names[selected_tower_index]
 	return ""
 
 func get_current_tower_cost() -> int:
 	"""Get the cost of the currently selected tower"""
+	if not has_tower_selected:
+		return 0
+		
 	var tower_type = get_current_tower_type()
 	if CurrencyManager:
 		return CurrencyManager.get_item_cost(tower_type, "tower")
@@ -188,18 +180,15 @@ func get_current_tower_cost() -> int:
 			2: return turret_tower_cost
 			_: return 100
 
-# Calculate grid position from world position
 func world_to_grid(world_pos: Vector2) -> Vector2i:
 	return Vector2i(
 		int(round(world_pos.x / grid_size)),
 		int(round(world_pos.y / grid_size))
 	)
 
-# Convert grid position back to world position
 func grid_to_world(grid_pos: Vector2i) -> Vector2:
 	return Vector2(grid_pos.x * grid_size, grid_pos.y * grid_size)
 
-# Check if a grid position is too close to any existing tower
 func is_too_close_to_tower(grid_pos: Vector2i) -> bool:
 	# Check each placed tower
 	for tower_pos in occupied_positions:
@@ -213,7 +202,6 @@ func is_too_close_to_tower(grid_pos: Vector2i) -> bool:
 	
 	return false
 
-# Check if a grid position is on the player
 func is_on_player(grid_pos: Vector2i) -> bool:
 	if not player:
 		return false
@@ -232,7 +220,6 @@ func is_on_player(grid_pos: Vector2i) -> bool:
 	
 	return within_x and within_y
 
-# Check if a position is valid for placement
 func is_valid_placement(grid_pos: Vector2i) -> bool:
 	# Check if position is already occupied by a tower
 	if occupied_positions.has(grid_pos):
@@ -251,7 +238,6 @@ func is_valid_placement(grid_pos: Vector2i) -> bool:
 	
 	return true
 
-# Get detailed reason why placement is invalid (useful for UI feedback)
 func get_placement_error(grid_pos: Vector2i) -> String:
 	if occupied_positions.has(grid_pos):
 		return "Position occupied"
@@ -264,9 +250,8 @@ func get_placement_error(grid_pos: Vector2i) -> String:
 		var current = CurrencyManager.get_current_currency() if CurrencyManager else 0
 		return "Insufficient funds for " + tower_display_names[selected_tower_index] + " (Need: " + str(cost) + ", Have: " + str(current) + ")"
 	else:
-		return ""  # Valid placement
+		return ""  
 
-# Update the preview tower position
 func update_preview_position() -> void:
 	var mouse_pos = get_global_mouse_position()
 	
@@ -300,8 +285,11 @@ func update_preview_position() -> void:
 		else:
 			preview_tower.modulate = preview_color
 
-# Show the preview tower
 func show_preview() -> void:
+	# Only show preview if a tower is selected
+	if not has_tower_selected:
+		return
+		
 	var current_scene = get_current_tower_scene()
 	if not current_scene:
 		push_error("TowerPlacementSystem: No tower scene available for index " + str(selected_tower_index))
@@ -324,51 +312,60 @@ func hide_preview() -> void:
 		preview_tower.queue_free()
 		preview_tower = null
 
-#Tower placement that handles currency transaction
 func attempt_place_tower() -> void:
-	if not can_place:
-		# Provide specific feedback about why placement failed
-		var error = get_placement_error(current_grid_position)
-		print("Cannot place tower: " + error)
-		
-		# Special handling for currency issues
-		if not can_afford_tower:
-			show_insufficient_funds_feedback()
+	# Only allow placement if a tower is selected
+	if not has_tower_selected or not can_place:
+		if not has_tower_selected:
+			print("No tower selected! Please select a tower first.")
+		else:
+			# Provide specific feedback about why placement failed
+			var error = get_placement_error(current_grid_position)
+			print("Cannot place tower: " + error)
+			
+			# Special handling for currency issues
+			if not can_afford_tower:
+				show_insufficient_funds_feedback()
 		
 		return
 	
-	var current_scene = get_current_tower_scene()
-	if not current_scene:
-		push_error("TowerPlacementSystem: No tower scene available!")
-		return
-	
-	# Attempt to purchase the tower before placing it
-	var cost = get_current_tower_cost()
+	# ADD THIS PART - Actually place the tower!
+	var tower_cost = get_current_tower_cost()
 	var tower_type = get_current_tower_type()
 	
-	if not CurrencyManager or not CurrencyManager.spend_currency(cost, tower_type):
-		print("Tower placement failed: Could not complete currency transaction")
-		show_insufficient_funds_feedback()
+	# Deduct currency
+	if CurrencyManager and not CurrencyManager.spend_currency(tower_cost):
+		print("Failed to spend currency for tower placement!")
 		return
 	
-	# Currency transaction successful, proceed with placement
+	# Place the tower
 	place_tower_at_position(current_grid_position)
 	
-	# Update affordability after purchase
+	# Deselect the tower after successful placement
+	cancel_tower_selection()
+	
+	# Update affordability after spending currency
 	update_affordability()
 
-# Handle phase changes
 func _on_phase_changed(new_phase: GameManager.Phase) -> void:
 	match new_phase:
 		GameManager.Phase.BUILD:
 			visible = true
 			update_affordability()  # Check if we can afford towers when entering build phase
+			# Don't auto-select any tower - wait for player input
 		GameManager.Phase.FIGHT:
 			visible = false
 			hide_preview()
+			cancel_tower_selection()  # Clear selection when fight starts
 
 func get_all_towers() -> Array[Node2D]:
 	return placed_towers
+
+func cancel_tower_selection() -> void:
+	"""Cancel current tower selection"""
+	selected_tower_index = -1
+	has_tower_selected = false
+	hide_preview()
+	print("Tower selection cancelled")
 
 func remove_tower(tower: Node2D) -> void:
 	for pos in occupied_positions:
@@ -450,7 +447,6 @@ func get_selected_tower_info() -> Dictionary:
 		"can_afford": can_afford_tower
 	}
 
-# Debug function to test the currency integration
 func debug_currency_integration() -> void:
 	"""Debug function to test currency integration"""
 	print("\n=== TOWER PLACEMENT CURRENCY DEBUG ===")

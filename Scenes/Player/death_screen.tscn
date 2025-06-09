@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://qql8v7cqq0r8"]
 
-[ext_resource type="Script" uid="uid://dfq13yuekjfl8" path="res://Scripts/Player/death_screen.gd" id="1_7rl67"]
+[ext_resource type="Script" uid="uid://dfq13yuekjfl8" path="res://Scripts/UI/death_screen.gd" id="1_7rl67"]
 
 [node name="DeathScreen" type="CanvasLayer"]
 layer = 100

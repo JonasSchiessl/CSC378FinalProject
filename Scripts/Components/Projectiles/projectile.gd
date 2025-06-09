@@ -1,4 +1,4 @@
-# projectile.gd - FIXED VERSION
+# projectile.gd - ENHANCED VERSION with Sound Integration
 extends Node2D
 class_name Projectile
 
@@ -30,7 +30,7 @@ var penetration_remaining: int = 0
 
 # Collision layer configuration
 @export var projectile_collision_layer: int = 32  # Default layer for projectiles
-@export var target_collision_mask: int = 8       # What this projectile can hit
+@export var target_collision_mask: int = 8        # What this projectile can hit
 
 # Runtime variables
 var direction: Vector2 = Vector2.RIGHT
@@ -45,13 +45,20 @@ var targets_hit: Array = []  # Keep track of targets already hit for penetration
 var has_spawned_lingering_effect: bool = false
 var is_expired: bool = false
 
+# Store the ProjectileType for sound and visual configuration
+var projectile_type: ProjectileType = null
+
 # Components
 @onready var hitbox_component: HitboxComponent = $HitboxComponent
 @onready var collision_shape: CollisionShape2D = $HitboxComponent/CollisionShape2D
 @onready var area_effect_shape: CollisionShape2D = $AreaEffectZone/CollisionShape2D if has_node("AreaEffectZone/CollisionShape2D") else null
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var particles: GPUParticles2D = $TrailParticles if has_node("TrailParticles") else null
-@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D if has_node("AudioStreamPlayer2D") else null
+
+# Audio players - will be created dynamically from ProjectileType
+var launch_audio_player: AudioStreamPlayer2D = null
+var impact_audio_player: AudioStreamPlayer2D = null
+var loop_audio_player: AudioStreamPlayer2D = null
 
 # Set up the projectile with attack data and settings
 func setup(new_attack: Attack, new_direction: Vector2, 
@@ -80,6 +87,9 @@ func setup(new_attack: Attack, new_direction: Vector2,
 	lingering_effect_radius = new_lingering_radius
 	lingering_effect_duration = new_lingering_duration
 	lingering_effect_damage = new_lingering_damage
+	
+	# Store the projectile type for sound/visual configuration
+	self.projectile_type = projectile_type
 	
 	# Collision layer setup
 	if collision_layer != -1:
@@ -171,7 +181,44 @@ func _physics_process(delta: float) -> void:
 				var original_extents = collision_shape.shape.extents / scale_factor
 				collision_shape.shape.extents = original_extents * scale_factor
 
-# New function to properly setup particles
+# ENHANCED: Setup audio players based on ProjectileType
+func setup_audio_players() -> void:
+	"""Setup audio players based on the ProjectileType's sound configuration"""
+	if not projectile_type:
+		return
+	
+	# Setup launch sound player
+	if projectile_type.launch_sound:
+		launch_audio_player = AudioStreamPlayer2D.new()
+		launch_audio_player.stream = projectile_type.launch_sound
+		launch_audio_player.name = "LaunchAudioPlayer"
+		add_child(launch_audio_player)
+		# Play launch sound immediately
+		launch_audio_player.play()
+		print("Playing projectile launch sound: ", projectile_type.name)
+	
+	# Setup impact sound player
+	if projectile_type.impact_sound:
+		impact_audio_player = AudioStreamPlayer2D.new()
+		impact_audio_player.stream = projectile_type.impact_sound
+		impact_audio_player.name = "ImpactAudioPlayer"
+		add_child(impact_audio_player)
+	
+	# Setup loop sound player (for continuous sounds during flight)
+	if projectile_type.loop_sound:
+		loop_audio_player = AudioStreamPlayer2D.new()
+		loop_audio_player.stream = projectile_type.loop_sound
+		loop_audio_player.name = "LoopAudioPlayer"
+		add_child(loop_audio_player)
+		loop_audio_player.play()
+
+func play_impact_sound() -> void:
+	"""Play the impact sound from ProjectileType"""
+	if impact_audio_player and impact_audio_player.stream:
+		impact_audio_player.play()
+		print("Playing projectile impact sound: ", projectile_type.name if projectile_type else "Unknown")
+
+# New function to setup particles
 func setup_particles() -> void:
 	if not particles:
 		return
@@ -230,10 +277,8 @@ func configure_as_type(projectile_type: ProjectileType) -> void:
 		if projectile_type.particle_texture:
 			particles.texture = projectile_type.particle_texture
 	
-	# Apply audio configuration
-	if audio_player and projectile_type.launch_sound:
-		audio_player.stream = projectile_type.launch_sound
-		audio_player.play()
+	# ENHANCED: Setup audio players based on ProjectileType
+	setup_audio_players()
 
 # Function to stop particles gracefully
 func stop_particles() -> void:
@@ -258,6 +303,9 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 		# Apply damage
 		area.damage(attack)
 		
+		# ENHANCED: Play impact sound
+		play_impact_sound()
+		
 		# Handle penetration
 		penetration_remaining -= 1
 		if penetration_remaining < 0:
@@ -276,6 +324,9 @@ func _handle_projectile_end() -> void:
 		return  # Prevent multiple calls
 	
 	is_expired = true
+	
+	# ENHANCED: Play impact sound
+	play_impact_sound()
 	
 	if area_effect:
 		trigger_area_effect()
@@ -368,9 +419,9 @@ func spawn_lingering_effect() -> void:
 	
 	# Setup the effect with proper parameters
 	effect.setup(null, lingering_effect_radius, 
-			lingering_effect_duration, lingering_effect_damage, 
-			lingering_effect_type, projectile_collision_layer,
-			target_collision_mask)
+		lingering_effect_duration, lingering_effect_damage, 
+		lingering_effect_type, projectile_collision_layer,
+		target_collision_mask)
 	
 	# Stop particles after spawning lingering effect
 	stop_particles()

@@ -1,4 +1,4 @@
-# lightning_projectile.gd - Chain Lightning Projectile
+# lightning_projectile.gd - Enhanced with ProjectileType Sound Integration
 extends Node2D
 class_name LightningProjectile
 
@@ -23,12 +23,15 @@ var current_chains: int = 0
 var hit_enemies: Array[Node2D] = []
 var beam_segments: Array[LightningBeam] = []
 var is_active: bool = true
+var projectile_type: ProjectileType = null  # Store the projectile type
 
 # Collision configuration
 var collision_layer: int = 32 
 var collision_mask: int = 8    
 
-# Audio and particles
+# Audio players - Create them dynamically based on ProjectileType
+var launch_audio_player: AudioStreamPlayer2D = null
+var impact_audio_player: AudioStreamPlayer2D = null
 @onready var lightning_sound: AudioStreamPlayer2D = $LightningSound if has_node("LightningSound") else null
 @onready var impact_particles: GPUParticles2D = $ImpactParticles if has_node("ImpactParticles") else null
 
@@ -73,7 +76,7 @@ class LightningBeam extends Line2D:
 		if enable_glow:
 			# Create glow effect
 			call_deferred("create_glow_effect", start_pos, end_pos, width, color, glow_width)
-	
+
 	func generate_crackling_path():
 		if base_points.size() < 2:
 			return
@@ -110,7 +113,7 @@ class LightningBeam extends Line2D:
 		
 		# Randomly create/update branches
 		update_crackling_branches()
-	
+
 	func update_crackling_branches():
 		# Clean up old branches
 		for branch in branches:
@@ -127,7 +130,7 @@ class LightningBeam extends Line2D:
 		for i in range(branch_count):
 			if randf() < 0.6: 
 				create_crackling_branch()
-	
+
 	func create_crackling_branch():
 		if points.size() < 3:
 			return
@@ -167,7 +170,7 @@ class LightningBeam extends Line2D:
 		
 		get_tree().current_scene.add_child(branch)
 		branches.append(branch)
-	
+
 	func create_glow_effect(start_pos: Vector2, end_pos: Vector2, base_width: float, base_color: Color, glow_width: float):
 		# Create a wider, more transparent line behind the main lightning for glow
 		var glow = Line2D.new()
@@ -186,7 +189,7 @@ class LightningBeam extends Line2D:
 			if is_instance_valid(glow):
 				glow.queue_free()
 		)
-	
+
 	func _process(delta: float):
 		lifetime += delta
 		crackling_timer += delta
@@ -235,22 +238,72 @@ class LightningBeam extends Line2D:
 
 func setup(new_attack: Attack, start_position: Vector2, initial_direction: Vector2,
 		   chains: int = max_chains, range: float = chain_range,
-		   proj_collision_layer: int = collision_layer, proj_collision_mask: int = collision_mask) -> void:
+		   proj_collision_layer: int = collision_layer, proj_collision_mask: int = collision_mask,
+		   proj_type: ProjectileType = null) -> void:
 	
 	attack = new_attack
 	max_chains = chains
 	chain_range = range
 	collision_layer = proj_collision_layer
 	collision_mask = proj_collision_mask
+	projectile_type = proj_type  # Store the projectile type
 	
 	global_position = start_position
 	
-	# Play lightning sound
-	if lightning_sound:
-		lightning_sound.play()
+	# Setup audio players based on ProjectileType
+	setup_audio_players()
+	
+	# Play launch sound if available
+	play_launch_sound()
 	
 	# Start the lightning chain from the emitter position
 	fire_lightning_chain(start_position, initial_direction, null)
+
+func setup_audio_players() -> void:
+	"""Setup audio players based on the ProjectileType's sound configuration"""
+	if not projectile_type:
+		return
+	
+	# Setup launch sound player
+	if projectile_type.launch_sound:
+		launch_audio_player = AudioStreamPlayer2D.new()
+		launch_audio_player.stream = projectile_type.launch_sound
+		launch_audio_player.name = "LaunchAudioPlayer"
+		add_child(launch_audio_player)
+	
+	# Setup impact sound player
+	if projectile_type.impact_sound:
+		impact_audio_player = AudioStreamPlayer2D.new()
+		impact_audio_player.stream = projectile_type.impact_sound
+		impact_audio_player.name = "ImpactAudioPlayer"
+		add_child(impact_audio_player)
+
+func play_launch_sound() -> void:
+	"""Play the launch sound from ProjectileType"""
+	if launch_audio_player and launch_audio_player.stream:
+		launch_audio_player.play()
+		print("Playing lightning launch sound")
+	elif lightning_sound:
+		# Fallback to the default lightning sound
+		lightning_sound.play()
+
+func play_impact_sound(position: Vector2) -> void:
+	"""Play the impact sound at a specific position"""
+	if impact_audio_player and impact_audio_player.stream:
+		# Create a temporary audio player at the impact position
+		var temp_audio = AudioStreamPlayer2D.new()
+		temp_audio.stream = impact_audio_player.stream
+		temp_audio.global_position = position
+		get_tree().current_scene.add_child(temp_audio)
+		temp_audio.play()
+		
+		# Clean up the temporary audio player after it finishes
+		temp_audio.finished.connect(func():
+			if is_instance_valid(temp_audio):
+				temp_audio.queue_free()
+		)
+		
+		print("Playing lightning impact sound at ", position)
 
 func fire_lightning_chain(start_pos: Vector2, search_direction: Vector2, last_target: Node2D) -> void:
 	if current_chains >= max_chains or not is_active:
@@ -298,7 +351,7 @@ func fire_lightning_chain(start_pos: Vector2, search_direction: Vector2, last_ta
 	hit_enemies.append(target)
 	current_chains += 1
 	
-	# Show impact effect
+	# Show impact effect with sound
 	show_impact_effect(target_pos)
 	
 	# Continue chain after a short delay for visual effect
@@ -394,6 +447,9 @@ func set_collision_layers(layer: int, mask: int) -> void:
 	collision_mask = mask
 
 func show_impact_effect(position: Vector2) -> void:
+	# Play impact sound at the impact position
+	play_impact_sound(position)
+	
 	# Create impact particles
 	if impact_particles:
 		var particles_instance = impact_particles.duplicate()
@@ -409,5 +465,5 @@ func show_impact_effect(position: Vector2) -> void:
 	
 	# Create a small electric burst effect
 	var burst = LightningBeam.new(position, position + Vector2(randf_range(-20, 20), randf_range(-20, 20)), 
-								  beam_width * 0.5, lightning_color, 0.2, enable_glow, glow_width)
+									beam_width * 0.5, lightning_color, 0.2, enable_glow, glow_width)
 	get_tree().current_scene.add_child(burst)  # Add to scene root

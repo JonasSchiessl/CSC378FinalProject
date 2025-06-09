@@ -71,7 +71,7 @@ func fire_projectile(direction: Vector2) -> bool:
 			lightning_type.max_chain_count,
 			lightning_type.chain_range,
 			lightning_type.base_damage,
-			lightning_type
+			current_projectile_type
 		)
 		if success:
 			# Update last fire time
@@ -80,15 +80,15 @@ func fire_projectile(direction: Vector2) -> bool:
 	
 	# Fire regular projectile using the enhanced method
 	fire_projectile_advanced_enhanced(direction, current_projectile_type.base_speed, 
-						current_projectile_type.base_damage, current_projectile_type.base_range, 
-						current_projectile_type.base_knockback, current_projectile_type.default_arc_height, 
-						current_projectile_type.default_penetration, current_projectile_type.can_area_effect, 
-						current_projectile_type.default_area_radius, current_projectile_type.can_create_lingering, 
-						current_projectile_type.default_lingering_type, current_projectile_type.default_lingering_radius,
-						current_projectile_type.default_lingering_duration, current_projectile_type.default_lingering_damage,
-						current_projectile_type, 
-						projectile_layer, 
-						target_mask)
+			current_projectile_type.base_damage, current_projectile_type.base_range, 
+			current_projectile_type.base_knockback, current_projectile_type.default_arc_height, 
+			current_projectile_type.default_penetration, current_projectile_type.can_area_effect, 
+			current_projectile_type.default_area_radius, current_projectile_type.can_create_lingering, 
+			current_projectile_type.default_lingering_type, current_projectile_type.default_lingering_radius,
+			current_projectile_type.default_lingering_duration, current_projectile_type.default_lingering_damage,
+			current_projectile_type, 
+			projectile_layer, 
+			target_mask)
 	
 	# Update last fire time
 	last_fire_times[current_projectile_type.name] = Time.get_ticks_msec() / 1000.0
@@ -186,9 +186,9 @@ func fire_lightning_projectile(direction: Vector2, chains: int = 3,
 			var duration = projectile_type_to_use.get_effect_duration(effect_name)
 			attack.apply_effect(effect_name, strength, duration)
 	
-	# Setup lightning projectile with parameters
+	# Setup lightning projectile with parameters - PASS THE PROJECTILE TYPE!
 	lightning_projectile.setup(attack, global_position, direction, chains, chain_range,
-							   projectile_layer, target_mask)
+							   projectile_layer, target_mask, projectile_type_to_use)
 	
 	# Update last fire time if using current projectile type
 	if not projectile_type_override and current_projectile_type:
@@ -277,9 +277,6 @@ func fire_projectile_advanced_enhanced(direction: Vector2, speed: float, damage:
 	if chains > 0:
 		fire_lightning_projectile(direction, chains, chain_range, damage, projectile_type_to_use)
 		return
-	
-	# Continue with regular projectile logic for non-lightning projectiles
-	# ... (rest of existing fire_projectile_advanced code)
 	
 	var projectile_type_to_use_final = projectile_type_override if projectile_type_override else current_projectile_type
 	

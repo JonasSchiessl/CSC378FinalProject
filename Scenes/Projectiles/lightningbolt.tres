@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="LightningProjectileType" load_steps=2 format=3 uid="uid://b1fja6mbt8opd"]
+[gd_resource type="Resource" script_class="LightningProjectileType" load_steps=3 format=3 uid="uid://b1fja6mbt8opd"]
 
+[ext_resource type="AudioStream" uid="uid://bg2ehb2k1k605" path="res://Assets/SFX/Projectiles/lightning.wav" id="1_43q1c"]
 [ext_resource type="Script" uid="uid://dc4c57au84fne" path="res://Scripts/Components/Projectiles/lightningbolt/lightningbolt_type.gd" id="1_kxukd"]
 
 [resource]
@@ -13,6 +14,7 @@ shock_application_chance = 0.4
 name = "ligning arc"
 description = ""
 projectile_color = Color(1, 1, 1, 1)
+launch_sound = ExtResource("1_43q1c")
 base_speed = 300.0
 base_damage = 2.0
 base_range = 1000.0
