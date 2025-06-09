@@ -1,0 +1,15 @@
+[gd_resource type="ParticleProcessMaterial" format=3 uid="uid://c3iebclotubo"]
+
+[resource]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+initial_velocity_min = 10.0
+initial_velocity_max = 50.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 0, 0)
+damping_min = 1.0
+damping_max = 3.0
+scale_min = 1.5
+scale_max = 5.0
+color = Color(0.658824, 0.517647, 0.952941, 1)
