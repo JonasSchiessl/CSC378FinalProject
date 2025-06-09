@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cv50x78duysxk"]
+[gd_scene load_steps=11 format=3 uid="uid://cv50x78duysxk"]
 
 [ext_resource type="Texture2D" uid="uid://txpr138y0pfy" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/Screen_combinedBG_scaled_9x_pngcrushed.png" id="1_iadjo"]
 [ext_resource type="Script" uid="uid://dvwq12yhp371l" path="res://Scripts/UI/build_phase_ui.gd" id="1_pwxe4"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dohlxjwhd0avc" path="res://Assets/Tower/turret.png" id="7_jiigi"]
 [ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="8_1brf8"]
 [ext_resource type="Texture2D" uid="uid://dktkiplukb8gk" path="res://Assets/Tower/lavaNoWings.png" id="9_dut2e"]
+[ext_resource type="AudioStream" uid="uid://cvi23iopnert6" path="res://Assets/SFX/UI/Select.wav" id="10_1brf8"]
 
 [node name="BuildPhaseUI" type="Control"]
 z_index = 100
@@ -389,6 +390,9 @@ offset_right = 142.745
 offset_bottom = 153.973
 scale = Vector2(0.773724, 1.09422)
 texture_normal = ExtResource("9_dut2e")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_1brf8")
 
 [connection signal="button_down" from="StartFightButton" to="StartFightButton" method="_on_button_down"]
 [connection signal="button_is_pressed" from="StartFightButton" to="." method="_on_fight_button_is_pressed"]

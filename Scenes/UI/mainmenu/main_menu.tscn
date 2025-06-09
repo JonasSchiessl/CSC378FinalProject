@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dbwimi1hpri3g"]
+[gd_scene load_steps=33 format=3 uid="uid://dbwimi1hpri3g"]
 
 [ext_resource type="Script" uid="uid://bos0xvkhcysw6" path="res://Scenes/UI/mainmenu/main_menu.gd" id="1_2ksgt"]
 [ext_resource type="Texture2D" uid="uid://dcbibb2wdxu65" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/colossal_button1_scaled_5x_pngcrushed.png" id="1_8qc4y"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://cgtuesu7rhf7d" path="res://Assets/Ui/Mini Sci-Fi Gui/Cyberphont 2.0/Cyberphont 2.0.ttf" id="3_8pvuc"]
 [ext_resource type="Script" uid="uid://dc31ym7wsiwm6" path="res://Scenes/UI/mainmenu/start_button.gd" id="4_8pvuc"]
 [ext_resource type="AudioStream" uid="uid://dhshp26pmoecp" path="res://Assets/Music/DavidKBD - Pink Bloom Pack - 03 - To the Unknown.ogg" id="6_16o10"]
+[ext_resource type="AudioStream" uid="uid://cvi23iopnert6" path="res://Assets/SFX/UI/Select.wav" id="7_5wk68"]
 [ext_resource type="Texture2D" uid="uid://txpr138y0pfy" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/Screen_combinedBG_scaled_9x_pngcrushed.png" id="7_qrcm0"]
 [ext_resource type="Texture2D" uid="uid://dc5fl2t0shsha" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/screen_bg_pattern.png" id="8_gfjmo"]
 [ext_resource type="Texture2D" uid="uid://b3rsf7rnyaswj" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/small_button1.png" id="9_an3td"]
@@ -275,10 +276,13 @@ vertical_alignment = 1
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_16o10")
 autoplay = true
 parameters/looping = true
+
+[node name="Select" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_5wk68")
 
 [node name="Settings" type="NinePatchRect" parent="."]
 custom_minimum_size = Vector2(50, 50)
@@ -553,22 +557,27 @@ drag_and_drop_selection_enabled = false
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="CreditsOverlay"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -204.0
-offset_top = -72.0
-offset_right = 204.0
-offset_bottom = 72.0
+anchors_preset = -1
+anchor_left = 0.0868056
+anchor_top = 0.231481
+anchor_right = 0.914063
+anchor_bottom = 0.875
+offset_right = -391.001
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.68, 1)
 theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
-theme_override_font_sizes/normal_font_size = 64
-text = "No Credits yet"
+theme_override_font_sizes/normal_font_size = 45
+text = "Art & Enemy Ai: Megan Robison
+Core Systems: Jonas Schiessl
+Tower System: Miguel Saenz
+SFX: Jonas Schiessl
+Projectiles: Polar_34 (Itch.io)
+UI: Finnmercury (Itch.io)
+Music: DavidKBD (Itch.io)"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="SettingsOverlay" type="Control" parent="."]
 visible = false
@@ -617,15 +626,11 @@ drag_and_drop_selection_enabled = false
 
 [node name="RichTextLabel" type="RichTextLabel" parent="SettingsOverlay"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -204.0
-offset_top = -72.0
-offset_right = 204.0
-offset_bottom = 72.0
+anchors_preset = -1
+anchor_left = 0.0963542
+anchor_top = 0.229938
+anchor_right = 0.912326
+anchor_bottom = 0.848765
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/default_color = Color(0, 1, 0.254902, 1)
@@ -633,6 +638,7 @@ theme_override_font_sizes/normal_font_size = 64
 text = "No Settings yet"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [connection signal="button_down" from="VBoxContainer/Start" to="VBoxContainer/Start" method="_on_button_down"]
 [connection signal="button_is_pressed" from="VBoxContainer/Start" to="." method="on_start_button_is_pressed"]

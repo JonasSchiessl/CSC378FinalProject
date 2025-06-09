@@ -57,9 +57,11 @@ func setup_overlay_connections():
 			back_button.pressed.connect(_on_credits_back)
 
 func on_start_button_is_pressed() -> void:
+	$Select.play()
 	get_tree().change_scene_to_file("res://Scenes/Levels/Level.tscn")
 
 func on_settings_button_is_pressed() -> void:
+	$Select.play()
 	if current_expanded_panel == settings_panel:
 		# Already expanded settings, close it
 		close_current_panel()
@@ -73,6 +75,7 @@ func on_settings_button_is_pressed() -> void:
 		expand_panel_to_fullscreen(settings_panel, "settings")
 
 func on_credits_button_is_pressed() -> void:
+	$Select.play()
 	if current_expanded_panel == credits_panel:
 		# Already expanded credits, close it
 		close_current_panel()
@@ -107,6 +110,7 @@ func expand_panel_to_fullscreen(panel: Control, panel_type: String):
 	tween.tween_callback(show_overlay.bind(panel_type)).set_delay(animation_duration)
 
 func close_current_panel():
+	$Select.play()
 	if not current_expanded_panel:
 		return
 	

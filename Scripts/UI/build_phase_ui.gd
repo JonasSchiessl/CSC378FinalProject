@@ -98,6 +98,7 @@ func hide_build_ui():
 func _on_start_fight_pressed():
 	"""Handle start fight button press"""
 	print("Start Fight button pressed!")
+	$AudioStreamPlayer.play()
 	# Emit signal to start fight phase
 	fight_phase_requested.emit()
 	
@@ -113,10 +114,8 @@ func _on_phase_changed(new_phase):
 		GameManager.Phase.FIGHT:
 			hide_build_ui()
 
-
 func _on_fight_button_is_pressed() -> void:
 	_on_start_fight_pressed()
-
 
 func _on_turret_button_pressed() -> void:
 	print("Turret tower selected")
