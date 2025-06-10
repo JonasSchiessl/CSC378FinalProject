@@ -1,294 +1,299 @@
 {
   "phases": [
-    {
-      "phase_name": "Tutorial Phase",
-      "waves": [
-        {
-          "wave_name": "First Steps",
-          "spawn_delay": 1.0,
-          "wave_delay": 5.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 5,
-              "group_delay": 0.0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "phase_name": "Basic Defense",
-      "waves": [
-        {
-          "wave_name": "Rat Pack",
-          "spawn_delay": 2.5,
-          "wave_delay": 6.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 5,
-              "group_delay": 0.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Mixed Assault",
-          "spawn_delay": 2.0,
-          "wave_delay": 7.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 5,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 5,
-              "group_delay": 3.0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "phase_name": "Rising Threat",
-      "waves": [
-        {
-          "wave_name": "Swarm Beginning",
-          "spawn_delay": 1.8,
-          "wave_delay": 5.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 8,
-              "group_delay": 0.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Coordinated Strike",
-          "spawn_delay": 1.5,
-          "wave_delay": 6.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 10,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 10,
-              "group_delay": 2.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 3,
-              "group_delay": 5.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Overwhelming Force",
-          "spawn_delay": 1.2,
-          "wave_delay": 8.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 12,
-              "group_delay": 0.0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "phase_name": "Advanced Tactics",
-      "waves": [
-        {
-          "wave_name": "Rapid Deployment",
-          "spawn_delay": 1.0,
-          "wave_delay": 4.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 20,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 20,
-              "group_delay": 1.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Sustained Pressure",
-          "spawn_delay": 0.8,
-          "wave_delay": 5.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 15,
-              "group_delay": 0.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Multi-Vector Attack",
-          "spawn_delay": 1.2,
-          "wave_delay": 6.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 5,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 5,
-              "group_delay": 2.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 5,
-              "group_delay": 4.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 5,
-              "group_delay": 6.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Final Assault",
-          "spawn_delay": 0.6,
-          "wave_delay": 10.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 20,
-              "group_delay": 0.0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "phase_name": "Elite Challenge",
-      "waves": [
-        {
-          "wave_name": "Speed Burst",
-          "spawn_delay": 0.5,
-          "wave_delay": 3.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 8,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 8,
-              "group_delay": 0.5
-            }
-          ]
-        },
-        {
-          "wave_name": "Endless Horde",
-          "spawn_delay": 0.4,
-          "wave_delay": 4.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 25,
-              "group_delay": 0.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Chaos Formation",
-          "spawn_delay": 0.7,
-          "wave_delay": 5.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 6,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 6,
-              "group_delay": 1.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 6,
-              "group_delay": 2.0
-            },
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 6,
-              "group_delay": 3.0
-            },
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 6,
-              "group_delay": 4.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Storm the Gates",
-          "spawn_delay": 0.3,
-          "wave_delay": 6.0,
-          "spawn_pattern": "PARALLEL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 15,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 15,
-              "group_delay": 2.0
-            }
-          ]
-        },
-        {
-          "wave_name": "Ultimate Test",
-          "spawn_delay": 0.2,
-          "wave_delay": 15.0,
-          "spawn_pattern": "SEQUENTIAL",
-          "enemy_groups": [
-            {
-              "enemy_type": "poison_rat",
-              "enemy_count": 25,
-              "group_delay": 0.0
-            },
-            {
-              "enemy_type": "melee_rat",
-              "enemy_count": 25,
-              "group_delay": 0.0
-            }
-          ]
-        }
-      ]
-    }
+	{
+	  "phase_name": "Tutorial Phase",
+	  "waves": [
+		{
+		  "wave_name": "First Steps",
+		  "spawn_delay": 1.0,
+		  "wave_delay": 3.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 5,
+			  "group_delay": 0.0
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "phase_name": "Basic Defense",
+	  "waves": [
+		{
+		  "wave_name": "Rat Pack",
+		  "spawn_delay": 1.0,
+		  "wave_delay": 3.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 5,
+			  "group_delay": 0.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Mixed Assault",
+		  "spawn_delay": 1.0,
+		  "wave_delay": 3.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 5,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 5,
+			  "group_delay": 3.0
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "phase_name": "Rising Threat",
+	  "waves": [
+		{
+		  "wave_name": "Swarm Beginning",
+		  "spawn_delay": 1.0,
+		  "wave_delay": 3.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 8,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 8,
+			  "group_delay": 0.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Coordinated Strike",
+		  "spawn_delay": 1.5,
+		  "wave_delay": 6.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 10,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 10,
+			  "group_delay": 2.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 3,
+			  "group_delay": 5.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Overwhelming Force",
+		  "spawn_delay": 1.2,
+		  "wave_delay": 8.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 12,
+			  "group_delay": 0.0
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "phase_name": "Advanced Tactics",
+	  "waves": [
+		{
+		  "wave_name": "Rapid Deployment",
+		  "spawn_delay": 1.0,
+		  "wave_delay": 4.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 20,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 20,
+			  "group_delay": 1.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Sustained Pressure",
+		  "spawn_delay": 0.8,
+		  "wave_delay": 5.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 15,
+			  "group_delay": 0.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Multi-Vector Attack",
+		  "spawn_delay": 1.2,
+		  "wave_delay": 6.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 5,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 5,
+			  "group_delay": 2.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 5,
+			  "group_delay": 4.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 5,
+			  "group_delay": 6.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Final Assault",
+		  "spawn_delay": 0.6,
+		  "wave_delay": 10.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 20,
+			  "group_delay": 0.0
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "phase_name": "Elite Challenge",
+	  "waves": [
+		{
+		  "wave_name": "Speed Burst",
+		  "spawn_delay": 0.5,
+		  "wave_delay": 3.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 8,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 8,
+			  "group_delay": 0.5
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Endless Horde",
+		  "spawn_delay": 0.4,
+		  "wave_delay": 4.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 25,
+			  "group_delay": 0.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Chaos Formation",
+		  "spawn_delay": 0.7,
+		  "wave_delay": 5.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 6,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 6,
+			  "group_delay": 1.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 6,
+			  "group_delay": 2.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 6,
+			  "group_delay": 3.0
+			},
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 6,
+			  "group_delay": 4.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Storm the Gates",
+		  "spawn_delay": 0.3,
+		  "wave_delay": 6.0,
+		  "spawn_pattern": "PARALLEL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 15,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 15,
+			  "group_delay": 2.0
+			}
+		  ]
+		},
+		{
+		  "wave_name": "Ultimate Test",
+		  "spawn_delay": 0.2,
+		  "wave_delay": 15.0,
+		  "spawn_pattern": "SEQUENTIAL",
+		  "enemy_groups": [
+			{
+			  "enemy_type": "poison_rat",
+			  "enemy_count": 25,
+			  "group_delay": 0.0
+			},
+			{
+			  "enemy_type": "melee_rat",
+			  "enemy_count": 25,
+			  "group_delay": 0.0
+			}
+		  ]
+		}
+	  ]
+	}
   ]
 }

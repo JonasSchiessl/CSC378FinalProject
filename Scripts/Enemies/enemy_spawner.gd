@@ -34,7 +34,6 @@ signal phase_completed(phase_index: int)
 signal wave_completed(phase_index: int, wave_index: int)
 signal all_phases_completed()
 
-
 func _ready() -> void:
 	print("=== ENEMY SPAWNER _ready() ===")
 	
@@ -77,7 +76,6 @@ func _ready() -> void:
 		return
 	
 	print("=== ENEMY SPAWNER _ready() COMPLETE ===")
-	
 
 func connect_to_gamemanager():
 	print("\n=== DEFERRED GAMEMANAGER CONNECTION ===")
@@ -289,8 +287,8 @@ func get_valid_spawn_position() -> Vector2:
 	var camera = get_viewport().get_camera_2d()
 	
 	if not camera:
-		# Fallback if no camera
-		return get_random_position_in_shape(shape, spawn_area.global_transform)
+		# Fallback if no camera - use Area2D's global transform
+		return get_random_position_in_shape(shape, spawn_area.global_transform * collision_shape.transform)
 	
 	# Get camera bounds
 	var camera_pos = camera.global_position
@@ -303,17 +301,26 @@ func get_valid_spawn_position() -> Vector2:
 		camera_size + Vector2.ONE * camera_margin * 2
 	)
 	
+	# The key fix: combine Area2D's global transform with CollisionShape2D's local transform
+	var final_transform = spawn_area.global_transform * collision_shape.transform
+	
 	# Try to find a position outside camera view
 	for attempt in range(max_spawn_attempts):
-		var test_position = get_random_position_in_shape(shape, spawn_area.global_transform)
+		var test_position = get_random_position_in_shape(shape, final_transform)
+		
+		# Debug: Print the test position
+		print("Attempt %d: Testing position %s" % [attempt + 1, test_position])
 		
 		# Check if position is outside camera view
 		if not camera_rect.has_point(test_position):
+			print("Found valid spawn position: %s" % test_position)
 			return test_position
 	
 	# Fallback: return any valid position in the area
 	print("Warning: Could not find spawn position outside camera view, using fallback")
-	return get_random_position_in_shape(shape, spawn_area.global_transform)
+	var fallback_pos = get_random_position_in_shape(shape, final_transform)
+	print("Fallback position: %s" % fallback_pos)
+	return fallback_pos
 
 func get_random_position_in_shape(shape: Shape2D, transform: Transform2D) -> Vector2:
 	"""Get a random position within a shape"""
@@ -669,7 +676,6 @@ func create_default_phase() -> void:
 	
 	print("Default phase created with ", phase.waves.size(), " waves")
 
-# Optional: Save current phases to JSON (for easy editing)
 func save_phases_to_json(file_path: String = "res://Data/phases_export.json") -> void:
 	"""Export current phases to JSON format"""
 	var data = {"phases": []}
