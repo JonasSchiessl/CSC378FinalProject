@@ -39,8 +39,8 @@ func _ready() -> void:
 	if hitbox_component:
 		hitbox_component.active = false  
 		# Set collision layers - enemy hitbox should target player hurtbox
-		hitbox_component.collision_layer = 64  
-		hitbox_component.collision_mask = 4    
+		hitbox_component.collision_layer = 4
+		hitbox_component.collision_mask = 3
 
 	if CurrencyManager:
 		var actual_reward = int(currency_reward * bonus_multiplier)
@@ -104,7 +104,7 @@ func perform_attack(direction: Vector2) -> void:
 		$Sprite.flip_h = true
 	
 	# Play idle animation for now (until you create attack animation)
-	$AnimationPlayer.play("idle")
+	$AnimationPlayer.play("attack")
 	
 	if hitbox_component:
 		hitbox_component.active = true

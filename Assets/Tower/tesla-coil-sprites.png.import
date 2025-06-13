@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv88qnx523ds4"
-path="res://.godot/imported/melee-rat-sprites.png-d7c5627fcda7846ba577abb6e6486273.ctex"
+uid="uid://dpjhualxcci7x"
+path="res://.godot/imported/tesla-coil-sprites.png-24196213287e16ee55e36d35746f6a9d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Enemies/melee-rat-sprites.png"
-dest_files=["res://.godot/imported/melee-rat-sprites.png-d7c5627fcda7846ba577abb6e6486273.ctex"]
+source_file="res://Assets/Tower/tesla-coil-sprites.png"
+dest_files=["res://.godot/imported/tesla-coil-sprites.png-24196213287e16ee55e36d35746f6a9d.ctex"]
 
 [params]
 

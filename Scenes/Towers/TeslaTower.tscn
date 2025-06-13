@@ -1,7 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://wael2dq1ktnn"]
+[gd_scene load_steps=16 format=3 uid="uid://wael2dq1ktnn"]
 
 [ext_resource type="Script" uid="uid://b3eo8alao27n6" path="res://Scenes/Towers/baseTower.gd" id="1_883p3"]
-[ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="2_o2tct"]
+[ext_resource type="Texture2D" uid="uid://dpjhualxcci7x" path="res://Assets/Tower/tesla-coil-sprites.png" id="2_hhxxs"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_dc2tg"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_1k8mm"]
 [ext_resource type="Resource" uid="uid://b1fja6mbt8opd" path="res://Scenes/Projectiles/lightningbolt.tres" id="5_hhxxs"]
@@ -9,6 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://n70pmkp7lwkr" path="res://Scenes/Projectiles/Lighningbolt.tscn" id="7_v4tts"]
 [ext_resource type="Script" uid="uid://dlgp4xkt45ocl" path="res://Scripts/Components/hurtbox_component.gd" id="8_366oh"]
 [ext_resource type="Script" uid="uid://bf45ufg6dyex6" path="res://Scripts/Components/health_component.gd" id="9_o2tct"]
+[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/Health/pixil-layer-Under.png" id="10_hhxxs"]
+[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/Health/pixil-layer-Over.png" id="11_bw2t5"]
+[ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="12_v4tts"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_w37wc"]
 
@@ -19,7 +22,7 @@ radius = 145.169
 radius = 11.0
 height = 54.0
 
-[node name="TempTower" type="CharacterBody2D"]
+[node name="TempTower" type="CharacterBody2D" groups=["towers"]]
 y_sort_enabled = true
 collision_layer = 16
 collision_mask = 28
@@ -28,7 +31,8 @@ script = ExtResource("1_883p3")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 y_sort_enabled = true
 position = Vector2(0, -16)
-texture = ExtResource("2_o2tct")
+texture = ExtResource("2_hhxxs")
+hframes = 3
 
 [node name="PhysicalCollision" type="CollisionShape2D" parent="."]
 visible = false
@@ -42,13 +46,6 @@ collision_mask = 8
 [node name="AttackCollision" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource("CircleShape2D_butbb")
 
-[node name="HealthBar" type="ProgressBar" parent="."]
-offset_left = -20.0
-offset_top = -75.0
-offset_right = 20.0
-offset_bottom = -48.0
-metadata/_edit_use_anchors_ = true
-
 [node name="RangeIndicator" type="Node2D" parent="."]
 
 [node name="RangeCircle" type="Sprite2D" parent="RangeIndicator"]
@@ -60,10 +57,11 @@ projectile_types = Array[ExtResource("4_1k8mm")]([ExtResource("5_hhxxs")])
 universal_projectile_scene = ExtResource("6_bw2t5")
 lightning_projectile_scene = ExtResource("7_v4tts")
 
-[node name="hurtbox_component" type="Area2D" parent="."]
-collision_layer = 256
-collision_mask = 0
+[node name="hurtbox_component" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+collision_layer = 16
+collision_mask = 8
 script = ExtResource("8_366oh")
+health_component = NodePath("../health_component")
 metadata/_custom_type_script = "uid://dlgp4xkt45ocl"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
@@ -73,5 +71,15 @@ shape = SubResource("CapsuleShape2D_3jyt2")
 [node name="health_component" type="Node2D" parent="."]
 position = Vector2(0, -5)
 script = ExtResource("9_o2tct")
-max_health = 20
+max_health = 150
 metadata/_custom_type_script = "uid://bf45ufg6dyex6"
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -53.0
+offset_right = 16.0
+offset_bottom = -49.0
+value = 50.0
+texture_under = ExtResource("10_hhxxs")
+texture_progress = ExtResource("11_bw2t5")
+script = ExtResource("12_v4tts")

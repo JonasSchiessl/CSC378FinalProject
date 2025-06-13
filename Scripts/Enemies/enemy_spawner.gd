@@ -15,6 +15,7 @@ extends Node2D
 
 var PoisonRatClass = preload("res://Scenes/Enemies/poison_rat.tscn")
 var MeleeRatClass = preload("res://Scenes/Enemies/melee_rat.tscn")
+var TowerDestroyerRatClass = preload("res://Scenes/Enemies/tower_destroyer_rat.tscn")
 
 # Phase and wave management
 @export var phases: Array[Resource] = []
@@ -257,6 +258,8 @@ func spawn_single_enemy(enemy_type: String) -> void:
 			enemy_scene = PoisonRatClass
 		"melee_rat":
 			enemy_scene = MeleeRatClass
+		"tower_destroyer_rat":
+			enemy_scene = TowerDestroyerRatClass
 		_:
 			push_error("Unknown enemy type: %s" % enemy_type)
 			return
@@ -278,6 +281,7 @@ func spawn_single_enemy(enemy_type: String) -> void:
 
 func get_valid_spawn_position() -> Vector2:
 	"""Get a spawn position within the area but outside camera view"""
+	
 	if not spawn_area or not player:
 		return Vector2.ZERO
 	

@@ -1,0 +1,133 @@
+[gd_scene load_steps=15 format=3 uid="uid://rlsaj15u520q"]
+
+[ext_resource type="Script" uid="uid://dv5hyjreoisgs" path="res://Scripts/Enemies/tower_destroyer_rat.gd" id="1_i1ntm"]
+[ext_resource type="Texture2D" uid="uid://dsopeddd01hsg" path="res://Assets/Enemies/pixil-layer-Tower Destroyer Rat.png" id="2_4rln2"]
+[ext_resource type="PackedScene" uid="uid://bux2ao34wjhu3" path="res://Scripts/Components/attack_component.tscn" id="2_i1ntm"]
+[ext_resource type="PackedScene" uid="uid://du3qd1ihh51o8" path="res://Scripts/Components/health_component.tscn" id="3_4rln2"]
+[ext_resource type="PackedScene" uid="uid://hpt6vaypagal" path="res://Scripts/Components/hitbox_component.tscn" id="4_minpf"]
+[ext_resource type="PackedScene" uid="uid://bauly11ivc0e3" path="res://Scripts/Components/hurtbox_component.tscn" id="5_818qi"]
+[ext_resource type="Script" uid="uid://dfncltihfaxrq" path="res://Scripts/Components/Projectiles/StatusEffectComponent.gd" id="6_ghq6g"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5de6e"]
+radius = 12.0
+height = 48.0
+
+[sub_resource type="Animation" id="Animation_4rln2"]
+resource_name = "attack"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [5, 3]
+}
+
+[sub_resource type="Animation" id="Animation_i1ntm"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+
+[sub_resource type="Animation" id="Animation_minpf"]
+resource_name = "run"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ghq6g"]
+_data = {
+&"attack": SubResource("Animation_4rln2"),
+&"idle": SubResource("Animation_i1ntm"),
+&"run": SubResource("Animation_minpf")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ce5r3"]
+radius = 27.0
+height = 104.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pthl7"]
+radius = 22.0
+height = 78.0
+
+[node name="TowerDestroyerRat" type="CharacterBody2D" groups=["enemies"]]
+collision_layer = 8
+collision_mask = 44
+script = ExtResource("1_i1ntm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_5de6e")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_4rln2")
+centered = false
+offset = Vector2(-48, -49)
+hframes = 5
+vframes = 3
+frame = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_ghq6g")
+}
+
+[node name="attack_component" parent="." instance=ExtResource("2_i1ntm")]
+base_damage = 5.0
+
+[node name="health_component" parent="." instance=ExtResource("3_4rln2")]
+max_health = 20
+
+[node name="hitbox_component" parent="." node_paths=PackedStringArray("attack_component") instance=ExtResource("4_minpf")]
+collision_layer = 8
+collision_mask = 20
+attack_component = NodePath("../attack_component")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox_component"]
+position = Vector2(0, -5)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_ce5r3")
+
+[node name="hurtbox_component" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("5_818qi")]
+collision_layer = 8
+collision_mask = 32
+health_component = NodePath("../health_component")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
+position = Vector2(0, -6)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_pthl7")
+
+[node name="StatusEffectComponent" type="Node" parent="."]
+script = ExtResource("6_ghq6g")
+metadata/_custom_type_script = "uid://dfncltihfaxrq"
+
+[connection signal="health_change" from="health_component" to="." method="_on_health_component_health_change"]
+[connection signal="health_depleted" from="health_component" to="." method="_on_health_component_health_depleted"]

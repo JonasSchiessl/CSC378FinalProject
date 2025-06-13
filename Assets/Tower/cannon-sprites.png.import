@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv88qnx523ds4"
-path="res://.godot/imported/melee-rat-sprites.png-d7c5627fcda7846ba577abb6e6486273.ctex"
+uid="uid://ckvaaobhdy31"
+path="res://.godot/imported/cannon-sprites.png-1d370b3d9d99e0aa6904762a4ea1d55b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Enemies/melee-rat-sprites.png"
-dest_files=["res://.godot/imported/melee-rat-sprites.png-d7c5627fcda7846ba577abb6e6486273.ctex"]
+source_file="res://Assets/Tower/cannon-sprites.png"
+dest_files=["res://.godot/imported/cannon-sprites.png-1d370b3d9d99e0aa6904762a4ea1d55b.ctex"]
 
 [params]
 

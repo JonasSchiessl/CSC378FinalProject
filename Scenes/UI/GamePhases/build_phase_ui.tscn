@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://dc31ym7wsiwm6" path="res://Scenes/UI/mainmenu/start_button.gd" id="5_0wbnq"]
 [ext_resource type="Texture2D" uid="uid://dohlxjwhd0avc" path="res://Assets/Tower/turret.png" id="7_jiigi"]
 [ext_resource type="Texture2D" uid="uid://b26gxc0qfdg1q" path="res://Assets/Tower/tesla-coil.png" id="8_1brf8"]
-[ext_resource type="Texture2D" uid="uid://dktkiplukb8gk" path="res://Assets/Tower/lavaNoWings.png" id="9_dut2e"]
+[ext_resource type="Texture2D" uid="uid://drh618spsmmfm" path="res://Assets/Tower/cannon.png" id="9_1brf8"]
 [ext_resource type="AudioStream" uid="uid://cvi23iopnert6" path="res://Assets/SFX/UI/Select.wav" id="10_1brf8"]
 
 [node name="BuildPhaseUI" type="Control"]
@@ -384,12 +384,12 @@ color = Color(0, 0.0784314, 0, 1)
 
 [node name="fire_button" type="TextureButton" parent="HBoxContainer/Tower3"]
 layout_mode = 0
-offset_left = 72.7454
-offset_top = 38.9735
-offset_right = 142.745
-offset_bottom = 153.973
-scale = Vector2(0.773724, 1.09422)
-texture_normal = ExtResource("9_dut2e")
+offset_left = 46.4563
+offset_top = 32.9775
+offset_right = 110.456
+offset_bottom = 96.9772
+scale = Vector2(1.99627, 2.41331)
+texture_normal = ExtResource("9_1brf8")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_1brf8")

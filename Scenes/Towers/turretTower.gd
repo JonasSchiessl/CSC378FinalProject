@@ -9,10 +9,11 @@ extends CharacterBody2D
 @onready var hurtbox_component: HurtboxComponent = $hurtbox_component
 
 # Visual components
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var range_indicator: Node2D = $RangeIndicator
 @onready var collision_shape: CollisionShape2D = $PhysicalCollision
-@onready var health_bar: ProgressBar = $HealthBar
+@onready var health_bar: TextureProgressBar = $HealthBar
 @onready var projectile_emitter = $projectile_emitter
 @onready var attack_range_area = $AttackRange
 
@@ -63,9 +64,11 @@ func _ready() -> void:
 		health_bar.value = health_component.health
 		health_bar.visible = false  # Only show when damaged
 
-	if animated_sprite:
-		animated_sprite.play("idle")
-		animated_sprite.flip_h = false
+	if sprite and animation_player:
+		animation_player.play("idle")
+		sprite.flip_h = false
+		
+	add_to_group("towers")
 
 # Connect to health component signals 
 func connect_health_signals() -> void:
@@ -92,8 +95,8 @@ func _physics_process(delta: float) -> void:
 	# Handle facing direction towards target
 	if current_target and is_instance_valid(current_target):
 		var direction_to_target = current_target.global_position.x - global_position.x
-		if animated_sprite:
-			animated_sprite.flip_h = direction_to_target < 0
+		if sprite:
+			sprite.flip_h = direction_to_target < 0
 	
 	if can_attack and not enemies_in_range.is_empty():
 		attack_nearest_enemy()
@@ -180,8 +183,8 @@ func attack_target(target: Node2D) -> void:
 	
 	var direction = (target.global_position - global_position).normalized()
 	
-	if animated_sprite:
-		animated_sprite.flip_h = direction.x < 0
+	if sprite:
+		sprite.flip_h = direction.x < 0
 	
 	start_shooting_animation()
 	
@@ -200,11 +203,11 @@ func attack_target(target: Node2D) -> void:
 		stop_shooting_animation()
 
 func start_shooting_animation() -> void:
-	if not animated_sprite:
+	if not sprite:
 		return
 		
 	is_shooting = true
-	animated_sprite.play("shooting")
+	animation_player.play("shooting")
 	
 	var shooting_duration = get_tree().create_timer(0.2)
 	shooting_duration.timeout.connect(func():
@@ -213,11 +216,11 @@ func start_shooting_animation() -> void:
 	)
 
 func stop_shooting_animation() -> void:
-	if not animated_sprite:
+	if not sprite:
 		return
 		
 	is_shooting = false
-	animated_sprite.play("idle")
+	animation_player.play("idle")
 
 # Preview mode management used by tower placement system
 func set_preview_mode(preview: bool) -> void:
@@ -240,10 +243,9 @@ func set_preview_mode(preview: bool) -> void:
 		# Make the tower transparent
 		modulate = preview_valid_color
 		
-		if animated_sprite:
-			animated_sprite.play("idle")
-			animated_sprite.flip_h = false
-			animated_sprite.flip_h = false
+		if sprite and animation_player:
+			animation_player.play("idle")
+			sprite.flip_h = false
 		
 		# Hide UI elements
 		if health_bar:
@@ -265,8 +267,8 @@ func set_preview_mode(preview: bool) -> void:
 		# Restore normal appearance
 		modulate = normal_color
 		
-		if animated_sprite:
-			animated_sprite.play("idle")
+		if sprite and animation_player:
+			animation_player.play("idle")
 		
 		# Connect health signals now that the tower is placed
 		connect_health_signals()
@@ -321,6 +323,12 @@ func _on_health_component_health_change(old_value: Variant, new_value: Variant) 
 	# Emit signal for other systems and stuff
 	health_change.emit(new_value, health_component.max_health)
 	
+	# Make the tower look destroyed by changing the sprite frame
+	if health_bar.value == 0:
+		sprite.texture = load("res://Assets/Tower/turret-sprites-2.png")
+	elif health_bar.value <= health_component.max_health/2:
+		sprite.texture = load("res://Assets/Tower/turret-sprites-1.png")
+	
 	"""
 	# Visual feedback for damage (if we want it)
 	if new_value < old_value:
@@ -369,9 +377,9 @@ func destroy() -> void:
 	is_destroyed = true
 	can_attack = false
 	
-	if animated_sprite:
-		animated_sprite.stop()
-		animated_sprite.flip_h = false
+	if sprite and animation_player:
+		animation_player.stop()
+		sprite.flip_h = false
 	
 	tower_destroyed.emit()
 	
