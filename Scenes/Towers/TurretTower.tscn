@@ -1,14 +1,71 @@
-[gd_scene load_steps=14 format=3 uid="uid://dthrnl8i5x8kk"]
+[gd_scene load_steps=21 format=3 uid="uid://dthrnl8i5x8kk"]
 
 [ext_resource type="Script" uid="uid://d0rwulyprx4gg" path="res://Scenes/Towers/turretTower.gd" id="1_n5j2b"]
+[ext_resource type="Texture2D" uid="uid://dxd6sinvqlgrg" path="res://Assets/Tower/turret-sprites-0.png" id="2_24o38"]
 [ext_resource type="Script" uid="uid://b6utwqgnhbq5l" path="res://Scripts/Components/Projectiles/projectile_emitter.gd" id="3_gnrwq"]
 [ext_resource type="Script" uid="uid://dml00cd28ie6g" path="res://Scripts/Components/Projectiles/projectile_type.gd" id="4_pws5s"]
 [ext_resource type="AudioStream" uid="uid://df8j62gxeh68b" path="res://Assets/SFX/Projectiles/turret.wav" id="5_lhear"]
 [ext_resource type="SpriteFrames" uid="uid://dq1fe0w7o1s4b" path="res://Scenes/Projectiles/bullet.tres" id="5_n5j2b"]
 [ext_resource type="PackedScene" uid="uid://dtxe34f4qw2x6" path="res://Scenes/Projectiles/Projectile.tscn" id="6_kk7px"]
 [ext_resource type="Script" uid="uid://dlgp4xkt45ocl" path="res://Scripts/Components/hurtbox_component.gd" id="7_l446f"]
-[ext_resource type="SpriteFrames" uid="uid://bbokd1mf2gws7" path="res://Scenes/Towers/turretTower.tres" id="7_pdqit"]
 [ext_resource type="Script" uid="uid://bf45ufg6dyex6" path="res://Scripts/Components/health_component.gd" id="8_uir43"]
+[ext_resource type="Texture2D" uid="uid://dfuxdx7k0v67i" path="res://Assets/Ui/Health/pixil-layer-Under.png" id="10_24o38"]
+[ext_resource type="Texture2D" uid="uid://bi35c5dj6wiqh" path="res://Assets/Ui/Health/pixil-layer-Over.png" id="11_kk7px"]
+[ext_resource type="Script" uid="uid://cbbg25ilysfa5" path="res://Scripts/Player/health_bar.gd" id="12_l446f"]
+
+[sub_resource type="Animation" id="Animation_kk7px"]
+resource_name = "idle"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_l446f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_uir43"]
+resource_name = "shooting"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bd7q6"]
+_data = {
+&"RESET": SubResource("Animation_l446f"),
+&"idle": SubResource("Animation_kk7px"),
+&"shooting": SubResource("Animation_uir43")
+}
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hyll0"]
 radius = 19.0
@@ -58,8 +115,8 @@ required_level = 1
 metadata/_custom_type_script = "uid://dml00cd28ie6g"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o2tct"]
-radius = 19.0
-height = 40.0
+radius = 18.0
+height = 60.0
 
 [node name="TurretTower" type="CharacterBody2D"]
 y_sort_enabled = true
@@ -67,11 +124,16 @@ collision_layer = 16
 collision_mask = 28
 script = ExtResource("1_n5j2b")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(-1, -23)
-sprite_frames = ExtResource("7_pdqit")
-animation = &"shooting"
-frame_progress = 0.0817442
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -22)
+texture = ExtResource("2_24o38")
+hframes = 4
+frame = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_bd7q6")
+}
 
 [node name="PhysicalCollision" type="CollisionShape2D" parent="."]
 visible = false
@@ -86,13 +148,6 @@ collision_mask = 8
 [node name="AttackCollision" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource("CircleShape2D_butbb")
 
-[node name="HealthBar" type="ProgressBar" parent="."]
-offset_left = -20.0
-offset_top = -75.0
-offset_right = 20.0
-offset_bottom = -48.0
-metadata/_edit_use_anchors_ = true
-
 [node name="RangeIndicator" type="Node2D" parent="."]
 visible = false
 
@@ -104,19 +159,29 @@ projectile_types = Array[ExtResource("4_pws5s")]([SubResource("Resource_8xilq")]
 universal_projectile_scene = ExtResource("6_kk7px")
 
 [node name="hurtbox_component" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
-visible = false
-collision_layer = 256
-collision_mask = 0
+collision_layer = 16
+collision_mask = 8
 script = ExtResource("7_l446f")
 health_component = NodePath("../health_component")
 metadata/_custom_type_script = "uid://dlgp4xkt45ocl"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox_component"]
-position = Vector2(-1, -16)
+position = Vector2(0, -18)
+rotation = -1.5708
 shape = SubResource("CapsuleShape2D_o2tct")
 
 [node name="health_component" type="Node2D" parent="."]
 position = Vector2(0, -5)
 script = ExtResource("8_uir43")
-max_health = 20
+max_health = 40
 metadata/_custom_type_script = "uid://bf45ufg6dyex6"
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -46.0
+offset_right = 16.0
+offset_bottom = -42.0
+value = 50.0
+texture_under = ExtResource("10_24o38")
+texture_progress = ExtResource("11_kk7px")
+script = ExtResource("12_l446f")

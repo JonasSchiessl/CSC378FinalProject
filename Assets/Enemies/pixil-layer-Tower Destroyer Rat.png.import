@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv88qnx523ds4"
-path="res://.godot/imported/melee-rat-sprites.png-d7c5627fcda7846ba577abb6e6486273.ctex"
+uid="uid://dsopeddd01hsg"
+path="res://.godot/imported/pixil-layer-Tower Destroyer Rat.png-aa33a40634730d7f5395175aa8e9e82f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Enemies/melee-rat-sprites.png"
-dest_files=["res://.godot/imported/melee-rat-sprites.png-d7c5627fcda7846ba577abb6e6486273.ctex"]
+source_file="res://Assets/Enemies/pixil-layer-Tower Destroyer Rat.png"
+dest_files=["res://.godot/imported/pixil-layer-Tower Destroyer Rat.png-aa33a40634730d7f5395175aa8e9e82f.ctex"]
 
 [params]
 

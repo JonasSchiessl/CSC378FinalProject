@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7dygixd17g18"
-path="res://.godot/imported/leftFacing.png-d38cad259f734e9e69115ad8e74f65fc.ctex"
+uid="uid://dxd6sinvqlgrg"
+path="res://.godot/imported/turret-sprites-0.png-64a5c5efa892cc22ded534cde1111a7c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Tower/leftFacing.png"
-dest_files=["res://.godot/imported/leftFacing.png-d38cad259f734e9e69115ad8e74f65fc.ctex"]
+source_file="res://Assets/Tower/turret-sprites-0.png"
+dest_files=["res://.godot/imported/turret-sprites-0.png-64a5c5efa892cc22ded534cde1111a7c.ctex"]
 
 [params]
 

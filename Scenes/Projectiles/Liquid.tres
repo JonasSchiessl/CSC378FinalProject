@@ -1,0 +1,60 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://dexvqcjwwongk"]
+
+[ext_resource type="Texture2D" uid="uid://djrnibedbdc3l" path="res://Assets/Projectiles/liquid-sheet.png" id="1_xhy4q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ic532"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0xnvl"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eubnc"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_opdgk"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3bqf"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2r2s"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkqtv"]
+atlas = ExtResource("1_xhy4q")
+region = Rect2(192, 0, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ic532")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0xnvl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eubnc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_opdgk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m3bqf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i2r2s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tkqtv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]

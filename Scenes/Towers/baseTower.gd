@@ -13,7 +13,7 @@ class_name Tower
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var range_indicator: Node2D = $RangeIndicator
 @onready var collision_shape: CollisionShape2D = $PhysicalCollision
-@onready var health_bar: ProgressBar = $HealthBar
+@onready var health_bar: TextureProgressBar = $HealthBar
 @onready var projectile_emitter = $projectile_emitter
 @onready var attack_range_area = $AttackRange
 
@@ -60,6 +60,9 @@ func _ready() -> void:
 		health_bar.max_value = health_component.max_health
 		health_bar.value = health_component.health
 		health_bar.visible = false  # Only show when damaged
+		
+	add_to_group("towers")
+
 
 # Connect to health component signals 
 func connect_health_signals() -> void:
@@ -269,6 +272,12 @@ func _on_health_component_health_change(old_value: Variant, new_value: Variant) 
 		# Hide health bar if at full health
 		if new_value >= health_component.max_health:
 			health_bar.visible = false
+	
+	# Make the tower look destroyed by changing the sprite frame
+	if health_bar.value == 0:
+		sprite.frame = 2
+	elif health_bar.value <= health_component.max_health/2:
+		sprite.frame = 1
 	
 	# Emit signal for other systems and stuff
 	health_change.emit(new_value, health_component.max_health)

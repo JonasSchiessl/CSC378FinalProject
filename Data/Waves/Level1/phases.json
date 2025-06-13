@@ -72,6 +72,11 @@
 			  "enemy_type": "melee_rat",
 			  "enemy_count": 8,
 			  "group_delay": 0.0
+			},
+			{
+			"enemy_type": "tower_destroyer_rat",
+			  "enemy_count": 4,
+			  "group_delay": 0.0
 			}
 		  ]
 		},
@@ -92,9 +97,9 @@
 			  "group_delay": 2.0
 			},
 			{
-			  "enemy_type": "poison_rat",
-			  "enemy_count": 3,
-			  "group_delay": 5.0
+			  "enemy_type": "tower_destroyer_rat",
+			  "enemy_count": 6,
+			  "group_delay": 0.0
 			}
 		  ]
 		},
@@ -107,6 +112,11 @@
 			{
 			  "enemy_type": "melee_rat",
 			  "enemy_count": 12,
+			  "group_delay": 0.0
+			},
+			{
+			"enemy_type": "tower_destroyer_rat",
+			  "enemy_count": 6,
 			  "group_delay": 0.0
 			}
 		  ]
@@ -131,6 +141,11 @@
 			  "enemy_type": "poison_rat",
 			  "enemy_count": 20,
 			  "group_delay": 1.0
+			},
+			{
+			  "enemy_type": "tower_destroyer_rat",
+			  "enemy_count": 5,
+			  "group_delay": 0.0
 			}
 		  ]
 		},
@@ -159,14 +174,14 @@
 			  "group_delay": 0.0
 			},
 			{
-			  "enemy_type": "poison_rat",
+			  "enemy_type": "melee_rat",
 			  "enemy_count": 5,
 			  "group_delay": 2.0
 			},
 			{
-			  "enemy_type": "poison_rat",
+			  "enemy_type": "tower_destroyer_rat",
 			  "enemy_count": 5,
-			  "group_delay": 4.0
+			  "group_delay": 0.0
 			},
 			{
 			  "enemy_type": "poison_rat",

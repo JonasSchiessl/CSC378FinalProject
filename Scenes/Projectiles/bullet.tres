@@ -1,16 +1,12 @@
-[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://dq1fe0w7o1s4b"]
+[gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://dq1fe0w7o1s4b"]
 
-[ext_resource type="Texture2D" uid="uid://6c1p6dl08cxc" path="res://Assets/Projectiles/syrringe.png" id="1_rnaqj"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h4etf"]
-atlas = ExtResource("1_rnaqj")
-region = Rect2(0, 0, 32, 32)
+[ext_resource type="Texture2D" uid="uid://c7ol0m28hh62c" path="res://Assets/Projectiles/syringe.png" id="1_rnaqj"]
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_h4etf")
+"texture": ExtResource("1_rnaqj")
 }],
 "loop": true,
 "name": &"default",
