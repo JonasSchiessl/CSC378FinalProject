@@ -24,11 +24,6 @@ func _ready() -> void:
 	# Start in build phase
 	set_phase(Phase.BUILD)
 
-func _input(event: InputEvent) -> void:
-	# Toggle between phases with Tab key for now
-	if event.is_action_pressed("togglePhase"): 
-		toggle_phase()
-
 # Set the current phase
 func set_phase(new_phase: Phase) -> void:
 	print("=== GameManager.set_phase() called ===")
