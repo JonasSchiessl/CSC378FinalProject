@@ -168,7 +168,6 @@ func _on_settings_back():
 
 func _on_credits_back():
 	close_current_panel()
-
 # Handle window resize
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:

@@ -1,0 +1,133 @@
+[gd_scene load_steps=7 format=3 uid="uid://cpg2jnyurwxsa"]
+
+[ext_resource type="Script" uid="uid://bymilsnrsyefg" path="res://Scripts/UI/win_ui.gd" id="1_27bjr"]
+[ext_resource type="Texture2D" uid="uid://txpr138y0pfy" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/Screen_combinedBG_scaled_9x_pngcrushed.png" id="2_isw6g"]
+[ext_resource type="Texture2D" uid="uid://dc5fl2t0shsha" path="res://Assets/Ui/Mini Sci-Fi Gui/Scalable Screen/screen_bg_pattern.png" id="3_qcorn"]
+[ext_resource type="Texture2D" uid="uid://c32dfd53gh7e7" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/medium_button1_scaled_10x_pngcrushed.png" id="4_lh70u"]
+[ext_resource type="Texture2D" uid="uid://cju167rwbqdvf" path="res://Assets/Ui/Mini Sci-Fi Gui/Buttons/medium_button2_scaled_10x_pngcrushed.png" id="5_c7wcf"]
+[ext_resource type="Script" uid="uid://dc31ym7wsiwm6" path="res://Scenes/UI/mainmenu/start_button.gd" id="6_semrh"]
+
+[node name="win_ui" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_27bjr")
+
+[node name="InfoScreen" type="NinePatchRect" parent="."]
+z_index = 100
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.198
+anchor_top = 0.08
+anchor_right = 0.756
+anchor_bottom = 0.189
+offset_left = -20.096
+offset_top = -20.3908
+offset_right = 565.088
+offset_bottom = 108.977
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.559999, 0.559999)
+texture = ExtResource("2_isw6g")
+patch_margin_left = 100
+patch_margin_top = 100
+patch_margin_right = 100
+patch_margin_bottom = 100
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="BoxContainer" type="BoxContainer" parent="InfoScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0322132
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_right = -30.6302
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02802, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="InfoScreen/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_qcorn")
+
+[node name="ColorRect" type="ColorRect" parent="InfoScreen"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.044
+anchor_top = 0.185
+anchor_right = 0.96
+anchor_bottom = 0.82
+offset_left = -14.1375
+offset_right = -30.2336
+offset_bottom = -1.52588e-05
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02734, 1)
+size_flags_horizontal = 3
+color = Color(0, 0.0784314, 0, 1)
+
+[node name="InstructionLabel" type="RichTextLabel" parent="InfoScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.183
+anchor_right = 0.961
+anchor_bottom = 1.0
+offset_left = 37.0
+offset_top = -1.6
+offset_right = 2.89197
+offset_bottom = -37.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 32
+text = "Congratulations you have cured all the rats and set them free!"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuButton" type="TextureButton" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.87458
+anchor_top = 0.905059
+anchor_right = 0.990473
+anchor_bottom = 0.982436
+offset_left = -525.516
+offset_top = -364.478
+offset_right = -299.025
+offset_bottom = -294.618
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.37086, 0.417833)
+texture_normal = ExtResource("4_lh70u")
+texture_pressed = ExtResource("5_c7wcf")
+script = ExtResource("6_semrh")
+metadata/_edit_group_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MenuButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+text = "Menu"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="button_down" from="MenuButton" to="MenuButton" method="_on_button_down"]
+[connection signal="button_is_pressed" from="MenuButton" to="." method="_on_menu_button_is_pressed"]
+[connection signal="button_up" from="MenuButton" to="MenuButton" method="_on_button_up"]

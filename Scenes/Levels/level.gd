@@ -4,6 +4,7 @@ extends Node2D
 @onready var enemy_spawner = $EnemySpawner  
 var death_screen: DeathScreen
 var build_phase_ui: BuildUI  
+var win_ui: WinUI
 var tower_container: Node2D
 
 # Game state
@@ -43,6 +44,9 @@ func setup_ui():
 	print("build_phase_ui size after add: ", build_phase_ui.size)
 	print("build_phase_ui position after add: ", build_phase_ui.position)
 	print("build_phase_ui visible after add: ", build_phase_ui.visible)
+	
+	win_ui = preload("res://Scenes/UI/win_ui.tscn").instantiate()
+	ui_layer.add_child(win_ui)
 	
 	# Connect signal
 	if build_phase_ui.has_signal("fight_phase_requested"):
@@ -117,13 +121,10 @@ func start_game():
 		# Fallback: start build phase without timer
 		start_build_phase()
 
-func start_build_phase(duration: float = 0.0):
+func start_build_phase():
 	"""Start a build phase (duration parameter ignored - only button starts combat)"""
 	print("Build phase started - waiting for player to start combat")
 	current_phase = GameManager.Phase.BUILD
-	
-	# No timer needed - only button will start combat
-	current_build_timer = null
 	
 	# Show build phase UI
 	if build_phase_ui:
@@ -181,7 +182,6 @@ func start_combat_phase():
 	
 	print("=== START_COMBAT_PHASE COMPLETE ===")
 
-# Signal handler for build UI fight request
 func _on_fight_phase_requested():
 	"""Called when player presses Start Fight button"""
 	print("Fight phase requested by player!")
@@ -192,7 +192,6 @@ func _on_fight_phase_requested():
 	# Start combat phase immediately
 	start_combat_phase()
 
-# Signal handlers for GameManager phase changes
 func _on_game_phase_changed(new_phase: GameManager.Phase):
 	"""Handle phase changes from GameManager"""
 	current_phase = new_phase
@@ -208,7 +207,6 @@ func _on_game_phase_changed(new_phase: GameManager.Phase):
 			if build_phase_ui:
 				build_phase_ui.hide_build_ui()
 
-# Signal handlers for enemy spawner events
 func _on_phase_completed(phase_index: int):
 	"""Called when an enemy phase completes"""
 	print("Enemy phase %d completed! Build phase starting..." % (phase_index + 1))
@@ -231,22 +229,19 @@ func _on_all_phases_completed():
 func handle_victory():
 	"""Handle victory condition"""
 	is_game_active = false
-	
+	win_ui.start_UI()
+	player.set_physics_process(false)  
+	player.set_process(false) 
+	player.set_process_input(false)
+	player.get_node("AnimatedSprite2D").pause()
 	# You can add victory screen, final score, etc.
 	print("Level completed successfully!")
-	
-	# Example: Show victory message
-	# victory_screen.show_victory()
-	
-	# Example: Load next level after delay
-	# get_tree().create_timer(3.0).timeout.connect(load_next_level)
 
 func load_next_level():
 	"""Load the next level (example)"""
 	# get_tree().change_scene_to_file("res://Scenes/Levels/level_2.tscn")
 	pass
 
-# Player death handler
 func _on_player_death():
 	"""Handle player death"""
 	print("Player died!")
@@ -258,7 +253,6 @@ func _on_player_death():
 		enemy_spawner.phase_active = false
 		enemy_spawner.wave_active = false
 
-# Debug functions (call from console or debug UI)
 func restart_level():
 	"""Restart the current level"""
 	get_tree().reload_current_scene()
